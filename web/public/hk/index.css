@@ -1,0 +1,365 @@
+@charset "utf-8";
+*
+{
+	margin:0;
+	padding:0;
+}
+html
+{
+	width:100%;
+	height:100%;
+	font-size:12px;
+	font-family:Arial, Helvetica, sans-serif;
+	-webkit-text-size-adjust:none;
+	background:#FFFFFF;
+}
+body
+{
+	padding:0px;
+}
+select
+{
+	height:20px;
+	line-height:20px;
+}
+.left
+{
+	float:left;
+}
+.freeze
+{
+	position:absolute;
+	text-align:center;
+	background:#343434;
+	color:#FFFFFF;
+	font-size:26px;
+	font-weight:bold;
+	filter:alpha(opacity=60);
+	opacity:0.6;
+}
+.vtop
+{
+	vertical-align:middle;
+	margin-top:-1px;
+}
+/*插件*/
+.plugin
+{
+	/*width:500px;*/
+	/*height:300px;*/
+}
+fieldset
+{
+	display:block;
+}
+/*本地配置*/
+.localconfig
+{
+	width:480px;
+	padding:10px;
+	border:1px solid #7F9DB9;
+}
+.localconfig .tt
+{
+	width:125px;
+}
+.localconfig .txt
+{
+	width:310px;
+}
+.localconfig .btn
+{
+	width:45px;
+	height:22px;
+	line-height:18px;
+}
+.localconfig .sel
+{
+	width:120px;
+}
+/*登录*/
+.login
+{
+	width:480px;
+	padding:10px;
+	border:1px solid #7F9DB9;
+}
+.login .tt
+{
+	width:100px;
+}
+.login .txt
+{
+	width:130px;
+}
+.login .btn
+{
+	width:45px;
+	height:22px;
+	line-height:18px;
+}
+.login .btn2
+{
+	width:100px;
+	height:22px;
+	line-height:18px;
+}
+.login .sel
+{
+	width:130px;
+}
+.login .sel2
+{
+	width:65px;
+}
+/*数字通道*/
+.ipchannel
+{
+	width:480px;
+	padding:10px;
+	border:1px solid #7F9DB9;
+}
+.ipchannel .btn
+{
+	width:130px;
+	height:22px;
+	line-height:18px;
+}
+.ipchannel .digitaltdiv
+{
+	height:100px;
+	overflow:hidden;
+	overflow-y:auto;
+	border:1px solid #7F9DB9;
+	font-size:11px;
+}
+.ipchannel .digitalchannellist th, .ipchannel .digitalchannellist td
+{
+	padding:2px;
+	border:1px solid #7F9DB9;
+	border-collapse:collapse;
+	white-space:nowrap;
+}
+/*预览*/
+.preview
+{
+	width:450px;
+	padding:10px;
+	padding-top:0;
+	margin-left:10px;
+	border:1px solid #7F9DB9;
+}
+.preview .tt
+{
+	width:60px;
+}
+.preview .txt
+{
+	width:30px;
+}
+.preview .btn
+{
+	width:70px;
+	height:22px;
+	line-height:18px;
+}
+.preview .btn2
+{
+	width:90px;
+	height:22px;
+	line-height:18px;
+}
+.preview .sel
+{
+	width:105px;
+}
+/*云台*/
+.ptz
+{
+	width:450px;
+	padding:10px;
+	margin-left:10px;
+	border:1px solid #7F9DB9;
+}
+.ptz .tt
+{
+	width:60px;
+}
+.ptz .txt
+{
+	width:60px;
+}
+.ptz .btn
+{
+	width:45px;
+	height:22px;
+	line-height:18px;
+}
+.ptz .btn2
+{
+    width:60px;
+    height:22px;
+    line-height:18px;
+}
+.ptz .sel
+{
+	width:65px;
+}
+/*视频参数*/
+.videoparam
+{
+	width:450px;
+	padding:10px;
+	margin-left:10px;
+	border:1px solid #7F9DB9;
+}
+.videoparam .tt
+{
+	width:60px;
+}
+.videoparam .txt
+{
+	width:60px;
+}
+.videoparam .btn
+{
+	width:45px;
+	height:22px;
+	line-height:18px;
+}
+.videoparam .sel
+{
+	width:65px;
+}
+/*回放*/
+.playback
+{
+	width:450px;
+	padding:10px;
+	margin-left:10px;
+	border:1px solid #7F9DB9;
+}
+.playback .tt
+{
+	width:60px;
+}
+.playback .txt
+{
+	width:140px;
+}
+.playback .btn
+{
+	width:45px;
+	height:22px;
+	line-height:18px;
+}
+.playback .btn2
+{
+	width:70px;
+	height:22px;
+	line-height:18px;
+}
+.playback .sel
+{
+	width:65px;
+}
+.playback .searchdiv
+{
+	height:100px;
+	overflow:hidden;
+	overflow-y:auto;
+	border:1px solid #7F9DB9;
+	font-size:11px;
+}
+.playback .searchlist th, .playback .searchlist td
+{
+	padding:2px;
+	border:1px solid #7F9DB9;
+	border-collapse:collapse;
+	white-space:nowrap;
+}
+/*系统维护*/
+.maintain
+{
+	width:450px;
+	padding:10px;
+	margin-left:10px;
+	border:1px solid #7F9DB9;
+}
+.maintain .tt
+{
+	width:60px;
+}
+.maintain .txt
+{
+	width:280px;
+}
+.maintain .btn
+{
+	width:45px;
+	height:22px;
+	line-height:18px;
+}
+.maintain .btn2
+{
+	width:100px;
+	height:22px;
+	line-height:18px;
+}
+.maintain .sel
+{
+	width:65px;
+}
+/*操作信息*/
+.operate
+{
+	width:450px;
+	padding:10px;
+	margin-left:10px;
+	border:1px solid #7F9DB9;
+}
+.operate .opinfo
+{
+	height:150px;
+	border:1px solid #7F9DB9;
+	overflow:auto;
+}
+/*事件回调*/
+.callback
+{
+	width:450px;
+	padding:10px;
+	margin-left:10px;
+	border:1px solid #7F9DB9;
+}
+.callback .cbinfo
+{
+	height:114px;
+	border:1px solid #7F9DB9;
+	overflow:auto;
+}
+/*IP解析*/
+.ipparse
+{
+	width:480px;
+	padding:10px;
+	border:1px solid #7F9DB9;
+}
+.ipparse .tt
+{
+	width:100px;
+}
+.ipparse .txt
+{
+	width:130px;
+}
+.ipparse .btn
+{
+	width:90px;
+	height:22px;
+	line-height:18px;
+}
+.ipparse .sel
+{
+	width:130px;
+}

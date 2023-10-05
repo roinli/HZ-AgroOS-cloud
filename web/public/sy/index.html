@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>溯源档案</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="stylesheet" href="./css/reset.css">
+  <link rel="stylesheet" href="./css/mui.min.css">
+  <link rel="stylesheet" href="./css/index.css">
+</head>
+<body class="mui-fullscreen" >
+  <div id="indexPage">
+    <!--页面主结构开始-->
+    <div id="app" class="mui-views">
+      <div class="mui-view">
+        <div class="mui-navbar">
+        </div>
+        <div class="mui-pages">
+        </div>
+      </div>
+    </div>
+    <!--页面主结构结束-->
+    <!--单页面开始-->
+    <div id="setting" class="mui-page">
+      <!--页面标题栏开始-->
+      <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <h1 class="mui-center mui-title">溯源档案</h1>
+      </div>
+      <!--页面标题栏结束-->
+      <!--页面主内容区开始-->
+      <div class="mui-page-content">
+        <div class="mui-scroll-wrapper">
+          <div>
+            <div class="title_msg">
+              <img alt="" style="width:100%" :src="product.productIcon">
+            </div>
+            <div class="pro-info">
+              <h2 >{{product.productName}}</h2>
+              <h5 class="title-min">指标描述</h5>
+              <div class="service-time">{{product.quotaDesc}}</div>
+              <div class="t3">
+                <div >
+                  <h5 class="title-cl">种植作物</h5>
+                  <span>{{product.productDetail}}</span>
+                </div>
+                <div class="line-1"></div>
+                <div>
+                  <h5 class="title-cl">种植品种</h5>
+                  <span>{{product.productType}}</span>
+                </div>
+                <div class="line-1"></div>
+                <div>
+                  <h5 class="title-cl">上市时间</h5>
+                  <span v-if="product.plantTime">{{product.plantTime.substring(0,10)}}</span>
+                </div>
+              </div>
+              <div class="comp">
+                <div class="comp-left">
+                  <img  src="img/comp.png">
+                </div>
+                <div class="comp-mid">
+                  <h5>{{product.companyName}}</h5>
+                  <h5>负责人：{{product.employeeName}}</h5>
+                  <h5>地&nbsp;&nbsp;&nbsp;址：{{product.address}}</h5>
+                </div>
+                <div class="comp-right">
+                  <a href="javascript:go('#companyAddress')" ><img src="img/r.png"></a>
+                </div>
+              </div>
+              <h5 class="title-min">产品简介</h5>
+              <div class="service-time">{{product.productInformation}}</div>
+              <div class="da">
+                <h5>档案完整度</h5>
+                <div>
+                  <div class="icons mui-inline icons_envirnment">
+                    <i v-for="item in product.integrity" class="mui-icon"><img :src="item"></i>
+                  </div>
+                </div>
+              </div>
+              <ul class="other-block">
+                <li >
+                  <a href="#companyGrowthPic">
+                    <p><img src="./img/zp.png" ></p>
+                    <p>生长期图片</p>
+                  </a>
+                </li>
+                <li >
+                  <a href="#fertilizationRec">
+                    <p><img src="./img/fl.png" ></p>
+                    <p>肥料使用表</p>
+                  </a>
+                </li>
+                <li >
+                  <a href="#pesticideRec">
+                    <p><img src="./img/ny.png" ></p>
+                    <p>农药使用表</p>
+                  </a>
+                </li>
+                <li >
+                  <a href="#echart">
+                    <p><img src="./img/sj.png" ></p>
+                    <p>关键环境数据</p>
+                  </a>
+                </li>
+                <li >
+                  <a href="#farmingRec">
+                    <p><img src="./img/jl.png" ></p>
+                    <p>农事记录</p>
+                  </a>
+                </li>
+                <li >
+                  <a href="#authInfo">
+                    <p><img src="./img/rz.png" ></p>
+                    <p>认证信息</p>
+                  </a>
+                </li>
+                <li >
+                  <a href="#seedSource">
+                    <p><img src="./img/ly.png" ></p>
+                    <p>种子来源信息</p>
+                  </a>
+                </li>
+              </ul>
+              <div class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+                <a class="mui-control-item mui-active" href="#item1mobile">
+                  网店购买
+                </a>
+                <a class="mui-control-item" href="#item2mobile">
+                  实体店购买
+                </a>
+                <a class="mui-control-item" href="#item3mobile">
+                  联络方式
+                </a>
+              </div>
+              <div class="mui-slider-group">
+                <div id="item1mobile" class="md-f1 mui-slider-item mui-control-content detailInfos md-box md-ver mui-active">
+                  <ul class="mui-table-view">
+                    <li class="mui-table-view-cell" v-for="(item,i) in product.webLinks">
+                      <a class="mui-navigate-right" target="_blank" :href="item"><span class="mui-icon mui-icon-paperplane" style="font-size: 20px;"></span>{{item}}</a>
+                    </li>
+                  </ul>
+                </div>
+                <div id="item2mobile" class="bg md-f1 mui-slider-item mui-control-content detailInfos1 md-box md-ver">
+                  <ul class="mui-table-view">
+                    <li class="mui-table-view-cell" v-for="(item,i) in product.shopAddress"><span class="mui-icon mui-icon-flag" style="font-size: 20px;"></span>{{item}}</li>
+                  </ul>
+                </div>
+                <div id="item3mobile" class="bg md-f1 mui-slider-item mui-control-content detailInfos2 md-box md-ver">
+                  <ul class="mui-table-view">
+                    <li class="mui-table-view-cell" v-for="(item,i) in product.salerList">
+                      <div>
+                        <span>{{item.name}}</span>
+                        <a class="mui-navigate-right fr" :href="'tel:'+item.mobile"><span class="mui-icon mui-icon-phone" style="font-size: 20px;"></span>{{item.mobile}}</a>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!--页面主内容区结束-->
+    </div>
+    <!--单页面结束-->
+    <div id="companyAddress" class="mui-page">
+      <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+          <span class="mui-icon mui-icon-left-nav"></span><!--返回-->
+        </button>
+        <h1 class="mui-center mui-title">公司地址</h1>
+      </div>
+      <div class="mui-page-content">
+        <div class="mui-scroll-wrapper">
+          <div class="mui-scroll">
+            <div id="allmap"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="companyGrowthPic" class="mui-page">
+      <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+          <span class="mui-icon mui-icon-left-nav"></span><!--返回-->
+        </button>
+        <h1 class="mui-center mui-title">生长期图片</h1>
+      </div>
+      <div class="mui-page-content">
+        <div class="mui-scroll-wrapper">
+          <div class="mui-scroll">
+            <div class="mui-content-padded">
+              <div class="line-box" v-for="(item,i) in product.growthPic">
+                <div class="p-img">
+                  <img :src="item.img" >
+                  <div class="figcaption">
+                    <span >{{item.time.substring(0,10)}}</span>
+                    <span class="fr">{{item.loc}}</span>
+                  </div>
+                </div>
+                <div class="service-time">{{item.dec}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="fertilizationRec" class="mui-page">
+      <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+          <span class="mui-icon mui-icon-left-nav"></span><!--返回-->
+        </button>
+        <h1 class="mui-center mui-title">肥料使用表</h1>
+      </div>
+      <div class="mui-page-content">
+        <div class="mui-scroll-wrapper">
+          <div class="mui-scroll">
+            <div class="mui-content-padded">
+              <div class="integral-box" v-for="(item,i) in product.fertilizationRec">
+                <ul class="jine-money">
+                  <li> <span>{{item.pinpai}}<em></em></span> <p>品牌</p> </li>
+                  <li> <span>{{item.val}}<em></em></span> <p>用量</p> </li>
+                  <li> <span>{{item.type}}<em></em></span> <p>类型</p> </li>
+                </ul>
+                <div class="jine-list-peo"><em>施肥时间：</em>{{item.time}}</div>
+                <div class="jine-info">
+                  <em>化肥供应商：</em><span>{{item.gongys}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="pesticideRec" class="mui-page">
+      <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+          <span class="mui-icon mui-icon-left-nav"></span><!--返回-->
+        </button>
+        <h1 class="mui-center mui-title">农药使用表</h1>
+      </div>
+      <div class="mui-page-content">
+        <div class="mui-scroll-wrapper">
+          <div class="mui-scroll">
+            <div class="mui-content-padded">
+              <div class="integral-box" v-for="(item,i) in product.pesticideRec">
+                <ul class="jine-money">
+                  <li> <span>{{item.name}}<em></em></span> <p>名称</p> </li>
+                  <li> <span>{{item.val}}<em></em></span> <p>用量</p> </li>
+                  <li> <span>{{item.pinpai}}<em></em></span> <p>品牌</p> </li>
+                </ul>
+                <div class="jine-list-peo"><em>用药时间：</em>{{item.time}}</div>
+                <div class="jine-info">
+                  <em>农药供应商：</em><span>{{item.gongys}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="echart" class="mui-page">
+      <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+          <span class="mui-icon mui-icon-left-nav"></span><!--返回-->
+        </button>
+        <h1 class="mui-center mui-title">关键环境数据</h1>
+      </div>
+      <div class="mui-page-content">
+        <div class="mui-scroll-wrapper">
+          <div class="mui-scroll">
+            <div class="mui-content-padded">
+              <div>
+                <div class="select-opt">
+                  <span v-for="(item,i) in product.envData" v-on:click="getEnvData(item.deviceId)" :id="item.deviceId" class="">{{item.deviceName}}</span>
+                </div>
+                <div id="container"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="farmingRec" class="mui-page">
+      <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+          <span class="mui-icon mui-icon-left-nav"></span><!--返回-->
+        </button>
+        <h1 class="mui-center mui-title">农事记录</h1>
+      </div>
+      <div class="mui-page-content">
+        <div class="mui-scroll-wrapper">
+          <div class="mui-scroll">
+            <div class="mui-content-padded">
+              <div class="integral-box" v-for="(item,i) in product.farmingRec">
+                <div class="jine-list-peo">
+                  <span><em>农事时间：</em>{{item.time.substring(0,10)}}</span>
+                  <span class="fr"><em>操作员：</em>{{item.user}}</span>
+                </div>
+                <div class="jine-list-peo" style="line-height: 25px;"><em>农事内容：</em>{{item.content}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="authInfo" class="mui-page">
+      <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+          <span class="mui-icon mui-icon-left-nav"></span><!--返回-->
+        </button>
+        <h1 class="mui-center mui-title">认证信息</h1>
+      </div>
+      <div class="mui-page-content">
+        <div class="mui-scroll-wrapper">
+          <div class="mui-scroll">
+            <div class="mui-content-padded">
+              <div class="line-box" v-for="(item,i) in product.authInfo">
+                <div class="p-img">
+                  <img :src="item.img" >
+                  <div class="figcaption">
+                    <span >{{item.type}}</span>
+                    <span class="fr">{{item.id}}</span>
+                  </div>
+                </div>
+                <div class="service-time">颁证机构：{{item.jg}}</div>
+                <div class="service-time">有效日期：{{item.date.substring(0,10)}} ~ {{item.enabelDate.substring(0,10)}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="seedSource" class="mui-page">
+      <div class="mui-navbar-inner mui-bar mui-bar-nav">
+        <button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+          <span class="mui-icon mui-icon-left-nav"></span><!--返回-->
+        </button>
+        <h1 class="mui-center mui-title">种子来源信息</h1>
+      </div>
+      <div class="mui-page-content">
+        <div class="mui-scroll-wrapper">
+          <div class="mui-scroll">
+            <div class="mui-content-padded">
+              <div class="line-box" v-if="product.seedSource">
+                <div class="service-time" >种子名称：{{product.seedSource.name}}</div>
+                <div class="service-time">生产厂家：{{product.seedSource.source}}</div>
+                <div class="service-time">
+                  <span>采购日期：{{product.seedSource.inDate.substring(0,10)}}</span>
+                  <span class="fr">出厂日期：{{product.seedSource.outDate.substring(0,10)}}</span>
+                </div>
+                <div class="service-time"></div>
+                <div class="p-img">
+                  <img :src="product.seedSource.img1" >
+                  <div class="figcaption border-radius">
+                    <span >生产合格证</span>
+                  </div>
+                </div>
+                <div class="p-img">
+                  <img :src="product.seedSource.img2" >
+                  <div class="figcaption border-radius">
+                    <span >销售商的记录或证书</span>
+                  </div>
+                </div>
+                <div class="p-img">
+                  <img :src="product.seedSource.img3" >
+                  <div class="figcaption border-radius">
+                    <span >非转基因证明</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</body>
+
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=LxK5hRSj8fV4G1G5cjotYljre55QmHDW"></script>
+<script src="../echarts.min.js"></script>
+<script src="../jquery-1.12.3.min.js"></script>
+<script src="./js/vue.min.js"></script>
+<script src="./js/mui.min.js"></script>
+<script src="./js/mui.view.js"></script>
+
+<script src="./js/index.js "></script>
+</html>
