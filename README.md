@@ -4,7 +4,7 @@
 
 ### 智慧农业公众号，算是一个有个讨论的地方,有什么需要支持的可以联系
 
-<img src="https://wenhui-1251454246.cos.ap-nanjing.myqcloud.com/cdz/%E5%85%AC%E4%BC%97%E5%8F%B7/qrcode_for_gh_5c8c1c1a69f8_258.jpg?q-sign-algorithm=sha1&q-ak=AKIDUCDfIrnnECwtD9WGbYa6T91ipKvTvyESqGp8rHwoGJEHfNhMA18wzk7G-VNrlFtW&q-sign-time=1696524040;1696527640&q-key-time=1696524040;1696527640&q-header-list=host&q-url-param-list=ci-process&q-signature=f43d8ec46dd2069678cb3e69a7019b0c3b969c67&x-cos-security-token=9YJe4TKzh7QdGGPb3tMjHylV5FWl8l8aa2336ffa41f3853030ebc2c52dafdfc9y-6A9jasnr4nrcTX079VvNiiAg8dQr9sAX1u1YeQJ0yXL1tSzXS5ENAOgBfCxcHgPdj0fRptlXExm0AfpBIYAQU5e5txx6v7vRRXOptZKi3FNCCfgfC16eOtvtL1BJ_i6wm-Ja_Ima2pGjRjEEPujnLje8k8Hyu0mpaYm-8_1alNz-hyZ70935WbRUNtymE7&ci-process=originImage"/>
+<img src="https://img-blog.csdnimg.cn/86e0196b0ad54c66b59fe64c51ff9d96.png"/>
 
 
 ### 开源智慧农业物联网平台(Version:3.0.2)
