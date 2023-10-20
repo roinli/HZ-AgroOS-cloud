@@ -4,7 +4,7 @@
 
 ### 智慧农业公众号，算是一个有个讨论的地方,有什么需要支持的可以联系
 
-<img src="https://img-blog.csdnimg.cn/86e0196b0ad54c66b59fe64c51ff9d96.png"/>
+<img src="https://img-blog.csdnimg.cn/2078334870644b4cbe3845730ab5fc88.jpeg"/>
 
 
 ### 开源智慧农业物联网平台(Version:3.0.2)
