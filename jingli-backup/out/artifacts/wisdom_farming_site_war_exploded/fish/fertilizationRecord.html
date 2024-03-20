@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>成长记录</title>
+    <link rel="stylesheet" href="../page/css/mui.min.css">
+    <style>
+        .mui-title{color:#227744}
+        .mui-content>table{border-top: 1px solid #ddd;border-bottom: 1px solid #ddd;color:#222;margin: 0 auto;width:100%;table-layout:fixed}
+        .mui-content>table>thead>tr{height:2rem;}
+        table td,table th{font-size :1rem;font-weight: normal;}
+        #fertilization td{text-align: center;color:#8E8E8E;font-size:0.8rem;word-wrap:break-word;padding:0 0.3rem;border-top:1px solid #ddd;height:2.5rem;line-height:2.5rem;}
+    </style>
+</head>
+<body>
+    <header id="myNav" class="mui-bar mui-bar-nav">
+        <a class="mui-icon mui-icon-arrowleft mui-action-back" style="color:#333;font-size:15px;margin-top:5px;" id="back">返回</a>
+        <h1 class="mui-title">成长记录</h1>       
+    </header>
+    <div class="mui-content">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:21%;">记录时间</th>
+                    <th>尺寸</th>
+                    <th>质量</th>
+                    <th>健康状况</th>
+                    <th>记录人</th>
+                </tr>
+            </thead>
+            <tbody id="fertilization">
+                <!-- <tr>
+                    <td style="width:21%">1900-01-01</td>
+                    <td style="width:19%">a1111111211111111111111</td>
+                    <td style="width:18%">a1111111111111</td>
+                    <td style="width:12%">100</td>
+                    <td style="width:13%">a1111111</td>
+                    <td style="width:17%">a111111111</td>
+                </tr> -->
+            </tbody>
+        </table>
+    </div>
+    <script src="../dist/js/jquery-1.9.1.min.js"></script>
+    <script src="../page/js/mui.min.js"></script>
+    <script>
+        $(function(){
+            var growUpContent= JSON.parse(localStorage.getItem('growUpContent'));
+            console.log(growUpContent);
+            var html="";
+            for(var i=0;i<growUpContent.length;i++){
+                html+='<tr>'+
+                        '<td>'+growUpContent[i].time+'</td>'+
+                        '<td>'+growUpContent[i].size+'</td>'+
+                        '<td>'+growUpContent[i].state+'</td>'+
+                        '<td>'+growUpContent[i].quality+'</td>'+
+                        '<td>'+growUpContent[i].employeename+'</td>'+
+                '</tr>'
+            }
+            $("#fertilization").html(html);
+        })
+    </script>
+</body>
+</html>

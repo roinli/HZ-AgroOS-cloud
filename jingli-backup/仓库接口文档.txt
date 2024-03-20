@@ -1,0 +1,492 @@
+﻿----------------------------------------------------------------------------------
+local url:http://127.0.0.1:8080/warehouseInterface 
+oray  url:http://chipcity.6655.la:10145/warehouseInterface
+----------------------------------------------------------------------------------
+调用地址 	
+2.仓库管理列表-(app仓库信息，web管理端使用仓库管理功能)   -- 需要加个id 和仓库名称（仓库名称可选）
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  getWareHouseManage
+mobile      手机号（可选）
+companyId	公司id（可选）
+displayName 产品名称（可选）
+warehouseId	仓库ID（可选）
+type	          公司类型默认传3	
+page		页码（默认传0）
+pageSize	一页几条
+
+返回信息
+statusCode
+message
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "获取成功",
+  "result": []
+}
+
+2.仓库管理Count
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  getWareHouseManageCount
+mobile      手机号（可选）
+companyId	公司id（可选）
+displayName 产品名称（可选）
+warehouseId	仓库ID（可选）
+type	          公司类型默认传3	
+
+返回信息
+statusCode
+message
+
+返回格式
+{
+	"statusCode":1,
+	"message":"获取成功",
+	"result":"0"
+}
+
+3.仓库管理添加
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  insertWareHouseAdd
+userType        用户类型默认且必须是3
+companyId		公司id
+number    		大棚|鱼塘|仓库 编号
+displayName		显示名称
+camera_pass_num 摄像头通道号默认0
+warehouse_name  仓库名称
+warehouse_num 	仓库数量（只对仓库有用）
+warehouse_location 仓库位置（只对仓库有用）
+返回信息
+statusCode
+message
+
+返回格式
+{"statusCode":1,"message":"仓库添加成功"}
+{"statusCode":2,"message":"编号是11仓库已存在"}
+
+
+
+4.仓库管理删除
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method = deleteWareHouse
+userType        用户类型默认且必须是3
+companyId		公司id
+num    			大棚|鱼塘|仓库 编号
+
+返回信息
+statusCode
+message
+
+返回格式
+{"statusCode":1,"message":"仓库删除成功"}
+
+5.仓库管理详情
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  queryWareHouseById
+userType        用户类型默认且必须是3
+companyId		公司id
+num    		大棚|鱼塘|仓库 编号
+
+返回信息
+statusCode
+message
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "仓库管理查询成功",
+  "result": {
+    "id": "224277",    	ID
+    "number": "1",     	仓库 编号
+    "type": "3",	   	仓库类型
+    "company_id": "13",	公司ID
+    "display_name": "1hao-cangku",	仓库名称
+    "camera_pass_num": "0",			摄像头通道号
+    "is_del": "0",					是否删除
+    "warehouse_name": "1hao-cangku",仓库名称（和上面重复）
+    "warehouse_num": "500",			仓库数量（只对仓库有用）
+    "warehouse_location": "beijing",仓库位置（只对仓库有用）
+    "create_time": "2018-08-09 16:45:58.0"	创建时间
+  }
+}
+
+6.仓库管理修改
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  updateWareHouse
+wareHouseID     仓库ID
+camera_pass_num 摄像头通道号默认0
+warehouse_num 	仓库数量
+warehouse_location 仓库位置
+displayName		显示名称
+返回信息
+statusCode
+message
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "仓库管理更新成功"
+}
+
+// ==============前端==============
+7.查下仓库下拉框
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  frontWareHouseList
+userType        用户类型默认且必须是3
+companyId		公司id
+返回信息
+statusCode
+message
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "查询仓库下拉框",
+  "result": [
+    {
+      "id": "224279", // 仓库ID
+      "number": "1",  // 仓库编号
+      "type": "3",    // 仓库类型
+      "company_id": "13", // 公司ID
+      "display_name": "xxxx", // 仓库名称
+      "camera_pass_num": "3",	// 摄像头通道
+      "is_del": "0",			// 是否删除默认0，删除1
+      "warehouse_name": "1hao-cangku",// 该字段无用处
+      "warehouse_num": "1800",        // 仓库数量
+      "warehouse_location": "dongbei",// 仓库位置
+      "create_time": "2018-08-09 17:28:49.0"
+    }
+  ]
+}
+
+
+8.前端显示仓库管理列表（复用2接口）
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  getWareHouseManage
+displayName 仓库名称（默认为空）
+companyId	公司id
+page		页码（默认传0）
+pageSize	一页几条
+
+返回信息
+statusCode
+message
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "获取成功",
+  "result": [
+    {
+      "id": "224279", // 仓库ID
+      "number": "1",  // 仓库编号
+      "type": "3",    // 仓库类型
+      "company_id": "13", // 公司ID
+      "display_name": "xxxx", // 仓库名称
+      "camera_pass_num": "3",	// 摄像头通道
+      "is_del": "0",			// 是否删除默认0，删除1
+      "warehouse_name": "1hao-cangku",// 该字段无用处
+      "warehouse_num": "1800",        // 仓库数量
+      "warehouse_location": "dongbei",// 仓库位置
+      // 差一个库存字段
+      "create_time": "2018-08-09 17:28:49.0"
+    }
+  ]
+}
+
+9.前端显示库存管理列表
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  getInventoryManage
+companyId	公司id	(2018.8.29 新增公司ID)
+warehouseId	仓库Id	(选填)
+page		页码（默认传0）
+pageSize	一页几条
+
+返回信息
+statusCode
+message
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "库存列表获取成功",
+  "result": [
+    {
+      "id": "2",
+      "warehouse_id": "224279",	//入库ID
+      "name": "xx",			   	//产品名称
+      "type": "x",				//产品种类
+      "size": "100吨",			//出库 量
+      "qualified": "80",		//合格率
+      "operator": "13", 		//操作人员
+      "create_time": "2018-08-13 10:34:20.0"// 出库时间
+    },
+    {
+      "id": "3",
+      "warehouse_id": "224279",
+      "name": "xxxx",
+      "type": "1",
+      "size": "134",
+      "operator": "13",
+      "create_time": "2018-08-13 14:54:43.0"
+    }
+  ]
+}
+
+10.前端显示库存管理count
+调用地址 	/warehouseInterface
+POST方式调用
+
+请求参数
+actionName = warehouseService
+method =  getInventoryCount
+companyId	公司id  	(2018.8.29 新增公司ID)
+warehouseId	仓库Id	(选填)
+返回信息
+statusCode
+message
+返回格式
+{
+  "statusCode": 1,
+  "message": "库存Count获取成功",
+  "result": "0"
+}
+
+
+11 ·
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  	insertWarehousesList
+companyId   公司ID
+warehouseId	仓库Id
+ioType      出入库类型： 1 入库 2 出库
+type        种类（选填）
+name		产品名称（选填）
+
+返回信息
+statusCode 1 查询成功
+message
+返回格式
+{
+  "statusCode": 1,
+  "message": "入库列表查询成功",
+  "result": [
+    {
+      "id": "2",
+      "warehouse_id": "224279",// 仓库ID
+      "name": "xx",			   // 产品名称
+      "type": "x",			   // 产品种类
+      "size": "100吨",		   // 入库量
+      "qualified": "80",	   // 合格率
+      "operator": "13",        // 操作人员
+      "create_time": "2018-08-13 10:34:20.0" // 入库时间
+    }
+  ]
+}
+
+
+
+11.添加出入库信息
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  insertWarehousing
+companyId   公司ID(2018.8.28添加)
+warehouseId	仓库Id
+name		产品名称
+type		产品种类（调用12接口）
+size		入库量
+qualified	合格率
+io_time     出入库时间（精确到分钟）（2018.8.30添加)
+operator	操作人员即公司ID
+io_type     类型 1 入库 	2 出库
+返回信息
+statusCode 1 入库信息成功  2 仓库不存在
+message
+返回格式
+{
+  "statusCode": 1,
+  "message": "入库信息成功"
+} 
+  
+12.产品种类
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  getInventoryType
+warehouseId	仓库Id
+
+返回信息
+statusCode 1 获取仓库种类列表成功  2 仓库不存在
+message
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "获取仓库种类列表成功",
+  "result": [
+    {
+      "id": "1", // 种类ID
+      "warehouse_id": "224279",// 仓库ID
+      "name": "大米",// 种类名称
+      "type": "",  
+      "operator": "13",// 添加用户ID
+      "create_time": "2018-08-13 12:29:39.0" // 创建时间
+    }
+  ]
+}13.出库
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  updatePlacing
+inventoryId	入库ID
+name		产品名称
+size		出库量（要传数字类型）
+qualified	合格率
+operator	操作人员即公司ID
+io_type     类型 1 入库 	2 出库
+type    	产品种类（12接口获取）
+返回信息
+statusCode 1 出库成功 2 入库信息不存在不能出库    3 如果出库数量小于入库数量，不能出库
+message
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "出库成功"
+}14.查看-产品信息
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  getViewProInfo
+inventoryId	产品ID或入库ID
+
+返回信息
+statusCode 1 出库成功 2 入库信息不存在不能出库    3 如果出库数量小于入库数量，不能出库
+message
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "产品信息查看成功",
+  "result": {
+    "id": "1",
+    "warehouse_id": "1",
+    "name": "ss",
+    "type": "1",
+    "size": "16",
+    "qualified": "6",
+    "operator": "1",
+    "create_time": "2018-08-09 19:46:10.0"
+  }
+}15.查看-出库记录
+调用地址 	/warehouseInterface
+POST方式调用
+请求参数
+actionName = warehouseService
+method =  getViewOutgoingRecords
+inventoryId	产品ID或入库ID
+
+返回信息
+statusCode 1 出库记录查询成功
+message
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "出库记录查询成功",
+  "result": [
+    {
+      "id": "3",
+      "warehouse_id": "224279",
+      "name": "xxxx",
+      "type": "1",
+      "size": "134",
+      "operator": "13",
+      "create_time": "2018-08-13 14:54:43.0"
+    },
+    {
+      "id": "7",
+      "warehouse_id": "1",
+      "name": "xxxx",
+      "type": "1",
+      "size": "134",
+      "qualified": "60",
+      "operator": "13",
+      "create_time": "2018-08-13 15:44:33.0"
+    }
+  ]
+}
+
+
+
+
+34.（V2.0新）设备管理-获取设备信息和数据web用 
+调用地址 /actionServlet
+POST方式调用
+
+请求参数
+actionName=deviceService
+method=getDeviceInfoByGfNumWeb
+companyId	 // 公司id
+userType       公司类型
+gfNum          大棚、鱼塘编号
+返回信息
+{
+	"statusCode": 1,
+	"message": "获取成功",
+	"result": [{
+			"id": "1",
+			"deviceType": "0",
+			"state": "2",
+			"name": "空气温度",
+			"unit": "℃"
+		},
+		{
+			"id": "2",
+			"deviceType": "0",
+			"state": "2",
+			"name": "空气湿度",
+			"unit": "%"
+		}
+	],
+	"token": "Arl+EyOeC7hOK2FDcysV2gvasGPy/NoRh+8L0ms7QDE="
+}
+
+
+
+
+

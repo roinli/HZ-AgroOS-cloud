@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="permission">
+
+	<select id="getAllRole" resultClass="cn.lookout.base.bean.RoleBean" >
+		SELECT id,name,level,user_type AS userType FROM xt_role;
+	</select>
+	
+	<select id="getRoleUserTypeById" parameterClass="map" resultClass="java.lang.String">
+		SELECT user_type FROM xt_role WHERE id=#roleId#
+	</select>
+	
+	<insert id="saveRole" parameterClass="map">
+		INSERT INTO xt_role(name,level,user_type) VALUES(#name#,#level#,#userType#)
+	</insert>
+	
+	<select id="getAllParent" resultClass="cn.lookout.base.bean.MenuBean" >
+		SELECT id,name AS menuName,menu_flag AS menuFlag FROM xt_menu WHERE parent='0'
+	</select>
+	
+	<select id="getAllMenu" resultClass="cn.lookout.base.bean.MenuChildBean">
+		SELECT xm1.id,xm1.name AS menuName,xm1.menu_flag AS menuFlag
+		,xm2.name AS parent,xm1.url AS menuUrl,xm1.img,xm1.visible,xm1.menu_order AS menuOrder FROM(
+			SELECT id,name,parent,menu_flag,img,menu_order,url,visible FROM xt_menu
+			<isNotEqual property="parent" compareValue="-1">
+				WHERE parent=#parent#
+			</isNotEqual>
+		)xm1
+		LEFT JOIN (
+			SELECT id,name,parent,menu_flag,img,menu_order,url FROM xt_menu
+		)xm2 ON xm1.parent=xm2.menu_flag
+		ORDER BY xm1.parent,xm1.menu_order
+	</select>
+	
+	<insert id="saveMenu" parameterClass="map">
+		INSERT INTO xt_menu(name,parent,menu_flag,url,menu_order) VALUES(
+			#name#,#parent#,#flag#,#url#,#menuOrder#
+		)
+	</insert>
+	
+	<update id="updateMenu" parameterClass="map">
+		UPDATE xt_menu SET name=#name#,menu_flag=#flag#,url=#url#,menu_order=#menuOrder#
+		WHERE id=#id#
+	</update>
+	
+	<update id="updateVisible" parameterClass="map">
+		UPDATE xt_menu SET visible=#visible# WHERE id=#id#
+	</update>
+	
+	<delete id="deleteMenu" parameterClass="map">
+		DELETE FROM xt_menu WHERE menu_flag=#flag# OR parent=#flag#
+	</delete>
+	
+	<select id="getAllFunc" parameterClass="map" resultClass="cn.lookout.base.bean.FunctionBean">
+		SELECT id,name,url FROM xt_func WHERE name LIKE '%$name$%'
+	</select>
+	
+	<insert id="saveFunc" parameterClass="map">
+		INSERT INTO xt_func(name,url) VALUES(#name#,#url#);
+	</insert>
+	
+	<delete id="deleteFunc" parameterClass="map">
+		DELETE FROM xt_func WHERE id=#id#
+	</delete>
+	
+	<select id="getMenuByRole" parameterClass="map" resultClass="cn.lookout.base.bean.MenuRoleBean">
+		SELECT t1.*,IF(t2.id IS NULL,'0','1') AS checked FROM(
+			SELECT xm1.id,xm1.name,IFNULL(xm2.id,0) AS parent,xm1.menu_order FROM(
+					SELECT id,name,parent,menu_order FROM xt_menu
+				)xm1
+				LEFT JOIN (
+					SELECT id,name,menu_flag FROM xt_menu
+				)xm2 ON xm1.parent=xm2.menu_flag
+		)t1
+		LEFT JOIN (SELECT id,menu_id FROM xt_role_menu WHERE role_id=#roleId#) t2 
+		ON t1.id=t2.menu_id
+		ORDER BY parent,menu_order
+	</select>
+	
+	<delete id="deleteRoleMenu" parameterClass="map">
+		DELETE FROM xt_role_menu WHERE role_id=#roleId#
+	</delete>
+	
+	<insert id="saveRoleMenu" parameterClass="map">
+		INSERT INTO xt_role_menu(role_id,menu_id)(
+			SELECT #roleId#,id FROM xt_menu WHERE id IN($menuIds$)
+		)
+	</insert>
+	
+	<select id="getFuncByRole" parameterClass="map" resultClass="cn.lookout.base.bean.FuncRoleBean">
+		SELECT xf.id,xf.name,IF(rf.func_id IS NULL,0,1) AS checked FROM xt_func xf
+		LEFT JOIN (SELECT func_id FROM xt_role_func WHERE role_id=#roleId#) rf ON xf.id=rf.func_id
+	</select>
+	
+	<delete id="deleteFuncByRole" parameterClass="map">
+		DELETE FROM xt_role_func WHERE role_id=#roleId#
+	</delete>
+	
+	<insert id="saveFuncRole" parameterClass="map">
+		INSERT INTO xt_role_func(role_id,func_id)(SELECT #roleId#,id FROM xt_func WHERE id IN ($funcIds$) )
+	</insert>
+	
+	<select id="getAllUser" parameterClass="map" resultClass="cn.lookout.base.bean.UserRoleBean">
+		SELECT tu.id,tu.name,mobile,xtr.name AS `type`,tu.contacts_user AS contactsUser,tu.default_pwd AS pwd,
+			max_cnt AS maxCount,contacts,`state`,DATE_FORMAT(xur.create_time,'%Y-%m-%d %H:%i') AS createTime
+		FROM t_user tu
+		LEFT JOIN xt_user_role xur ON tu.id = xur.user_id
+		LEFT JOIN xt_role xtr ON xur.role_id=xtr.id 
+		WHERE tu.name LIKE '%$name$%' OR tu.mobile LIKE '%$name$%'
+		ORDER BY tu.id DESC
+	</select>
+	
+	<select id="getUserIdByMobile" parameterClass="map" resultClass="java.lang.Integer">
+		SELECT id FROM t_user WHERE mobile=#mobile# 
+	</select>
+	
+	<select id="getUserByMobileRole" parameterClass="map" resultClass="java.lang.Integer">
+		SELECT COUNT(id) FROM xt_user_role WHERE user_id IN(
+			SELECT id FROM t_user WHERE mobile=#mobile# 
+		)
+		AND role_id=#roleId#
+	</select>
+	
+	<insert id="saveUser" parameterClass="map" >
+		INSERT INTO t_user(mobile,name,`type`,max_cnt,contacts,create_time,update_time
+			,camera_url,camera_port,phone_port,camera_uname,camera_pwd,contacts_user,default_pwd)
+		VALUES(#mobile#,#name#,#roleId#,#maxCnt#,#contacts#,NOW(),NOW()
+			,#cameraUrl#,#cameraPort#,#phonePort#,#cameraUname#,#cameraPwd#,#contactsUser#,#pwd#)
+		<selectKey resultClass="int" keyProperty="id">
+	         <![CDATA[SELECT LAST_INSERT_ID() AS ID ]]>
+	    </selectKey>  
+	</insert>
+	
+	<insert id="saveUserRole" parameterClass="map" >
+		INSERT INTO xt_user_role(user_id,role_id,create_time)
+		VALUES(#userId#,#roleId#,NOW())
+	</insert>
+	
+	<update id="updateUserState" parameterClass="map">
+		UPDATE t_user set `state`=#state# WHERE id=#id#
+	</update>
+	
+	<delete id="deleteUser" parameterClass="map"> 
+		DELETE FROM t_user WHERE id=#id#
+	</delete>
+	
+	<insert id="saveGroundFishpond" parameterClass="map">
+		INSERT INTO t_ground_fishpond(`number`,`type`,company_id,display_name,create_time)
+		VALUES(#num#,#userType#,#companyId#,#displayName#, NOW())
+	</insert>
+	
+	
+	<insert id="saveCKGroundFishpond" parameterClass="map">
+		INSERT INTO t_ground_fishpond(`number`,`type`,company_id,display_name,create_time,camera_pass_num,
+		warehouse_num,warehouse_location,warehouse_name
+		)
+		VALUES(#number#,#userType#,#companyId#,#displayName#, NOW(),#camera_pass_num#
+		,#warehouse_num#,#warehouse_location#,#warehouse_name#
+		)
+	</insert>
+	
+	
+	<insert id="saveGroundFishpondList" parameterClass="map">
+		INSERT INTO t_ground_fishpond(`number`,`type`,company_id,display_name,create_time)
+		VALUES 
+		<iterate  property="list" conjunction=",">  
+           (#list[].num#,#userType#,#userId#,#list[].displayName#,NOW())
+      	</iterate>
+	</insert>
+	
+	
+	<select id="queryWareHouseByCgfn" parameterClass="map" resultClass="java.lang.String">
+		SELECT count(*) FROM t_ground_fishpond WHERE `company_id`=#companyId# 
+		AND number=#number#
+		AND type =#userType#
+	</select>
+	<select id="getDeviceIds" parameterClass="map" resultClass="java.lang.String">
+		SELECT id FROM t_device WHERE `type`=#userType# AND park_device=#parkDevice#
+	</select>
+	
+	<insert id="saveDeviceRelation" parameterClass="map" >
+		INSERT INTO t_device_relation(divice_flag,device_id,company_id,
+		ground_fishpond_num,device_type,device_state,create_time)
+		VALUES 
+		<iterate  property="list" conjunction=",">  
+           (#list[].flag#,#list[].deivceId#,#list[].companyId#, #list[].num#, #list[].deviceType#,'2',NOW())
+      	</iterate>
+	</insert>
+	
+	<select id="getUserById" parameterClass="map" resultClass="cn.lookout.base.bean.UserBean">
+		SELECT id,mobile,name,camera_url AS cameraUrl,camera_port AS cameraPort
+			,phone_port AS phonePort,camera_uname AS cameraUname
+			,camera_pwd AS cameraPwd,contacts,contacts_user AS contactsUser
+			,default_pwd AS pwd,exception_mobile AS exceptionMobile
+		FROM t_user
+		WHERE id=#id#
+	</select>
+	<update id="updateUserInfo" parameterClass="map">
+		UPDATE t_user SET name=#name#,camera_url=#cameraUrl#,camera_port=#cameraPort#
+			,phone_port=#phonePort#,camera_uname=#cameraUname#,camera_pwd=#cameraPwd#
+			,contacts=#contacts#,contacts_user=#contactsUser#,update_time=NOW(),exception_mobile=#exceptionMobile#
+		WHERE id=#id#
+	</update>
+	
+	<select id="getUserInfoByPhoneAndRoleId" parameterClass="map" resultClass="cn.lookout.base.bean.UserGfFishListBean">
+		SELECT xur.user_id AS companyId ,xr.user_type AS `type`
+		FROM(
+			SELECT user_id,role_id FROM xt_user_role
+			WHERE role_id=#roleId#
+			AND user_id IN(
+				SELECT id FROM t_user WHERE mobile=#mobile# 
+			)
+		)xur
+		LEFT JOIN xt_role xr ON xur.role_id = xr.id
+	</select>
+	
+	<select id="getGfListInfo" parameterClass="map" resultClass="cn.lookout.base.bean.UserGfFishInfoBean">
+		SELECT id,number AS gfNum,`type`,display_name AS displayName
+			,camera_pass_num AS passNum,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i') AS createTime
+		FROM t_ground_fishpond
+		WHERE company_id=#companyId#
+		AND `type`= #type#
+		AND is_del=0
+	</select>
+	
+	<select id="getNextGfNum" parameterClass="map" resultClass="java.lang.Integer">
+		SELECT IFNULL(MAX(number)+1,1) 
+		FROM t_ground_fishpond
+		WHERE company_id=#companyId#
+	</select>
+	
+	<update id="delGfInfo" parameterClass="map">
+		DELETE FROM t_ground_fishpond WHERE id=#id# AND company_id=#companyId#
+	</update>
+	
+	
+	<update id="delDeviceRelation" parameterClass="map">
+		DELETE FROM t_device_relation 
+		WHERE company_id=#companyId#
+		AND ground_fishpond_num=(SELECT number FROM t_ground_fishpond WHERE id=#id#)
+		AND device_type = #userType#
+	</update>
+	
+	<update id="updateUserMaxCnt" parameterClass="map">
+		UPDATE t_user SET max_cnt=(SELECT COUNT(id) FROM t_ground_fishpond WHERE company_id=#companyId# AND is_del=0) WHERE id=#companyId#
+	</update>
+	
+	
+	
+	<select id="getNumberIsExist" parameterClass="map" resultClass="java.lang.Integer">
+		SELECT COUNT(id) FROM t_ground_fishpond 
+		WHERE company_id=#companyId# AND number=#num#
+		AND `type` = #userType#
+	</select>
+	
+	<select id="getUploadDataIsExist" parameterClass="map" resultClass="java.lang.Integer">
+		SELECT COUNT(id) FROM 
+		<isEqual property="userType" compareValue="0">t_g_data_collection</isEqual>
+		<isEqual property="userType" compareValue="1">t_f_data_collection</isEqual>
+		<isEqual property="userType" compareValue="2">t_t_data_collection</isEqual>
+		WHERE company_id=#companyId# 
+		<isEqual property="userType" compareValue="0">
+			AND ground_num=(SELECT number FROM t_ground_fishpond WHERE id=#id#)
+		</isEqual>
+		<isEqual property="userType" compareValue="1">
+			AND fishpond_num=(SELECT number FROM t_ground_fishpond WHERE id=#id#)
+		</isEqual>
+		<isEqual property="userType" compareValue="2">
+			AND datian_num=(SELECT number FROM t_ground_fishpond WHERE id=#id#)
+		</isEqual>
+	</select>
+	
+	<update id="updatePassNum" parameterClass="map" >
+		UPDATE t_ground_fishpond SET camera_pass_num=#passNum# WHERE id=#id#
+	</update>	
+	
+	<select id="getCompanyDevicesInfo" parameterClass="map" resultClass="cn.lookout.base.bean.DtDeviceSwitchBean">
+		SELECT tdr.id,tdr.deviceId,tdr.switchNum,td.name
+			,tgf.display_name AS displayName,tdr.gfNum AS gfNum
+		FROM(
+			SELECT id,device_id AS deviceId
+			,ground_fishpond_num AS gfNum
+			,device_switch_num AS switchNum
+			FROM t_device_relation 
+			WHERE company_id=#companyId# 
+			<isNotEmpty property="gfNum">
+				AND ground_fishpond_num = #gfNum#
+			</isNotEmpty>
+			AND device_type=#userType# AND is_del=0
+		)tdr
+		LEFT JOIN t_device td ON tdr.deviceId=td.id
+		LEFT JOIN (
+			SELECT number,display_name FROM t_ground_fishpond WHERE company_id=#companyId# AND `type`=#userType#
+		) tgf ON tdr.gfNum=tgf.number
+		WHERE td.device_type=0
+		ORDER BY deviceId
+	</select>
+	
+	<update id="updateDeviceSwitchNum" parameterClass="map">
+		UPDATE t_device_relation SET device_switch_num=#num# WHERE id=#id#
+	</update>
+	
+	<select id="getCompanyIdByDeviceRelation" parameterClass="map" resultClass="java.lang.String">
+		SELECT divice_flag FROM t_device_relation WHERE id=#id# 
+	</select>
+	
+	<delete id="deleteDeviceTimeScheduleSetting" parameterClass="map" >
+		DELETE FROM t_control_device_setting 
+		WHERE compay_id=#companyId# 
+		AND gf_num=#gfNum# 
+		AND device_num=#deviceId# 
+		AND device_switch_num <![CDATA[ > ]]> #switchNum#
+	</delete>
+	
+	<select id="getUserTypeByRoleId" parameterClass="map" resultClass="java.lang.String">
+		SELECT user_type FROM xt_role WHERE id=#roleId#
+	</select>
+	
+ </sqlMap>

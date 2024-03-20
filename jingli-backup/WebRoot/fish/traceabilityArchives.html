@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>鱼类溯源</title>
+    <link rel="stylesheet" href="./page/css/mui.min.css">
+    <link rel="stylesheet" href="./page/css/publicStyle.css">
+    <link rel="stylesheet" href="./dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./dist/css/star-rating.min.css">
+</head>
+<body style="background-color:#efeff4">
+    <header class="mui-bar mui-bar-nav">
+        <h1 class="mui-title">溯源档案</h1>
+    </header>
+    <div class="mui-content">
+        <div class="title_msg"> 
+            <img id="product_img" alt="" style="width:100%">
+            <p id="product_name"></p>
+        </div>
+        <div class="msgList">
+            <div class="msgItem">
+                <div class="msgItem_title" style="text-align:center">作物</div>
+                <div class="msgItem_content" id="product_detail"></div>
+            </div>
+            <div class="icon">|</div>
+            <div class="msgItem">
+                <div class="msgItem_title" style="text-align:center">品种</div>
+                <div class="msgItem_content" id="product_type"></div>
+            </div>
+            <div class="icon">|</div>
+            <div class="msgItem">
+                <div class="msgItem_title" style="text-align:center">上市时间</div>
+                <div class="msgItem_content" id="product_date"></div>
+            </div>
+        </div>
+        <!-- 指标描述 -->
+       <div class="indexDescription">
+            <h4>指标描述</h4>
+            <p id="description" class="indexDescription_msg">
+            </p>
+        </div>
+       <!-- 地图 -->
+        <div id="companyInformation" style="margin-top:10px;">
+            <div class="companyInformationMsg">
+                <div class="companyNameBox">
+                   <span>公司名称</span>
+                   <div id="companyDetail">
+                       <div id="companyName"></div>
+<!--                        <p>营业执照已认证</p> -->
+                   </div>
+                </div>
+                <div class="companyNameBox">
+                    <span>负责人</span>
+                    <div id="leader"></div>
+                </div>
+                <div class="companyNameBox">
+                    <span>地址</span>
+                    <div id="address"></div>
+                </div>
+            </div>
+            <div class="companyInformationAddress">
+                <button class="mui-btn mui-btn-warning">查看地图</button>
+            </div>
+        </div>
+        <div id="allmap" style="margin-top:10px;"></div>
+        
+        <!-- 溯源档案 -->
+        <div id="traceabilityArchives" style="margin-top:10px;">
+<!--             <h4>溯源档案</h4> -->
+            <p id="p_start_level">
+               <span class="archivalIntegrity">档案完整度:</span>
+<!--                <span class="starCount"> -->
+<!--                </span> -->
+            </p>
+            <ul id="traceabilityArchivesList">
+                <li id="fishSource">
+                    <p>
+                        <img src="./img/source/fish_click.png" alt="">
+                    </p>
+                    <p>鱼苗来源</p>
+                </li>
+                <li id="growthPhasePicture">
+                    <p>
+                        <img src="./img/source/grow_click.png" alt="">
+                    </p>
+                    <p>生长期图片</p>
+                </li>
+                <li id="fertilizerUseTable">
+                    <p>
+                        <img src="./img/source/grow_recordclick.png" alt="">
+                    </p>
+                    <p>成长记录</p>
+                </li>
+                <li id="pesticideUseTable">
+                    <p>
+                        <img src="./img/source/feed_click.png" alt="">
+                    </p>
+                    <p>饲料记录</p>     
+                </li>
+                <li id="agriculturalRecordsTable">
+                    <p>
+                        <img src="./img/source/vaccine_click.png" alt="">
+                    </p>
+                    <p>疫苗记录</p>
+                </li>
+                <li id="sourceInformation">
+                    <p>
+                        <img src="./img/source/drug_click.png" alt="">
+                    </p>
+                    <p>用药记录</p>
+                </li>
+                <li id="credentialsTable">
+                        <p>
+                            <img src="./img/source/auth_click.png" alt="">
+                        </p>
+                        <p>认证信息</p>     
+                    </li>
+                <li id="environmentalData">
+                    <p>
+                       	<img src="./img/source/device_click.png" alt="">
+                    </p>
+                    <p>环境数据</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 产品简介 -->
+        <div id="productIntroduction">
+            <h4>产品简介</h4>
+            <p class="indexDescription_msg productIntroductionMsg">
+            </p>
+        </div>
+
+        <!-- 公司简介 -->
+        <div id="companyProfile">
+            <h4>公司简介</h4>
+            <p class="indexDescription_msg companyProfileMsg">
+            </p>
+        </div>
+
+        <!-- 购买信息 -->
+        <div id="purchaseInformation">
+            <h4>购买信息</h4>
+            <div class="indexDescription_msg purchaseInformationMsg">
+                <ul id="operations">
+                    <li class="operationsMsg_left publicStyle">
+                        网店购买
+                    </li>
+                    <li class="operationsMsg_center">
+                        实体店购买
+                    </li>
+                    <li class="operationsMsg_right">
+                        联络方式
+                    </li>
+                </ul>
+                <div id="operationsMsg_left" style="display:block">
+                </div>
+                <div id="operationsMsg_center" style="display:none;">
+                </div>
+                <div id="operationsMsg_right" style="display:none;">
+                    <p>
+                        <span>销售人员</span>
+                        <span class="lastChildRight">联系方式</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+     	<script src="./dist/js/jquery-1.9.1.min.js"></script>
+        <script src="./page/js/mui.min.js"></script>
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=P050awfa2ZlevlfAwjNO1SWu2xgxxS9c"></script>
+        <script src="./fish/js/traceabilityArchives.js"></script>
+        <script src="./dist/js/bootstrap.min.js"></script>
+        <script src="./dist/js/widgets/star-rating.min.js"></script>
+</body>
+</html>

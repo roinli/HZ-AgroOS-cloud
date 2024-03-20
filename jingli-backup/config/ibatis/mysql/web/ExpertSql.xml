@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="expert">
+	
+	<!-- 专家相关start -->
+	<select id="queryExperts" resultClass="cn.lookout.base.bean.ExpertBean" parameterClass="map">
+		select e.* from 
+		t_expert e
+		WHERE 1=1
+		<isNotEmpty property="name">
+			and name like concat('%',#name#,'%')
+		</isNotEmpty>
+		<isNotEqual property="userType" compareValue="99">
+			and `type` = #userType#
+		</isNotEqual>
+		ORDER BY id DESC
+		limit $startRec$,$pageSize$
+	</select>
+	
+	<select id="queryExpertsCount" resultClass="Integer" parameterClass="map">
+		select count(1) 
+		from t_expert e
+		WHERE 1=1
+		<isNotEmpty property="name">
+			and name like concat('%',#name#,'%')
+		</isNotEmpty>
+		<isNotEqual property="userType" compareValue="99">
+			and `type` = #userType#
+		</isNotEqual>
+	</select>
+	
+	<insert id="saveExpert" parameterClass="map">
+		INSERT INTO t_expert(`name`,`type`,`sex`,`icon`,`industry`,`major`,`mobile`,`wechat`,`qq`,`create_time`)
+		VALUES(#name#,#type#,#sex#,#icon#,#industry#,#major#
+			,#mobile#,#wechat#,#qq#,NOW())
+	</insert>
+	
+	<delete id="deleteExpert" parameterClass="map">
+		DELETE FROM t_expert WHERE id IN($ids$)
+	</delete>
+	
+	<!-- 专家相关end -->
+	
+ </sqlMap>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="userInfo">
+
+	<!-- 通过手机号获取用户信息 -->
+	<select id="getUserInfoByPhone" resultClass="cn.lookout.base.bean.UserBean" parameterClass="map">
+		SELECT tu.*,IF(wi.company_id IS NULL,'0','1') AS haveCk
+		FROM(
+			SELECT id,mobile,name,icon,address,contacts,`describe`,default_pwd AS pwd
+				,camera_url as cameraUrl,camera_port as cameraPort,phone_port as phonePort
+				,camera_uname as cameraUname,camera_pwd as cameraPwd,lng,lat,`state`,push_state AS pushState 
+			FROM t_user WHERE mobile=#phone#
+		) tu
+		LEFT JOIN (SELECT DISTINCT company_id FROM t_ground_fishpond WHERE `type` = 3)  
+			wi ON tu.id = wi.company_id
+	</select>
+	
+	<!-- 通过用户id获取用户信息 -->
+	<select id="getUserInfoById" resultClass="cn.lookout.base.bean.UserBean" parameterClass="map">
+		SELECT id,mobile,name,`type`,icon,address,contacts,`describe`,
+			camera_url AS cameraUrl,camera_uname AS cameraUname, camera_pwd AS cameraPwd,camera_port AS cameraPort  
+			,phone_port AS phonePort,lng,lat,`state`,push_state AS pushState
+			,(SELECT IF(COUNT(id)>0,'1','0') FROM t_ground_fishpond 
+				WHERE company_id=#companyId# AND `type` = 3) AS haveCk
+		FROM t_user WHERE id=#companyId#
+	</select>
+	
+	<!-- 通过用户id查询用户类型，多个类型逗号分割 -->
+	<select id="getUserTypesById" resultClass="java.lang.String" parameterClass="map">
+		SELECT GROUP_CONCAT(user_type) FROM xt_role
+		WHERE id IN (
+			SELECT role_id FROM xt_user_role WHERE user_id=#id#
+		)
+	</select>
+	
+	<!-- 查询用户基础信息 -->
+	<select id="queryDescribe" resultClass="cn.lookout.base.bean.UserBean" parameterClass="map">
+		SELECT u.max_cnt as maxCnt,u.`describe`,
+			u.position_lng as positionLng,
+			u.position_lng as positionLat,
+			u.camera_url as cameraUrl,
+			u.camera_port as cameraPort,
+			u.phone_port as phonePort,
+			u.camera_uname as cameraUname,
+			u.camera_pwd as cameraPwd,u.*
+		 FROM t_user u WHERE id=#id#
+	</select>
+	
+	<update id="updateDescribe" parameterClass="map">
+		update t_user set `update_time` = now(),`describe`=#describe#,
+		`contacts` = #contacts#,`icon`=#icon#,address=#address#,name=#name#
+		,lng=#lng#,lat=#lat#
+		where `id` = #companyId#
+	</update>
+	
+	<update id="updateUserInfo" parameterClass="map"> 
+		update t_user set `update_time` = now(),`describe`=#describe#,
+		`contacts` = #contacts#,`icon`=#icon#,address=#address#,name=#name#
+		where `id` = #companyId#
+	</update>
+	
+	
+	
+ </sqlMap>

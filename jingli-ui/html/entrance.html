@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>地址入口</title>
+    <link rel="stylesheet" href="../dist/css/toastr.min.css" >
+    <link rel="stylesheet" href="../dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../dist/css/index_public.css">
+    <link rel="stylesheet" href="../dist/css/sweetalert.css">
+    <style media="screen">
+      body{
+        background: #fff;
+      }
+      .entrance{
+        width: 1000px;
+        margin: 120px auto;
+        font-size: 0;
+      }
+      .entrance-item{
+        display: inline-block;
+        position: relative;
+        width: 300px;
+        margin-left: 30px;
+      }
+      .entrance-item img{
+        display: block;
+        width: 300px;
+      }
+      .entrance-item span{
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 111;
+        width: 300px;
+        height: 186px;
+        line-height: 186px;
+        text-align: center;
+        font-size: 18px;
+        color: #fff;
+        background: rgba(0,0,0,0.6);
+        cursor: pointer;
+      }
+      #warning_icon, #classify{
+        display: none;
+      }
+    </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <!-- header  -->
+    <div class="nav row " id="loadHeader"></div>
+    <div class="row neirong col-xs-12" >
+      <ul class="entrance">
+        <li class="entrance-item">
+          <img src="../img/00.jpg" alt="image">
+          <span>温棚云入口</span>
+        </li>
+        <li class="entrance-item">
+          <img src="../img/11.jpg" alt="image">
+          <span>渔业入口</span>
+        </li>
+        <li class="entrance-item">
+          <img src="../img/22.jpg" alt="image">
+          <span>大田云入口</span>
+        </li>
+      </ul>
+    </div>
+    <div class="row" id="divFooter"></div>
+  </div>
+  <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"></div>
+
+  <script type="text/javascript" type="text/javascript" src="../dist/js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+
+  <script type="text/javascript" type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+  <script type="text/javascript" src="../dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/webuploader.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/jquery.pagination.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/sweetalert.min.js"></script>
+
+  <script type="text/javascript" src="../dist/js/js/comm.js"></script>
+  <script type="text/javascript" src="../dist/js/js/index_head_left.js"></script>
+  <script type="text/javascript">
+      $(document).ready(function(){
+        $("#loadHeader").load("../include/header.html",function(){
+          header();
+        })
+
+        $(".entrance-item").on("click", function() {
+          var id;
+          var index = $(this).index();
+          var loginInfo = sessionStorage.getItem("loginInfo");
+
+          loginInfo = JSON.parse(loginInfo);
+          if(typeof loginInfo == "string" || typeof loginInfo == "String") {
+            loginInfo = JSON.parse(loginInfo);
+          }
+          id = loginInfo.id
+
+          console.log(loginInfo);
+          if (loginInfo.typeAll.indexOf(index) > -1) {
+            loginInfo.type = index.toString();
+            sessionStorage.setItem("loginInfo",JSON.stringify(loginInfo));
+
+            $.ajax({
+              url: URLAPI + "loginServlet",
+              type: "post",
+              data: {
+                "method": "getToken",
+                "companyId": id,
+                "userType": index
+              },
+              dateType: "json",
+              success: function(msg) {
+                if(msg.statusCode == 1) {
+                  setCookie("token", msg.token);
+                }
+                window.location.href = 'companyIndex.html';
+              }
+            })
+          } else {
+            swal({
+              title: "暂未开通",
+              text: "",
+            });
+          }
+        })
+      });
+    </script>
+</body>
+</html>

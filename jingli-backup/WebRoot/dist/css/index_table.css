@@ -1,0 +1,40 @@
+/* table */
+/* input */
+.pitchOn{background:url("../../img/table_input_03.jpg") no-repeat center center;display: inline-block;width: 15px;height:15px;}
+.notPitchOn{background:url("../../img/table_input01_03.jpg") no-repeat center center;display: inline-block;width: 15px;height:15px;}
+
+/* 新增 */
+
+a.add>i{background: url("../../img/addvip.jpg") no-repeat center left ;display:inline-block;padding-left:20px;}
+
+
+/* 会员 */
+/* #clerka{margin-top:30px;margin-left:10px;width:97%;} */
+#clerka th {border:1px solid #ECEFF5;height:60px;padding-left:10px;font-weight:normal}
+#clerka tr {border:1px solid #ECEFF5;height:60px;text-align:center}
+#clerka td {border:1px solid #ECEFF5;height:60px;text-align:left;padding-left:10px;}
+#clerka th.firstCrl,#clerka td.firstCrl{text-align: center;padding-left:0}  
+#clerka img{width:30px;height:30px;}
+#clerka a{color:#fff;}
+.page{height:50px;line-height:50px;margin:50px 0;}
+.option{height:50px;line-height:50px;margin-left:-7px;}
+.option>a.firstChild{margin-left:30px;}
+.option>a.firstChild>i{color:#fff}
+.M-box1{text-align:center}
+.page>.M-box1>a,.page>.M-box1>span{color:#7E7E7E;border:1px solid #ddd;padding:1% 1.5%;margin-left:0.5%;border-radius:2px;}
+.page>.M-box1>a.active,.page>.M-box1>span.active{background:#0583DF;color:#fff;}
+/* table#clerka>tbody{height:700px;}  */
+h4.col-xs-12{padding-left:5px;}
+
+
+/* 11.17 添加员工*/
+#fileList-geren{display:inline-block }
+#fileList-geren img{width:100px;height:100px;}
+#uploader-demo-geren{position: relative;top:-44px;left:20%;display: inline-block;}
+#filePicker-geren{position: absolute;top:7px;left:10px;opacity: 0}
+.user_sex{display: inline-block;width:10%;position: relative;cursor: pointer}
+.sex_user>label{padding-left:20px;}
+.user_sex>i.sex_public{display: inline-block;width:15px;height: 15px;background:url("../../img/pernal_sex2_03.jpg") no-repeat center center;position:absolute;left:0; top:0;}
+.user_sex>i.sex_moren{display: inline-block;width:15px;height: 15px;background:url("../../img/pernal_sex1_03.jpg") no-repeat center center;position:absolute;left:0; top:0;}
+.user_sex>label{padding-left:20px;}
+.xinzeng{display:inline-block;width:20px;height:20px;background:url('../../img/source/xinjian.jpg') no-repeat center center; vertical-align:middle;margin-top:-2px;}

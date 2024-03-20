@@ -1,0 +1,519 @@
+﻿url:http://127.0.0.1:8080/
+======================================================
+1.获取所有权限（一般用于下拉）
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  getAllRole
+返回格式
+{
+    "statusCode": 1,
+    "result": [
+        {
+            "id": 3,
+            "name": "农业权限",
+            "level": "3",
+            "userType": "0"
+        }
+    ]
+}
+======================================================
+2.新增权限
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  saveRole
+name	权限名称
+level	权限等级
+userType	用户类型
+返回格式
+{
+}
+======================================================
+3.获取所有父级菜单
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  getAllParent
+返回格式
+{
+    "statusCode": 1,
+    "result": [
+        {
+            "id": 1,
+            "menuName": "权限管理",
+            "menuFlag": "A"
+        },
+        {
+            "id": 5,
+            "menuName": "账号管理",
+            "menuFlag": "B"
+        }
+    ]
+}
+======================================================
+4.获取所有菜单
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  getAllMenu
+parent	父级菜单id（查看所有传-1）
+返回格式
+{
+    "statusCode": 1,
+    "result": [
+        {
+            "id": 1,
+            "menuName": "权限管理",
+            "menuUrl": "",
+            "menuFlag": "A",
+            "img": "statistics.png",
+            "menuOrder": "1",
+            "visible": 1
+        },
+        {
+            "id": 5,
+            "menuName": "账号管理",
+            "menuUrl": "",
+            "menuFlag": "B",
+            "img": "link.png",
+            "menuOrder": "2",
+            "visible": 1
+        }
+    ]
+}
+======================================================
+5.新增菜单
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  saveMenu
+name	菜单名
+parent	父级菜单id（若是父级菜单传0）
+flag	菜单标识
+url		跳转url
+menuOrder	顺序
+返回格式
+{
+}
+======================================================
+6.修改菜单
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  updateMenu
+name	菜单名
+flag	菜单标识
+url		跳转url
+menuOrder	顺序
+id		菜单Id
+返回格式
+{
+}
+======================================================
+7.修改菜单显示隐藏
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  updateVisible
+visible	 1显示0隐藏
+id		菜单Id
+返回格式
+{
+}
+======================================================
+8.删除菜单
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  deleteMenu
+flag	 菜单标识
+返回格式
+{
+}
+======================================================
+9.获取所有方法
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  getAllFunc
+name	 方法关键字
+返回格式
+{
+    "statusCode": 1,
+    "result": [
+        {
+            "id": 2,
+            "name": "权限管理-查询",
+            "url": "/actionServlet?actionName=permissionService&method=getAllRole"
+        },
+        {
+            "id": 3,
+            "name": "菜单管理-父级菜单查询",
+            "url": "/actionServlet?actionName=permissionService&method=getAllParent"
+        }
+    ]
+}
+======================================================
+10.新增方法
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  saveFunc
+name	 方法名描述
+url		方法Url
+返回格式
+{
+}
+======================================================
+11.删除方法
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  deleteFunc
+id	 方法id
+返回格式
+{
+}
+======================================================
+12.通过权限查询菜单
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  getMenuByRole
+roleId	 权限id
+返回格式
+{
+    "statusCode": 1,
+    "result": [
+        {
+            "id": 1,
+            "text": "权限管理",
+            "children": [
+                {
+                    "id": 2,
+                    "text": "权限管理",
+                    "state": {
+                        "selected": false
+                    }
+                },
+                {
+                    "id": 3,
+                    "text": "菜单管理",
+                    "state": {
+                        "selected": false
+                    }
+                }
+            ]
+        }
+    ]
+}
+======================================================
+13.修改菜单-权限的关联关系
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  updateMenuRole
+menuIds	 菜单id（逗号分割）
+roleId	权限id
+返回格式
+{
+}
+======================================================
+14.通过权限查询对应方法
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  getFuncByRole
+roleId	权限id
+返回格式
+{
+    "statusCode": 1,
+    "result": [
+        {
+            "id": 1,
+            "name": "权限管理-新增",
+            "checked": 0
+        },
+        {
+            "id": 2,
+            "name": "权限管理-查询",
+            "checked": 0
+        }
+    ]
+}
+======================================================
+15.修改方法-权限对应关系
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  updateFuncRole
+funcIds	方法id（逗号分割）
+roleId	权限id
+返回格式
+{
+}
+======================================================
+16.查询所有用户
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  getAllUser
+name	关键字
+返回格式
+{
+    "statusCode": 1,
+    "result": [
+        {
+            "id": 126,
+            "mobile": "17688888888",
+            "name": "农业渔业大田三合一账号",
+            "type": "大田权限",
+            "maxCount": "2",
+            "contacts": "15600121111",
+            "state": "1",
+            "createTime": "2018-08-13 10:18",
+            "contactsUser": "17688888888",
+            "pwd": "123456"
+        },
+        {
+            "id": 126,
+            "mobile": "17688888888",
+            "name": "农业渔业大田三合一账号",
+            "type": "渔业权限",
+            "maxCount": "2",
+            "contacts": "15600121111",
+            "state": "1",
+            "createTime": "2018-08-13 10:17",
+            "contactsUser": "17688888888",
+            "pwd": "123456"
+        },
+        {
+            "id": 126,
+            "mobile": "17688888888",
+            "name": "农业渔业大田三合一账号",
+            "type": "农业权限",
+            "maxCount": "2",
+            "contacts": "15600121111",
+            "state": "1",
+            "createTime": "2018-08-13 10:16",
+            "contactsUser": "17688888888",
+            "pwd": "123456"
+        }
+    ]
+}
+======================================================
+17.新增用户
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  saveUser
+roleId	权限id
+maxCnt	组织数
+mobile	注册手机号
+name	公司名
+contactsUser	联系方式
+返回格式
+{
+}
+======================================================
+18.修改用户禁用、启用
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  updateUserState
+state	1启用 0禁用
+id		账号id
+返回格式
+{
+}
+======================================================
+19.删除用户
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  deleteUser
+id		账号id
+返回格式
+{
+}
+======================================================
+20.根据公司id获取基本信息
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  getUserById
+id		账号id
+返回格式
+{
+    "statusCode": 1,
+    "result": {
+        "id": "126",
+        "mobile": "17688888888",
+        "name": "农业渔业大田三合一账号",
+        "contacts": "15600121111",
+        "cameraUrl": "21d632d012.51mypc.cn",
+        "cameraUname": "admin",
+        "cameraPwd": "pt123456",
+        "cameraPort": "10964",
+        "phonePort": "10514",
+        "contactsUser": "17688888888",
+        "pwd": "123456"
+    }
+}
+======================================================
+21.根据公司id修改基本信息
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  updateUserInfo
+id		账号id
+name	公司名
+cameraUrl	摄像头Url
+cameraPort	摄像头端口
+phonePort	手机端口
+cameraUname	摄像头用户名
+cameraPwd	摄像头密码
+contacts	联系方式
+contactsUser	联系人
+返回格式
+{
+}
+======================================================
+22.（2.0新）获取大棚、鱼塘信息列表(需要根据手机号、类型搜索)
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  getGfListInfo
+mobile		手机号
+roleId	权限id
+返回格式
+{
+    "statusCode": 1,
+    "message": "获取成功",
+    "result": {
+        "companyId": "126",
+        "type": "0",
+        "list": [
+            {
+                "id": "224280",
+                "gfNum": "1",
+                "type": "0",
+                "createTime": "2018-08-13 10:16",
+                "displayName": "1号大棚",
+                "passNum": "1"
+            },
+            {
+                "id": "224281",
+                "gfNum": "2",
+                "type": "0",
+                "createTime": "2018-08-13 10:16",
+                "displayName": "2号大棚",
+                "passNum": "2"
+            }
+        ]
+    }
+}
+======================================================
+23.增加、删除公司组织信息
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  updateGfFishInfo
+companyId	公司id
+userType	公司类型
+num			大棚、鱼塘、大田编号
+id			组织id(若新增，则传空)
+返回格式
+======================================================
+24.（2.0新）修改摄像头通道号
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  updatePassNum
+id			组织id
+passNum		通道号
+返回格式
+{
+    "statusCode": 1,
+    "message": "修改成功"
+}
+======================================================
+25.（2.0新）通过公司手机号、角色类型获取公司的动态设备信息（设备名称，开关数等）
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  getCompanyDevicesInfoByPhone
+mobile		手机号
+roleId	权限id
+gfNum	大棚、鱼塘、大田编号（查看所有传0）
+返回格式
+{
+    "statusCode": 1,
+    "message": "获取成功",
+    "result": [
+        {
+            "id": "59166",
+            "deviceId": "61",
+            "switchNum": "2",
+            "name": "水泵",
+            "displayName": "1号大棚"
+        },
+        {
+            "id": "59168",
+            "deviceId": "62",
+            "switchNum": "1",
+            "name": "天窗",
+            "displayName": "1号大棚"
+        },
+        {
+            "id": "59170",
+            "deviceId": "63",
+            "switchNum": "1",
+            "name": "供热",
+            "displayName": "1号大棚"
+        }
+    ]
+}
+======================================================
+26.（2.0新）修改设备开关数
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = permissionService
+method =  updateDeviceSwitchNum
+id		上一个接口的id
+num		开关数量
+返回格式
+{
+    "statusCode": 1,
+    "message": "修改成功"
+}
+======================================================
+
+

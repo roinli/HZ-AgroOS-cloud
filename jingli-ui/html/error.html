@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>报警</title>
+    <link rel="stylesheet" href="../dist/css/toastr.min.css" >
+    <link rel="stylesheet" href="../dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../dist/css/index_public.css">
+    <link rel="stylesheet" href="../dist/css/error.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <!-- header  -->
+    <div class="nav row " id="loadHeader"></div>
+    <div class="row neirong" >
+      <!-- 侧边导航 -->
+      <div id="div1" class="sidebar col-xs-2"></div>
+      <!-- 主题内容 -->
+      <div class="main col-xs-10 row animated fadeInRight" style="min-height:800px;background-color:#F4F7FE;padding:15px 0;">
+        <div id="companyInfoDiv" class="col-xs-12">
+          <div class="wareList-wrapper">
+            <div class="wareList-head">
+              报警
+            </div>
+            <div class="error-nav">
+              <div class="error-nav-day">
+                <img src="../img/circle_b.png" alt="" />
+                <span>今日</span>
+              </div>
+              <div class="error-nav-day">
+                <img src="../img/circle_w.png" alt="" />
+                <span>近7日</span>
+              </div>
+              <div class="error-nav-day">
+                <img src="../img/circle_w.png" alt="" />
+                <span>近30日</span>
+              </div>
+              <div class="error-nav-day">
+                <img src="../img/circle_w.png" alt="" />
+                <span>自定义</span>
+              </div>
+              <div class="error-nav-read">全部标记为已读</div>
+              <div class="error-nav-sel-wra">
+                <span>全部：</span>
+                <select class="" value="选择类型">
+                  <option value="1">选择</option>
+                </select>
+              </div>
+              <div class="error-nav-time">
+                <i class="error-nav-time-icon glyphicon glyphicon-calendar"></i>
+                <input type="text" name="name" placeholder="开始时间">
+                <span>至</span>
+                <input type="text" name="name" placeholder="结束时间">
+              </div>
+              <div class="error-nav-search-wra">
+                <input type="text" name="name" placeholder="关键字搜索">
+                <i class="error-nav-search glyphicon glyphicon-search"></i>
+              </div>
+            </div>
+            <div class="error-content">
+              <ul class="error-content-head">
+                <li>类型</li>
+                <li>内容</li>
+                <li>时间</li>
+                <li>来源</li>
+                <li>详情</li>
+              </ul>
+              <ul class="error-content-con">
+                <li>农业</li>
+                <li>世界世界世界</li>
+                <li>2018-01-01</li>
+                <li>
+                  <span>80后</span>
+                  <span>VIP</span>
+                  <span>VIP决策人</span>
+                </li>
+                <li>详情详情详情详情详情详情详情</li>
+              </ul>
+              <ul class="error-content-con">
+                <li>农业</li>
+                <li>世界世界世界</li>
+                <li>2018-01-01</li>
+                <li>
+                  <span>80后</span>
+                  <span>VIP</span>
+                  <span>VIP决策人</span>
+                </li>
+                <li>详情详情详情详情详情详情详情</li>
+              </ul>
+              <ul class="error-content-con">
+                <li>农业</li>
+                <li>世界世界世界</li>
+                <li>2018-01-01</li>
+                <li>
+                  <span>80后</span>
+                  <span>VIP</span>
+                  <span>VIP决策人</span>
+                </li>
+                <li>详情详情详情详情详情详情详情</li>
+              </ul>
+            </div>
+
+            <div class="wareList-foot">
+              <!-- 底部 分页 -->
+              <div class="wareList-foot-page">
+                <nav aria-label="Page navigation">
+                  <ul class="pagination">
+                    <li>
+                      <a href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                    </li>
+                    <li class="active"><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li>
+                      <a href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+              <div class="wareList-foot-jump">
+                跳至
+                <input type="text" name="" value="20">
+                页
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 11.17 -->
+        <!-- <div class="M-box1 col-xs-12" style="text-align:right;">
+          456
+        </div> -->
+      </div>
+    </div>
+    <div class="row" id="divFooter"></div>
+  </div>
+  <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"></div>
+
+  <script type="text/javascript" type="text/javascript" src="../dist/js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+
+  <script type="text/javascript" type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+  <script type="text/javascript" src="../dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/webuploader.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/jquery.pagination.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/sweetalert.min.js"></script>
+
+  <script type="text/javascript" src="../dist/js/js/comm.js"></script>
+  <script type="text/javascript" src="../dist/js/js/index_head_left.js"></script>
+  <script type="text/javascript">
+      $(document).ready(function(){
+        $("#div1").load('../include/left_title.html',function(){
+          menu();
+        })
+        $("#loadHeader").load("../include/header.html",function(){
+          header();
+        })
+        $("#personal").load("../include/modelpersonal.html",function(){
+          personalModel();
+        })
+      });
+    </script>
+</body>
+</html>

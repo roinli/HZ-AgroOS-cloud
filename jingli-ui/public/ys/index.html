@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="keywords" content="enter,your,keywords,here" />
+    <meta http-equiv="description" content="A short description of this page." />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="./css/ui.jqgrid.css">
+    <link rel="stylesheet" href="./css/nprogress.css">
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+<body onbeforeunload="Index.destory_activex()">;
+<div class="main clearfix">
+    <div class="mainbanxin">
+        <div id="errormsg"></div>
+        <div class="clearfix func">
+            <div class="login">
+                <ul class="clearfix">
+                    <li class="loginTtile">
+                        <span>Local Login</span>
+                    </li>
+                    <li>
+                        <span>Camera IP</span>
+                        <input type="text" id="cameraIp">
+                    </li>
+                    <li>
+                        <span>Port</span>
+                        <input type="text" id="port">
+                    </li>
+                    <li>
+                        <span>Username</span>
+                        <input type="text" id="localusername">
+                    </li>
+                    <li>
+                        <span>Password</span>
+                        <input id="localpassword">
+                    </li>
+                    <li style="margin-left: 140px;">
+                        <span>Device Type</span>
+                        <select id="localdeviceType">
+                            <option value="1">IPC</option>
+                            <option value="101">NVR</option>
+                            <option value="501">VMS</option>
+                        </select>
+                    </li>
+                    <li>
+                        <span>Protocol</span>
+                        <select id="localprotocol">
+                            <option value="0">ONVIF</option>
+                            <option value="1">Private</option>
+                        </select>
+                    </li>
+                </ul>
+                <div class="loginBtn">
+                    <input type="button" value="Login" class="loginIn" id="locallogin">
+                    <input type="button" value="Login Out" id="localloginout" >
+                </div>
+            </div>
+            <div class="localDevlist" id="localDevlist">
+                <ul class="localDevlistul clearfix">
+                    <li>
+                        <span>Get ChannelList</span>
+                    </li>
+                    <li class="getlocallistli clearfix">
+                        <input type="button" value="Get Local List" id="getlocallist" >
+                    </li>
+                </ul>
+                <div id="girdtableDiv">
+                    <!--<table id="girdTable"></table>-->
+                </div>
+            </div>
+            <div class="cloudlogin">
+                <ul class="clearfix">
+                    <li class="cloudloginTtile">
+                        Cloud Login
+                    </li>
+                    <li>
+                        <span>URL</span>
+                        <input type="text" id="cloudUrl" value="http://ezcloud.uniview.com">
+                    </li>
+                    <li>
+                        <span>User/Dev name</span>
+                        <input type="text" id="cloudUsername" value="j00504">
+                    </li>
+                    <li>
+                        <span>Password</span>
+                        <input type="text" id="cloudPwd" value="j00504">
+                    </li>
+                </ul>
+                <div class="loginBtn">
+                    <input type="button" value="Login" class="loginIn" id="cloudLogin">
+                    <input type="button" value="Login Out" id="cloudloginout" >
+                </div>
+            </div>
+            <div class="localDevlist">
+                <ul class="localDevlistul cloudDevlistul clearfix">
+                    <li>
+                        <span>Get ChannelList</span>
+                    </li>
+                    <li class="getlocallistli clearfix">
+                        <input type="button" value="Get Dev List" id="getclouddevlist" >
+                    </li>
+                </ul>
+                <div id="clouddevgirdTablediv">
+                    <!--<table id="cloudgirdTable"></table>-->
+                </div>
+            </div>
+            <div class="DevLogin cloudlogin">
+                <ul class="clearfix" style="margin-bottom:10px;">
+                    <li class="cloudloginTtile">
+                        Dev Login
+                    </li>
+                    <li class="DevLoginbtn">
+                        <span>Dev Name</span>
+                        <input type="text" id="cloudDevName" value="Device00002">
+                        <span>Dev Password</span>
+                        <input type="text" id="cloudDevPwd" value="123456">
+                        <span>Device Type</span>
+                        <select id="cloudDevType">
+                            <option value="501">VMS</option>
+                            <option value="1">IPC</option>
+                            <option value="101" selectd>NVR</option>
+                        </select>
+                        <span>Protocol</span>
+                        <select id="cloudprotocol">
+                            <option value="0">ONVIF</option>
+                            <option value="1">Private</option>
+                        </select>
+                        <input type="button" value="Dev Login" id="cloudDevLogin">
+                        <input type="button" value="Dev Login Out" id="cloudDevLoginout">
+                    </li>
+                </ul>
+
+            </div>
+            <div class="localDevlist">
+                <ul class="localDevlistul clearfix">
+                    <li>
+                        <span>Get Cloud ChannelList</span>
+                    </li>
+                    <li class="getlocallistli clearfix">
+                        <input type="button" value="Get Cloud List" id="getdevcloudlist" >
+                    </li>
+                </ul>
+                <div id="clouddevlisttableDiv">
+                    <!--<table id="clouddevlisttable"></table>-->
+                </div>
+            </div>
+            <div class="funcBtn fl" id="funBtn">
+                <div class="PresetTitle">
+                    FUN
+                </div>
+                <div class="funcBtnCommon funcBtnHeight">
+                    <span>Channel ID</span>
+                    <input type="text" id="DevchannelID" value="1">
+                </div>
+                <div class="funcBtnCommon funcBtnHeight">
+                    <span>Live</span>
+                    <input type="button" id="startvideo" value="Open Live" >
+                    <input type="button" id="closevideo" value="Close Live" >
+                </div>
+                <div class="funcBtnCommon funcBtnHeight">
+                    <span>Record</span>
+                    <input type="button" value="Start Record" id="startRecord">
+                    <input type="button" value="Stop Record" id="stopRecord">
+                    <div id="recordfiledispaly" class="hidden">
+                        <span>save To</span>
+                        <span id="recordfileurl"></span>
+                    </div>
+                </div>
+                <div class="funcBtnCommon clearfix">
+                    <div class="fl clearfix">
+                        <span style="margin-top: 5px;">Sound</span>
+                    </div>
+                    <div class="fr clearfix soundBtn">
+                        <div class="volumeInputBtn">
+                            <input type="button" value="Open Sound" id="opensound">
+                            <input type="button" value="Close Sound" id="closesound">
+                        </div>
+                        <div class="volumeInputBtn">
+                            <input type="button" value="Get Sound" id="getsound">
+                            <input type="button" value="Set Sound" id="setsound">
+                        </div>
+                        <div class="volumeinput">
+                            <span>Volume</span>
+                            <input type="text" id="soundvalue">
+                        </div>
+                    </div>
+                </div>
+                <div class="funcBtnCommon funcSnapBtn">
+                    <span>Snapshot</span>
+                    <input type="button" value="Snapshot" id="snapshot">
+                    <div style="margin-top: 5px;" class="hidden" id="snapshoturldiv">
+                        <span>Save to</span>
+                        <span style="margin-top: 5px; margin-left: -10px;" id="snapshoturl"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="Preset fl" id="presetBtn">
+                <div class="PresetTitle">
+                    Preset
+                </div>
+                <div class="presetControl clearfix">
+                    <div></div>
+                    <ul class="clearfix" id="presetul">
+                        <li id="turnNW">NW</li>
+                        <li id="turnUP">UP</li>
+                        <li id="turnNE">NE</li>
+                        <li id="turnL">L</li>
+                        <li id="turnSTOP">STOP</li>
+                        <li id="turnR">R</li>
+                        <li id="turnSW">SW</li>
+                        <li id="turnDN">DN</li>
+                        <li ID="turnSE">SE</li>
+                    </ul>
+                </div>
+                <div class="getPreset">
+                    <span class="getpresettitle">Preset</span>
+                    <input type="button" value="Get" id="getPreset">
+                    <select id="presetlistcontent">
+
+                    </select>
+                </div>
+                <div class="setPreset">
+                    <div class="setPresetInput">
+                        <span class="setPresetInputTitle">Set Preset</span>
+                        ID:
+                        <input type="text" id="presetID">
+                        Name:
+                        <input type="text" id="presetName">
+                    </div>
+                    <div class="setPresetBtn">
+                        <input type="button" value="Set" id="setpreset">
+                        <input type="button" value="GoTo" id="gotpreset">
+                        <input type="button" value="Delete" id="deletepreset">
+                    </div>
+                </div>
+            </div>
+            <div class="Query fl" id="queryBtn">
+                <div class="queryTitle">Query</div>
+                <div class="queryTime">
+                    Start: <input type="text" class="Wdate" id="startQuerytime" onclick="Index.queryclick()">
+                    End: <input type="text" class="Wdate" id="endQuerytime" onClick="Index.queryclick()">
+                </div>
+                <div class="queryBtn">
+                    <input type="button" value="Common" id="commonquery">
+                    <input type="button" value="Find All" id="FindAll">
+                </div>
+                <div id="querytablediv" style="margin-top:10px;">
+                    <!--<table id="querytable" class="querytable"></table>-->
+                </div>
+                <!--<div class="queryBtn">-->
+                    <!--<input type="button" value="Find Next File" id="findNextfile" >-->
+                    <!--<input type="button" value="Close Find" id="closefind">-->
+                <!--</div>-->
+                <div class="playback">
+                    <span>Playback</span>
+                    <input type="button" value="By Time" id="byTime">
+                    <input type="button" value="Stop" id="stopbytime">
+                </div>
+                <div class="download">
+                    <span>Download</span>
+                    <input type="button" value="By Time" id="downloadbytime">
+                    <input type="button" value="Stop" id="stopdownload">
+                </div>
+                <div class="download" id="downloadpathurldiv" class="hidden">
+                    <span>Save To</span>
+                    <span id="downloadpathurl"></span>
+                </div>
+                <div class="progress">
+                    <div>
+                        <span>Progress</span>
+                        <input type="button" value="Get" id="getprogress">
+                        <input type="text" id="getprogresstime" style="width: 115px;">
+                        <!--<input type="button" value="Set" id="setprogress">-->
+                    </div>
+                    <div style="margin-top: 5px;">
+                        <span></span>
+                        <input type="button" value="Set" id="setprogress">
+                        <!--<input type="text" id="getprogresstime">-->
+                        <input type="text" class="Wdate" id="setprogresstime" onclick="Index.queryclick()" style="width: 115px;">
+                    </div>
+                    <div style="margin-top: 5px; margin-bottom: 32px;">
+                        <span></span>
+                        <input type="button" value="Resume" id="resumeprogress">
+                        <input type="button" value="Pause" id="pauseprogress">
+                    </div>
+                </div>
+            </div>
+            <div class="Log fl">
+                <div class="logTitle">Log</div>
+                <div class="logBtn logBtnOpen" style="margin-bottom:10px;">
+                    <input type="text" id="logpath" value="C:\sdklog">
+                </div>
+                <div class="logBtn logBtnOpen">
+                    <input type="button" value="set path" id="setlogpath" style="margin-bottom:10px;">
+                </div>
+                <div class="logBtn logBtnOpen">
+                    <input type="button" value="OpenLog" id="openLog">
+                </div>
+                <div class="logBtn logBtnClose">
+                    <input type="button" value="CloseLog" id="closeLog">
+                </div>
+            </div>
+        </div>
+        <div class="ocxStyle">
+            <div id="playerContainer"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script src="js/plugins/jquery.min.js"></script>
+<script src="js/plugins/json2.js"></script>
+<script src="js/plugins/jquery.jqGrid.min.js"></script>
+<script src="js/plugins/msgbox.js"></script>
+<script src="js/plugins/nprogress.js"></script>
+<script src="js/common/comscript.js"></script>
+<script src="lang/zh_lang.js"></script>
+<script src="js/common/utils.js"></script>
+<!--控件加载Begin-->
+<script src="js/common/plugin.js"></script>
+<script src="js/common/sdkviewer.js"></script>
+<!--控件加载End-->
+<script src="js/common/index.js"></script>
+
+

@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="../dist/css/normalize.css">
+    <link rel="stylesheet" href="../dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../dist/css/index_public.css">
+    <link rel="stylesheet" href="../dist/css/webuploader.css">
+    <link rel="stylesheet" href="../dist/css/device_manage.css">
+    <link rel="stylesheet" href="../dist/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../dist/css/iCheck/custom.css">
+    <link rel="stylesheet" href="../dist/css/switchery.css">
+    <link rel="stylesheet" href="../dist/css/animate.css">
+    <link rel="stylesheet" href="../dist/css/toastr.min.css">
+    <script src="../dist/js/jquery-1.9.1.min.js"></script>
+    <script src="../dist/js/widgets/switchery.js"></script>
+    <script src="../dist/js/iCheck/icheck.min.js"></script>
+    <script src="../dist/js/js/comm.js"></script>
+    <script src="../dist/js/My97DatePicker_ie9/WdatePicker.js"></script>
+    <script src="../dist/js/bootstrap.min.js"></script>
+    <script src="../dist/js/widgets/webuploader.min.js"></script>
+    <script src="../dist/js/js/device_manage.js"></script>
+    <script src="../dist/js/js/webVideoCtrl.js"></script>
+    <!-- Toastr script -->
+    <script src="../dist/js/widgets/toastr.min.js"></script>
+    <!-- Toastr style -->
+    <link rel="stylesheet" href="../dist/css/sweetalert.css">
+    <script src="../dist/js/widgets/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+    <style media="screen">
+      body{
+        min-height: 620px;
+        background: rgba(0,0,0,0.8);
+      }
+      .toast-title {
+      color: #FFFFFF;
+      }
+
+      .toast-message {
+      color: #FFFFFF;
+      }
+
+      .mask {
+      position: absolute;
+      top: 0px;
+      filter: alpha(opacity=60);
+      background-color: #777;
+      z-index: 1002;
+      left: 0px;
+      opacity: 0.5;
+      -moz-opacity: 0.5;
+      display: none;
+      }
+
+      #myTab>li {
+      float: left;
+      width: 200px;
+      text-align: center;
+      }
+
+      #myTab>li:hover {
+      cursor: pointer
+      }
+
+      #myTab>li>a {
+      color: #A8A9AB;
+      font-size: 14px
+      }
+
+      .disconnectionEquipmentBg {
+      background: url("../img/qietu/linkHas.png") no-repeat;
+      }
+
+      .disconnectionEquipmentBgNo {
+      background: url("../img/qietu/linkNo.png") no-repeat;
+      }
+
+      .normalList {
+      border: 1px solid #ddd;
+      margin-left: 7px;
+      float: left;
+      width: 100%;
+      text-align: center;
+      }
+
+      .normalList>li {
+      float: left;
+      width: 50%;
+      height: 80px;
+      line-height: 80px;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 50px;
+      border-bottom: 1px dashed #ddd;
+      }
+
+      .normalList>li>b {
+      font-family: "impact","Microsoft YaHei","SimHei";
+      font-size: 16px;
+      color: #666585;
+      }
+
+      .normalList>li>a {
+      color: #7F8387
+      }
+
+      .clearfix::after {
+      content: "";
+      display: block;
+      clear: both;
+      }
+
+      .linkNormal a {
+      color: #828689;
+      font-size: 14px;
+      }
+
+      .linkNormal b {
+      color: #656486;
+      font-size: 16px;
+      }
+
+      .noImg {
+      text-align: center;
+      margin-top: 100px;
+      }
+
+      .noImg>p {
+      font-size: 14px;
+      }
+
+      #title_company_name {
+      font-size: 20px;
+      font-family: "黑体"
+      }
+
+      #triangle-right {
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-left: 6px solid #A9A9A9;
+      border-bottom: 5px solid transparent;
+      }
+      /* TODO */
+      .quyu-wra {
+      height: 60px;
+      line-height: 60px;
+      padding-left: 20px;
+      font-size: 18px;
+      }
+
+      .quyu-wra select {
+      display: inline-block;
+      width: 200px;
+      font-size: 14px;
+      padding: 8px 0;
+      text-indent: 1em;
+      border-radius: 6px;
+      -webkit-border-radius: 6px;
+      outline: none;
+      }
+
+      .quyu-search {
+      display: inline-block;
+      width: 100px;
+      text-align: center;
+      cursor: pointer;
+      }
+
+      .shipin-wra {
+      width: 110px;
+      height: 36px;
+      line-height: 36px;
+      margin-top: 12px;
+      margin-right: 20px;
+      border: 1px solid #1885dc;
+      color: #1885dc;
+      text-align: center;
+      border-radius: 10px;
+      -webkit-border-radius: 10px;
+      cursor: pointer;
+      }
+
+      .kongzhi-wra {
+        /*height: 40px;*/
+      font-size: 0;
+      }
+
+      .kongzhi-wra .tit {
+      display: inline-block;
+      height: 40px;
+      line-height: 40px;
+      font-size: 16px;
+      color: #000;
+      font-weight: 600;
+      }
+
+      .kongzhi-wra .sxj {
+      display: inline-block;
+      width: 100px;
+      height: 40px;
+      line-height: 40px;
+      font-size: 16px;
+      color: #444;
+      text-align: center;
+      }
+
+      .sxj-btn {
+      display: inline-block;
+      transform: translateY(-6px);
+      -webkit-transform: translateY(-6px);
+      }
+
+      .controller-items {
+      display: flex;
+      -webkit-display: flex;
+      -ms-display: flex;
+      -moz-display: flex;
+      width: 100%;
+      }
+
+      .controller-item {
+      flex: 1;
+      -webkit-flex: 1;
+      -ms-flex: 1;
+      -moz-flex: 1;
+      border: 1px solid #e5ebfc;
+      text-align: center;
+      }
+
+      .controller-items li+li {
+      margin-left: 20px;
+      }
+
+      .controller-item-set {
+      display: block;
+      width: 80px;
+      height: 24px;
+      line-height: 24px;
+      margin: 22px auto 40px auto;
+      border: 1px solid #1885dc;
+      font-size: 12px;
+      color: #1885dc;
+      text-align: center;
+      border-radius: 10px;
+      -webkit-border-radius: 10px;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      }
+
+      .controller-item-icon {
+      display: block;
+      width: 40px;
+      height: 40px;
+      margin: 0 auto;
+      background: url(../img/icon/icon-11.png) no-repeat center;
+      }
+
+      .controller-item:nth-child(2) i {
+      background: url(../img/icon/icon-22.png) no-repeat center;
+      }
+
+      .controller-item:nth-child(3) i {
+      background: url(../img/icon/icon-33.png) no-repeat center;
+      }
+
+      .controller-item:nth-child(4) i {
+      background: url(../img/icon/icon-44.png) no-repeat center;
+      }
+
+      .controller-item:nth-child(5) i {
+      background: url(../img/icon/icon-55.png) no-repeat center;
+      }
+
+      .controller-item:nth-child(6) i {
+      background: url(../img/icon/icon-66.png) no-repeat center;
+      }
+
+      .controller-item-tit {
+      display: block;
+      width: 100%;
+      height: 40px;
+      line-height: 40px;
+      margin-bottom: 30px;
+      font-size: 14px;
+      color: #444a50;
+      }
+
+      .shezhi-tt-head {
+      width: 100%;
+      height: 58px;
+      font-size: 0;
+      border-bottom: 1px solid #efefef;
+      }
+
+      .shezhi-tt-head span {
+      display: inline-block;
+      width: 90%;
+      height: 58px;
+      line-height: 58px;
+      font-size: 20px;
+      color: #000;
+      font-weight: 600;
+      text-indent: 1.5em;
+      }
+
+      .shezhi-tt-head i {
+      display: inline-block;
+      width: 10%;
+      height: 58px;
+      line-height: 58px;
+      font-size: 20px;
+      font-style: normal;
+      font-family: "sans-serif";
+      text-align: center;
+      cursor: pointer;
+      }
+
+      .shezhi-tt-con-tit {
+      width: 80%;
+      height: 36px;
+      margin: 20px auto 0 auto;
+      border: 1px solid #efefef;
+      display: flex;
+      -webkit-display: flex;
+      -moz-display: flex;
+      -ms-display: flex;
+      }
+
+      .shezhi-tt-con-tit li {
+      flex: 1;
+      -webkit-flex: 1;
+      -moz-flex: 1;
+      -ms-flex: 1;
+      height: 36px;
+      line-height: 36px;
+      text-align: center;
+      color: #393d41;
+      font-size: 14px;
+      }
+
+      .shezhi-tt-con-tit li+li {
+      border-left: 1px solid #efefef;
+      }
+
+      .shezhi-tt-content {
+      width: 80%;
+      margin: 0 auto;
+      }
+
+      .shezhi-tt-con {
+      height: 36px;
+      display: flex;
+      -webkit-display: flex;
+      -moz-display: flex;
+      -ms-display: flex;
+      border: 1px solid #efefef;
+      border-top: none;
+      }
+
+      .shezhi-tt-con li {
+      flex: 1;
+      -webkit-flex: 1;
+      -moz-flex: 1;
+      -ms-flex: 1;
+      height: 36px;
+      line-height: 36px;
+      text-align: center;
+      color: #393d41;
+      font-size: 14px;
+      }
+
+      .shezhi-tt-con li+li {
+      border-left: 1px solid #efefef;
+      }
+
+      .shezhi-tt-con .shezhi-btn {
+      cursor: pointer;
+      }
+
+      .shezhi-foot {
+      width: 80%;
+      margin: 80px auto 0 auto;
+      padding-bottom: 30px;
+      text-align: right;
+      }
+
+      .shezhi-foot span {
+      display: inline-block;
+      width: 90px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      cursor: pointer;
+      }
+
+      .shezhi-cancel {
+      border: 1px solid #dcdcdc;
+      background: #fff;
+      font-size: 14px;
+      color: #6b8299;
+      }
+
+      .shezhi-confirm {
+      border: 1px solid #1885dc;
+      background: #1885dc;
+      font-size: 14px;
+      color: #fff;
+      }
+
+      .plugin-btn {
+      position: absolute;
+      top: 570px;
+      left: 50%;
+      z-index: 1111;
+      width: 800px;
+      height: 40px;
+      margin-left: -400px;
+      font-size: 0;
+      text-align: center;
+      }
+
+      .plugin-btn span {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background: url(../img/icon/icon-p-1.png) no-repeat center;
+      background-size: 40px 40px;
+      cursor: pointer;
+      margin-left: 18px;
+      user-select: none;
+      -webkit-user-select: none;
+      }
+
+      .plugin-btn span:nth-child(2) {
+      background: url(../img/icon/icon-p-2.png) no-repeat center;
+      background-size: 40px 40px;
+      }
+
+      .plugin-btn span:nth-child(3) {
+      background: url(../img/icon/icon-p-3.png) no-repeat center;
+      background-size: 40px 40px;
+      }
+
+      .plugin-btn span:nth-child(4) {
+      background: url(../img/icon/icon-p-4.png) no-repeat center;
+      background-size: 40px 40px;
+      }
+
+      .plugin-btn span:nth-child(5) {
+      background: url(../img/icon/icon-p-5.png) no-repeat center;
+      background-size: 40px 40px;
+      }
+
+      .plugin-btn span:nth-child(6) {
+      background: url(../img/icon/icon-p-6.png) no-repeat center;
+      background-size: 40px 40px;
+      }
+      .smallBox{
+        border-bottom: 1px solid #EAEEFD;
+      }
+      .toushi{
+        display: none;
+      }
+      .plugin{
+        position:absolute;
+        top: 50px;
+        left:50%;
+        z-index:1003;
+        background-color:#FFFFFF;
+        width: 800px;
+        height: 500px;
+        margin-left: -400px;
+        /* TODO display: none; */
+      }
+      #download_plugin{
+        position:absolute;
+        top:10%;
+        left:50%;
+        z-index:1003;
+        background-color:#FFFFFF;
+        min-width: 800px;
+        min-height: 500px;
+        margin-left: -300px;
+        text-align:center;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+
+      <div id="divPlugin" class="plugin"></div>
+      </div>
+      <div class="plugin-btn">
+        <span class="btn-Zoomout">-</span>
+        <span class="btn-ZoomIn">+</span>
+        <span class="btn-PTZControl-1">上</span>
+        <span class="btn-PTZControl-2">上</span>
+        <span class="btn-PTZControl-3">上</span>
+        <span class="btn-PTZControl-4">上</span>
+      </div>
+
+
+      <div id="download_plugin">
+      	<p style="margin-top:100px">
+      		检测到您还未安装播放插件
+      	</p>
+      	<p style="margin-top:20px">
+      		请安装插件后重启浏览器
+      	</p>
+      	<a style="margin-top:20px" href="../dist/WebComponents.exe" class="btn btn-w-m btn-default">安装插件</a>
+      </div>
+
+
+      <script type="text/javascript">
+        $(function() {
+          //--------->设备状态
+          var connects = ","; //连接正常
+          var disConnects = "," //断线
+          var warnings = ","; //预警
+          var runnings = ","; //运行
+          //<------设备状态
+          var szIP = "";
+          var szPort = "";
+          var szUsername = "";
+          var szPassword = "";
+          var isLogin = false;
+          var g_iWndIndex;
+
+
+          $(".btn-Zoomout").on("click", function() {
+            PTZZoomout()
+          })
+          $(".btn-ZoomIn").on("click", function() {
+            PTZZoomIn()
+          })
+
+          $(".btn-PTZControl-1").on("click", function() {
+            mouseDownPTZControl(1)
+          })
+          $(".btn-PTZControl-2").on("click", function() {
+            mouseDownPTZControl(2)
+          })
+          $(".btn-PTZControl-3").on("click", function() {
+            mouseDownPTZControl(3)
+          })
+          $(".btn-PTZControl-4").on("click", function() {
+            mouseDownPTZControl(4)
+          })
+
+          showVideo();
+
+
+
+          function showVideo(){
+          	var loginInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
+          	if(isLogin){
+          		$("#divPlugin").css('display','');
+          		$(".plugin-btn").show();
+          		toastr.warning('请稍候...','视频连接中');
+          		clickStartRealPlay();
+          		return;
+          	}
+          	$.ajax({
+          		type:"POST",
+          	 		url: URLAPI + "actionServlet",
+          	 		data:{
+          				"actionName":"deviceService",
+          				"method":"getCameraInfo",
+          				"gfNum": GetQueryString("gfNum"),
+          				"companyId": loginInfo.id,
+          				"userType": GetQueryString("userType"),
+          				"token": getCookie("token")
+          			},
+          	 		dataType:"JSON",
+          	 		success:function(data){
+          	 			if(data.statusCode == 100){
+          	 				toastr.error('请联系管理员','未拥有权限');
+          	 				return;
+          	 			}
+          	 			szIP = data.result.url;
+          	 			szUsername = data.result.loginName;
+          	 			szPort = data.result.webPort;
+          	 			szPassword = data.result.loginPwd;
+          	 			if(szIP != '' && szIP!=null){
+
+          	 				var iRet = WebVideoCtrl.I_CheckPluginInstall();
+                    if (-2 == iRet || -1 == iRet) {
+        	 		    		$("#download_plugin").css('display','');
+        	 		    		$("#divPlugin").css('display','none');
+        							$(".plugin-btn").hide();
+        	 		    		return;
+        	 		    	}
+          	 		    	toastr.warning('请稍候...','视频连接中');
+           		    	  $("#download_plugin").css('display','none');
+          		    		$("#divPlugin").css('display','');
+          						$(".plugin-btn").show();
+                      // VideoCtrl.I_InitPlugin(600, 400, {
+          	 		    	WebVideoCtrl.I_InitPlugin(800, 500, {
+          	 		            bWndFull: true,//是否支持单窗口双击全屏，默认支持 true:支持 false:不支持
+          	 		            iWndowType: 1,
+          	 		    		cbSelWnd: function (xmlDoc) {
+          	 		    			g_iWndIndex = $(xmlDoc).find("SelectWnd").eq(0).text();
+          	 		    		}
+          	 		    	});
+                      WebVideoCtrl.I_InsertOBJECTPlugin("divPlugin");
+                      // WebVideoCtrl.I_WriteOBJECT_XHTML("divPlugin");
+          	 		    	var errorTimmer;
+          	 		    	var iRet = WebVideoCtrl.I_Login(szIP, 1,szPort , szUsername, szPassword, {
+          	 		    		success: function (xmlDoc) {
+          	 		    			setTimeout(function () {
+                            // n = true;
+          	 		    				// getChannelInfo();
+          									clickStartRealPlay()
+          									// TODO
+          	 		    			}, 5);
+          	 		    		},
+          	 		    		error: function (code,xmlDoc) {
+          	 		    			clearTimeout(errorTimmer)
+          	 		    			videoFail();
+          	 		    		}
+          	 		    	});
+                    // rrorTimmer = setTimeout(function () {
+                    // if(!isLogin){
+                    // 	console.log("loginError");
+          		    	// 			videoFail();
+                    // }
+              			// }, 5000);
+
+          	 			}else{
+          	 				toastr.error('请配置摄像头参数','预览失败');
+          	 				cameraSetting();
+          	 			}
+          	 		}
+          	});
+
+          }
+
+          //点击视频显示遮罩层
+          function showMask(){
+            $("#mask").css("display","none");
+            var height = $("body").height();
+                $("#mask").css("height",height);
+              $("#mask").css("width","100%");
+              $("#mask").show();
+          }
+
+          function clickStartRealPlay() {
+          	cid = GetQueryString("gfNum");
+          	var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex)
+          	if (oWndInfo != null) {// 已经在播放了，先停止
+          		WebVideoCtrl.I_Stop();
+          	}
+          	var iRet = WebVideoCtrl.I_StartRealPlay(szIP, {
+          		iStreamType: 1,
+          		iChannelID: cid,
+          		bZeroChannel: false
+          	});
+
+          	if (0 == iRet) {
+          		console.log('开始预览成功');
+          	} else {
+          		videoFail();
+          	}
+          }
+
+          //视频播放失败方法
+          function videoFail(){
+              $("#divPlugin").hide();
+              swal({
+                title: "预览失败",
+                text: "",
+                type: "error"
+              });
+          }
+
+          //下载插件
+          function installPlugin(){
+            window.location.href="dist/WebComponents.exe";
+          }
+
+
+
+          // TODO
+          function PTZZoomout() {
+              var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex);
+              if (oWndInfo != null) {
+                  WebVideoCtrl.I_PTZControl(11, false, {
+                      iWndIndex: g_iWndIndex,
+                      success: function (xmlDoc) {
+                          // alert(oWndInfo.szIP + " 调焦-成功！");
+                          PTZZoomStop()
+                      },
+                      error: function () {
+                          // alert(oWndInfo.szIP + "  调焦-失败！");
+                      }
+                  });
+              }
+          }
+          function PTZZoomIn() {
+            var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex);
+
+            if (oWndInfo != null) {
+                WebVideoCtrl.I_PTZControl(10, false, {
+                    iWndIndex: g_iWndIndex,
+                    success: function (xmlDoc) {
+                        // alert(oWndInfo.szIP + " 调焦+成功！");
+                        PTZZoomStop();
+                    },
+                    error: function () {
+                        // alert(oWndInfo.szIP + "  调焦+失败！");
+                    }
+                });
+            }
+          }
+          function PTZZoomStop() {
+              var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex);
+
+              if (oWndInfo != null) {
+                  WebVideoCtrl.I_PTZControl(11, true, {
+                      iWndIndex: g_iWndIndex,
+                      success: function (xmlDoc) {
+                          // alert(oWndInfo.szIP + " 调焦停止成功！");
+                      },
+                      error: function () {
+                          // alert(oWndInfo.szIP + "  调焦停止失败！");
+                      }
+                  });
+              }
+          }
+          // 上下左右
+          // PTZ控制 9为自动，1,2,3,4,5,6,7,8为方向PTZ
+          var g_bPTZAuto = false;
+          function mouseDownPTZControl(iPTZIndex) {
+            var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex),
+              bZeroChannel = false,
+              iPTZSpeed = 4,
+              bStop = false;
+
+            if (bZeroChannel) {// 零通道不支持云台
+              return;
+            }
+
+            if (oWndInfo != null) {
+              if (9 == iPTZIndex && g_bPTZAuto) {
+                iPTZSpeed = 0;// 自动开启后，速度置为0可以关闭自动
+                bStop = true;
+              } else {
+                g_bPTZAuto = false;// 点击其他方向，自动肯定会被关闭
+                bStop = false;
+              }
+
+              WebVideoCtrl.I_PTZControl(iPTZIndex, bStop, {
+                iPTZSpeed: iPTZSpeed,
+                success: function (xmlDoc) {
+                  if (9 == iPTZIndex) {
+                    g_bPTZAuto = !g_bPTZAuto;
+                  }
+                  // alert(oWndInfo.szIP + " 开启云台成功！");
+                  mouseUpPTZControl()
+                },
+                error: function () {
+                  // alert(oWndInfo.szIP + " 开启云台失败！");
+                }
+              });
+            }
+          }
+          // 方向PTZ停止
+          function mouseUpPTZControl() {
+            var oWndInfo = WebVideoCtrl.I_GetWindowStatus(g_iWndIndex);
+
+            if (oWndInfo != null) {
+              WebVideoCtrl.I_PTZControl(1, true, {
+                success: function (xmlDoc) {
+                  // alert(oWndInfo.szIP + " 停止云台成功！");
+                },
+                error: function () {
+                  // alert(oWndInfo.szIP + " 停止云台失败！");
+                }
+              });
+            }
+          }
+        })
+      </script>
+  </body>
+</html>

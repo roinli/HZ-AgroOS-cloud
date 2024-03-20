@@ -1,0 +1,76 @@
+<div class="modal-dialog" role="document">  
+    <div class="modal-content">  
+        <div class="modal-header">  
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span  aria-hidden="true">×</span>
+            </button>  
+        </div>  
+        <div class="modal-body" id="tf">  
+        	<table>
+        		<tr>
+        			<td><label>头像</label></td>
+        			<td width="20"></td>
+        			<td>
+        				<button type="button" class="btn btn-primary" id="choose_pic" onclick="choosePic(this)" >上传头像</button>  
+	                    <img id="imgviewPersonal" style="width:100px;height:100px;display:none" onclick="choosePic(this)"/>  
+	                    <input id="file_choose_pic" style="display:none" type="file" class="filehide" name="filehide" onchange="filechange(this)" />
+        			</td>
+        		</tr>
+        		<tr height="20"></tr>
+        		<tr>
+        			<td><label>公司名称</label></td>
+        			<td width="20"></td>
+        			<td>
+        				<input type="text" class="form-control" id="uname" style="width:400px"> 
+        			</td>
+        		</tr>
+        		<tr height="20"></tr>
+        		<tr>
+        			<td><label>联系方式</label></td>
+        			<td width="20"></td>
+        			<td>
+        				<input type="text" class="form-control" id="u_bir" style="width:400px"> 
+        			</td>
+        		</tr>
+        		<tr height="20"></tr>
+        		<tr>
+        			<td><label>选择位置</label></td>
+        			<td width="20"></td>
+        			<td>
+        				<div>
+        					<input id="company_position"  class="form-control" type="text" style="width:400px" readonly="readonly">
+<!--         					<a id="choose_position" onclick="choosePosition()" class="btn btn-primary">请选择位置</a> -->
+        				</div>
+        			</td>
+        		</tr>
+        		<tr>
+        			<td></td>
+        			<td></td>
+        			<td>
+        				<div id="container" style="width:400px;height:400px;"></div>
+        			</td>	
+        		</tr>
+        		<tr height="20"></tr>
+        		<tr>
+        			<td><label>公司地址</label></td>
+        			<td width="20"></td>
+        			<td>
+        				<input type="text" class="form-control" id="u_detail" style="width:400px"> 
+        			</td>
+        		</tr>
+        		<tr height="20"></tr>
+        		<tr>
+        			<td style="text-align:top;"><label>公司简介</label></td>
+        			<td width="20"></td>
+        			<td>
+        				<textarea id="companyProfile" rows="5" class="form-control" style="width:400px;min-height:200px;resize:none;"></textarea>
+        			</td>
+        		</tr>
+        	</table>
+        </div>  
+        <div class="modal-footer">  
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>  
+            <button type="button" class="btn btn-primary" id="company_sure" >确定</button>  
+        </div>  
+    </div>  
+</div>  

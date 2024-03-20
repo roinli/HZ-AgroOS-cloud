@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>设备管理-更改</title>
+    <link rel="stylesheet" href="../dist/css/toastr.min.css" >
+    <link rel="stylesheet" href="../dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../dist/css/index_public.css">
+    <link rel="stylesheet" href="../dist/css/setDeviceManage.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <!-- header  -->
+    <div class="nav row " id="loadHeader"></div>
+    <div class="row neirong" >
+      <!-- 侧边导航 -->
+      <div id="div1" class="sidebar col-xs-2"></div>
+      <!-- 主题内容 -->
+      <div class="main col-xs-10 row animated fadeInRight" style="min-height:800px;background-color:#F4F7FE;padding:15px 0;">
+        <div id="setDeviceManage" class="col-xs-12">
+          <h4 class="device-title">设备管理列表</h4>
+          <div class="device-wrapper">
+            <ul class="device-top">
+              <li>序号</li>
+              <li>设备</li>
+              <li>状态</li>
+              <li>操作</li>
+            </ul>
+            <div class="device-content">
+              <ul class="device-con">
+                <li>1</li>
+                <li>增氧机</li>
+                <li>73-1</li>
+                <li class="device-change">开启</li>
+              </ul>
+              <ul class="device-con">
+                <li>2</li>
+                <li>增氧机</li>
+                <li>73-1</li>
+                <li class="device-change">关闭</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- 11.17 -->
+        <!-- <div class="M-box1 col-xs-12" style="text-align:right;">
+          456
+        </div> -->
+      </div>
+    </div>
+    <div class="row" id="divFooter"></div>
+  </div>
+  <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"></div>
+
+  <script type="text/javascript" type="text/javascript" src="../dist/js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+
+  <script type="text/javascript" type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+  <script type="text/javascript" src="../dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/webuploader.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/jquery.pagination.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/sweetalert.min.js"></script>
+
+  <script type="text/javascript" src="../dist/js/js/comm.js"></script>
+  <script type="text/javascript" src="../dist/js/js/index_head_left.js"></script>
+  <script type="text/javascript">
+      $(document).ready(function(){
+        $("#div1").load('../include/left_title.html',function(){
+          menu();
+        })
+        $("#loadHeader").load("../include/header.html",function(){
+          header();
+        })
+        $("#personal").load("../include/modelpersonal.html",function(){
+          personalModel();
+        })
+
+        deviceInit();
+        function deviceInit() {
+          $.ajax({
+            url: URLAPI + "actionServlet",
+            dataType: "json",
+            type: "post",
+            data: {
+              "actionName": "permissionService",
+              "method": "getCompanyDevicesInfoByPhone",
+              "mobile": "15801448911",
+              "roleId": 1,
+              "gfNum": 0,
+              "token": getCookie("token")
+            },
+            success: function(data) {
+              console.log(data);
+            }
+          })
+        }
+      });
+    </script>
+</body>
+</html>

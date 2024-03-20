@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>鱼苗来源</title>
+    <link rel="stylesheet" href="../page/css/mui.min.css">
+    <style>
+        ul,li{margin:0;padding:0;list-style: none;}
+        li{margin:0.5rem}
+        .mui-title{color:#227744;}
+        .provenanceName, .provenanceVender,.standard,.mass,.purchaser{display: flex;justify-content: space-between;}
+        span{color:#888;font-size: 0.8rem;}
+        b{color:#888;font-weight: normal;font-size: 0.8rem;}
+        .item>div{text-align: center;}
+        .item>div>img{width:98%;}
+    </style>
+</head>
+<body>
+    <header id="myNav" class="mui-bar mui-bar-nav">
+        <a class="mui-icon mui-icon-arrowleft mui-action-back" style="color:#333;font-size:15px;margin-top:5px;" id="back">返回</a>
+        <h1 class="mui-title">鱼苗信息</h1>       
+    </header>
+    <div class="mui-content">
+        <!-- 种子来源信息  -->
+        <div id="torrentContents">
+                <ul>
+                    <li class="item provenanceName">
+                        <span>鱼苗名称</span> 
+                        <b></b>  
+                    </li>
+                    <li class="item provenanceVender">
+                        <span>鱼苗生产厂家</span>
+                        <b></b>
+                    </li>
+                    <li class="item standard">
+                        <span>鱼苗规格</span>
+                        <b></b>
+                    </li>
+                    <li class="item mass">
+                        <span>鱼苗质量</span>
+                        <b></b>
+                    </li>
+                    <li class="item purchaser">
+                        <span>采购人</span>
+                        <b></b>
+                    </li>
+                    <li class="item  clickHref">
+                        <span>合格证</span>
+                        <!-- <b>查看证书</b> -->
+                        <div class="hgz">
+                            <!-- <img src="img/002.jpg" alt=""> -->
+                        </div>
+                    </li>
+                    <li class="item  clickHref">
+                        <span>销售记录或证书</span>
+                        <!-- <b>查看证书</b> -->
+                        <div class="xs">
+                            <!-- <img src="img/002.jpg" alt=""> -->
+                        </div>
+                    </li>
+                  
+                </ul>
+            </div>
+    </div>
+    <script src="../dist/js/jquery-1.9.1.min.js"></script>
+    <script src="../page/js/mui.min.js"></script>
+    <script>
+      $(function(){
+//          var imgUrl="http://ozdwirxvt.bkt.clouddn.com/";
+         var imgUrl="http://img.nxptdn.com/";
+          var ymlyContent=JSON.parse(localStorage.getItem('ymlyContent'));
+          $(".provenanceName>b").html(ymlyContent.name);
+          $(".provenanceVender>b").html(ymlyContent.factory);
+          $(".standard>b").html(ymlyContent.size);
+          $(".mass>b").html(ymlyContent.quality);
+          $(".purchaser>b").html(ymlyContent.buyname);
+          if(ymlyContent.hgzIcon != null && ymlyContent.hgzIcon != ""){
+        	  $(".hgz").html('<img src='+imgUrl+ymlyContent.hgzIcon+'>')
+          }
+          if(ymlyContent.saleIcon != null && ymlyContent.saleIcon != ""){
+        	  $(".xs").html('<img src='+imgUrl+ymlyContent.saleIcon+'>')
+          }
+      })
+    </script>
+</body>
+</html>

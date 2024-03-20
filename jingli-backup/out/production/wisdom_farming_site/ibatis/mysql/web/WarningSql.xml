@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="warning">
+	
+	<!-- 预警信息start -->
+	<select id="queryEarlyWaring" resultClass="cn.lookout.base.bean.EarlyWaringBean" parameterClass="Map">
+		SELECT t.*,td.name AS deviceName,IF(t.groundFishpondNum='0' , '气象站',tgf.display_name) AS displayName FROM (
+			select ea.id,ea.company_id as companyId,
+				ea.ground_fishpond_num as groundFishpondNum,ea.device_id as deviceId,
+				ea.waring_info as waringInfo,DATE_FORMAT(ea.create_time,'%Y-%m-%d %H:%i') as createTime
+				,ea.warning_type AS warningType,ea.source_type AS sourceType
+			from t_early_waring ea
+			where 1=1
+			and ea.company_id = #companyId#
+<!-- 			and ea.source_type = #userType# -->
+			<isNotEmpty property="startTime">
+				and DATE_FORMAT(ea.create_time,'%Y-%m-%d') >= #startTime#
+			</isNotEmpty>
+			<isNotEmpty property="endTime">
+				and DATE_FORMAT(ea.create_time,'%Y-%m-%d') &lt;= #endTime#
+			</isNotEmpty>
+			<isNotEmpty property="content">
+				and waring_info LIKE '%$content$%'
+			</isNotEmpty>
+			ORDER BY id DESC
+			limit $startRec$,$pageSize$
+			)t
+		LEFT JOIN t_device td ON t.deviceId=td.id
+		LEFT JOIN (SELECT number,`type`,display_name FROM t_ground_fishpond WHERE company_id=#companyId#)tgf
+			ON tgf.number=t.groundFishpondNum AND tgf.`type`=t.sourceType
+	</select>
+	
+	<select id="queryEarlyWaringCount" resultClass="Integer" parameterClass="Map">
+		select count(1)
+		from t_early_waring ea
+		where 1=1
+		and ea.company_id = #companyId#
+		<isNotEmpty property="groundFishpondId">
+			and ea.ground_fishpond_id = #groundFishpondId#
+		</isNotEmpty>
+		<isNotEmpty property="deviceId">
+			and ea.device_id = #deviceId#
+		</isNotEmpty>
+		<isNotEmpty property="startTime">
+			and DATE_FORMAT(ea.create_time,'%Y-%m-%d') >= #startTime#
+		</isNotEmpty>
+		<isNotEmpty property="endTime">
+			and DATE_FORMAT(ea.create_time,'%Y-%m-%d') &lt;= #endTime#
+		</isNotEmpty>
+		<isNotEmpty property="content">
+			and waring_info LIKE '%$content$%' 
+		</isNotEmpty>
+	</select>
+	
+	<select id="queryNotReadCount" resultClass="Integer" parameterClass="Map">
+		SELECT COUNT(1) FROM t_early_waring 
+		WHERE is_read=0 AND company_id = #companyId#
+	</select>
+	
+	<update id="updateEarlyWaringRead" parameterClass="Map">
+		UPDATE t_early_waring SET is_read=1 WHERE company_id = #companyId# AND is_read=0
+	</update>
+	
+	<!-- 预警信息end -->
+	
+ </sqlMap>

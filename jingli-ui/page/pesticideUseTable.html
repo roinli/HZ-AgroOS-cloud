@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>农药使用表</title>
+    <link rel="stylesheet" href="css/mui.min.css">
+    <style>
+        .mui-title{color:#227744}
+        .mui-content>table{border-top: 1px solid #ddd;border-bottom: 1px solid #ddd;color:#222;margin: 0 auto;width:100%;table-layout:fixed}
+        .mui-content>table>thead>tr{height:2rem;}
+        table td,table th{font-size :1rem;font-weight: normal;}
+        #pesticideUseTable td{text-align: center;color:#8E8E8E;font-size:0.8rem;word-wrap:break-word;padding:0 0.3rem;border-top:1px solid #ddd}
+    </style>
+</head>
+<body>
+    <header id="myNav" class="mui-bar mui-bar-nav">
+        <a class="mui-icon mui-icon-arrowleft mui-action-back" style="color:#333;font-size:15px;margin-top:5px;" id="back">返回</a>
+        <h1 class="mui-title">农药使用表</h1>       
+    </header>
+    <div class="mui-content">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:21%">使用时间</th>
+                    <th style="width:25%">名称</th>
+                    <th style="width:13%">用量</th>
+                    <th style="width:17%">品牌</th>
+                    <th style="width:24%">供应商</th>
+                </tr>
+            </thead>
+            <tbody id="pesticideUseTable">
+                
+            </tbody>
+        </table>
+    </div>
+    <script src="../dist/js/jquery-1.9.1.min.js"></script>
+    <script src="js/mui.min.js"></script>
+    <script>
+        $(function(){
+            var pesticideContent= JSON.parse(localStorage.getItem('pesticideContent'));
+            console.log(pesticideContent);
+            var html="";
+            for(var i=0;i<pesticideContent.length;i++){
+                html+='<tr><td style="width:21%">'+pesticideContent[i].drugDate+'</td><td style="width:25%">'+pesticideContent[i].drugName+'</td>'+
+                    '<td style="width:13%">'+pesticideContent[i].drugCnt+'</td>'+
+                    '<td style="width:17%">'+pesticideContent[i].drugPp+'</td>'+
+                    '<td style="width:24%">'+pesticideContent[i].drugGys+'</td>'+
+                '</tr>'
+            }
+            $("#pesticideUseTable").html(html)
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+
+	<select id="getParentMenuByUserId" parameterClass="map" resultClass="cn.lookout.base.bean.MenuBean">
+		SELECT id,name AS menuName,menu_flag AS menuFlag,url AS menuUrl,img
+		FROM xt_menu WHERE id IN(
+			SELECT menu_id FROM xt_role_menu WHERE role_id=(SELECT id FROM xt_role WHERE user_type=#userType# LIMIT 1)
+		)
+		AND parent='0' AND visible=1
+		ORDER BY menu_order
+	</select>
+	<select id="getChildMenuByUserId" parameterClass="map" resultClass="cn.lookout.base.bean.MenuChildBean">
+		SELECT id,name AS menuName,menu_flag AS menuFlag,url AS menuUrl,parent,img
+		FROM xt_menu WHERE id IN(
+			SELECT menu_id FROM xt_role_menu WHERE role_id=(SELECT id FROM xt_role WHERE user_type=#userType# LIMIT 1)
+		)
+		AND parent!='0' AND visible=1
+		ORDER BY menu_flag,menu_order
+	</select>
+	<select id="getPermissionByUser" parameterClass="map" resultClass="java.lang.String">
+		SELECT url FROM xt_func WHERE id IN( 
+			SELECT func_id FROM xt_role_func WHERE role_id=(SELECT id FROM xt_role WHERE user_type=#userType# LIMIT 1)
+		)
+	</select>
+	
+	<!-- 获取首页公司个数（管理员用） -->
+	<select id="getIndexCompanyCnt" parameterClass="map" resultClass="java.lang.Integer">
+		SELECT COUNT(id) FROM t_user WHERE `type` NOT IN(1,2)
+		<isNotEmpty property="companyName">
+			AND name LIKE CONCAT('%',#companyName#,'%')
+		</isNotEmpty>
+	</select>
+	
+	<!-- 通过公司id和类型获取首页公司信息 -->
+	<select id="getIndexCompanyInfoByIdAndType" parameterClass="map" resultClass="cn.lookout.base.bean.IndexCompanyBean">
+		SELECT tu.*,tgs.pName AS crop,
+			IFNULL(tds.device_cnt,0) AS deviceCnt,IFNULL(tdsrc.runing_cnt,0) AS runingCnt
+			,IFNULL(tdsoc.offline_cnt,0) AS offlineCnt,IFNULL(tdswc.waring_cnt,0) AS waringCnt
+		FROM ( 
+			SELECT id,name,(SELECT COUNT(id) FROM t_ground_fishpond WHERE company_id=#companyId# AND `type`=#userType# AND is_del=0) AS maxCnt
+			FROM t_user WHERE id=#companyId#
+		)tu
+		LEFT JOIN ( 
+			SELECT GROUP_CONCAT(product_name SEPARATOR '|') AS pName,company_id FROM 
+			<isEqual property="userType" compareValue="0">t_g_source</isEqual>
+			<isEqual property="userType" compareValue="1">t_f_source</isEqual>
+			<isEqual property="userType" compareValue="2">t_t_source</isEqual>
+		 	WHERE company_id=#companyId#
+		 	GROUP BY company_id
+		)tgs ON tu.id=tgs.company_id
+		LEFT JOIN ( 
+			SELECT COUNT(id) AS device_cnt,company_id FROM t_device_relation 
+			WHERE is_del=0 AND company_id=#companyId# AND device_type = #userType# 
+			GROUP BY company_id 
+		)tds ON tu.id=tds.company_id
+		LEFT JOIN (
+			SELECT COUNT(id) AS runing_cnt,company_id FROM t_device_relation where device_state=0 
+			AND is_del=0 AND company_id=#companyId# AND device_type = #userType# 
+		 	GROUP BY company_id 
+		)tdsrc ON tu.id=tdsrc.company_id
+		LEFT JOIN (
+			SELECT COUNT(id) AS waring_cnt,company_id FROM t_device_relation where device_state=1 
+			AND is_del=0 AND company_id=#companyId# AND device_type = #userType# 
+		 	GROUP BY company_id  )tdswc ON tu.id=tdswc.company_id
+		LEFT JOIN (
+			SELECT COUNT(id) AS offline_cnt,company_id FROM t_device_relation where device_state=2 
+			AND is_del=0 AND company_id=#companyId# AND device_type = #userType# 
+			group by company_id  
+		)tdsoc ON tu.id=tdsoc.company_id
+	</select>
+	
+	<select id="getAllUserLimit"  resultClass="cn.lookout.base.bean.IndexCompanyBean">
+		SELECT ri.user_id AS id,xr.user_type AS `type`,tu.name
+		FROM(
+			SELECT user_id,role_id FROM xt_user_role WHERE role_id NOT IN(1,2) ORDER BY user_id DESC 
+			LIMIT $page$,$pageSize$
+		)ri
+		LEFT JOIN xt_role xr ON ri.role_id=xr.id
+		LEFT JOIN t_user tu ON ri.user_id=tu.id
+	</select>
+	
+	<select id="getUserIndexInfoById" parameterClass="map"  resultClass="cn.lookout.base.bean.IndexCompanyBean">
+		SELECT tu.id,tgf.maxCnt,tgs.crop,IFNULL(tdr1.deviceCnt,0) AS deviceCnt
+			,IFNULL(tdr2.runingCnt,0) AS runingCnt,IFNULL(tdr3.waringCnt,0) AS waringCnt
+			,IFNULL(tdr4.offlineCnt,0) AS offlineCnt
+		FROM(
+			SELECT id FROM t_user WHERE id=#companyId#
+		)tu
+		LEFT JOIN(
+			SELECT COUNT(id) AS maxCnt FROM t_ground_fishpond WHERE company_id=#companyId# AND `type`=#userType#
+		)tgf ON 1=1
+		LEFT JOIN(
+			SELECT GROUP_CONCAT(product_name SEPARATOR '|') AS crop FROM 
+					<isEqual property="userType" compareValue="0">t_g_source</isEqual>
+					<isEqual property="userType" compareValue="1">t_f_source</isEqual>
+					<isEqual property="userType" compareValue="2">t_t_source</isEqual>
+				 	WHERE company_id=#companyId#
+				 	GROUP BY company_id
+		)tgs ON 1=1
+		LEFT JOIN(
+			SELECT COUNT(id) AS deviceCnt FROM t_device_relation
+					WHERE is_del=0 AND company_id=#companyId# AND device_type = #userType# 
+					GROUP BY company_id 
+		)tdr1 ON 1=1
+		LEFT JOIN(
+			SELECT COUNT(id) AS runingCnt FROM t_device_relation WHERE device_state=0
+					AND is_del=0 AND company_id=#companyId# AND device_type = #userType# 
+					GROUP BY company_id 
+		)tdr2 ON 1=1
+		LEFT JOIN(
+			SELECT COUNT(id) AS waringCnt FROM t_device_relation WHERE device_state=1 
+					AND is_del=0 AND company_id=#companyId# AND device_type = #userType# 
+					GROUP BY company_id 
+		)tdr3 ON 1=1
+		LEFT JOIN(
+			SELECT COUNT(id) AS offlineCnt FROM t_device_relation WHERE device_state=2
+					AND is_del=0 AND company_id=#companyId# AND device_type = #userType# 
+					GROUP BY company_id 
+		)tdr4 ON 1=1
+	</select>
+	
+	
+	<!-- 获取首页公司信息 -->
+	<select id="getIndexCompanyInfo" parameterClass="map" resultClass="cn.lookout.base.bean.IndexCompanyBean">
+		SELECT tu.*,IFNULL(tgs.pName,tfs.pName) AS crop,
+			IFNULL(tds.device_cnt,0) AS deviceCnt,IFNULL(tdsrc.runing_cnt,0) AS runingCnt
+			,IFNULL(tdsoc.offline_cnt,0) AS offlineCnt,IFNULL(tdswc.waring_cnt,0) AS waringCnt
+		FROM ( SELECT id,name,`type`,max_cnt AS maxCnt FROM t_user WHERE `type` IN(3,4)
+			<isNotEqual property="userType" compareValue="2">
+				AND id=#companyId#
+			</isNotEqual>
+			<isNotEmpty property="companyName">
+				AND name LIKE CONCAT('%',#companyName#,'%')
+			</isNotEmpty>
+			<isEqual property="userType" compareValue="2">
+				ORDER BY id DESC LIMIT $page$,$pageSize$
+			</isEqual>
+		)tu
+		LEFT JOIN ( SELECT GROUP_CONCAT(product_name SEPARATOR '|') AS pName,company_id FROM t_g_source 
+			<isNotEqual property="userType" compareValue="2">
+				WHERE company_id=#companyId#
+			</isNotEqual>
+			group by company_id)tgs ON tu.id=tgs.company_id
+		LEFT JOIN ( SELECT GROUP_CONCAT(product_name SEPARATOR '|') AS pName,company_id FROM t_f_source 
+			<isNotEqual property="userType" compareValue="2">
+				WHERE company_id=#companyId#
+			</isNotEqual>
+			group by company_id )tfs ON tu.id=tfs.company_id
+		LEFT JOIN ( SELECT COUNT(id) AS device_cnt,company_id FROM t_device_relation 
+			WHERE is_del=0
+			<isNotEqual property="userType" compareValue="1">
+				AND company_id=#companyId#
+			</isNotEqual>
+			group by company_id )tds ON tu.id=tds.company_id
+		LEFT JOIN ( SELECT COUNT(id) AS runing_cnt,company_id FROM t_device_relation where device_state=0 
+			AND is_del=0
+			<isNotEqual property="userType" compareValue="2">
+				AND company_id=#companyId#
+			</isNotEqual>
+		 group by company_id )tdsrc ON tu.id=tdsrc.company_id
+		LEFT JOIN ( SELECT COUNT(id) AS waring_cnt,company_id FROM t_device_relation where device_state=1 
+		AND is_del=0
+			<isNotEqual property="userType" compareValue="2">
+				AND company_id=#companyId#
+			</isNotEqual>
+		 group by company_id  )tdswc ON tu.id=tdswc.company_id
+		LEFT JOIN ( SELECT COUNT(id) AS offline_cnt,company_id FROM t_device_relation where device_state=2 
+		AND is_del=0
+			<isNotEqual property="userType" compareValue="2">
+				AND company_id=#companyId#
+			</isNotEqual>
+		group by company_id  )tdsoc ON tu.id=tdsoc.company_id
+	</select>
+	
+	<!-- 获取大棚鱼塘大田个数 -->
+	<select id="getGroundFishpondCntById" parameterClass="map" resultClass="java.lang.String">
+		SELECT COUNT(id) FROM t_ground_fishpond WHERE company_id=#companyId# AND `type`=#userType#
+	</select>
+	
+	
+	<!-- 获取大棚鱼塘大田列表信息 -->
+	<select id="getGFTListById" parameterClass="map" resultClass="cn.lookout.base.bean.GroundFishpondBean">
+		SELECT tgf.id,tgf.number,tgf.`type`,tgf.company_id AS companyId,tgf.display_name AS displayName
+			,IFNULL(tds.deviceCnt,0) AS deviceCnt,IFNULL(tdsrc.runingCnt,0) AS runingCnt
+			,IFNULL(tdsoc.offlineCnt,0) AS offlineCnt,IFNULL(tdswc.warningCnt,0) AS warningCnt
+			,IFNULL(tsource.crop,"") AS crop,IFNULL(tsource.cropCnt,0) AS cropCnt
+			,IFNULL(tdata1.sum_data,0) AS temperature 
+			,IFNULL(tdata2.sum_data,0) AS temperaturePre 
+ 			,IFNULL(tdata3.sum_data,0) AS light
+ 			,IFNULL(tdata4.sum_data,0) AS lightPre
+		FROM(
+			SELECT id,number,`type`,company_id,display_name FROM t_ground_fishpond 
+			WHERE company_id=#companyId# AND is_del=0 AND `type`=#userType#
+			ORDER BY id
+		)tgf
+		LEFT JOIN ( 
+			SELECT COUNT(id) AS deviceCnt,ground_fishpond_num FROM t_device_relation 
+			WHERE company_id=#companyId# AND device_type=#userType#
+			GROUP BY company_id,ground_fishpond_num )tds ON tgf.number=tds.ground_fishpond_num
+		LEFT JOIN (
+		 	SELECT COUNT(id) AS runingCnt,ground_fishpond_num FROM t_device_relation 
+			WHERE company_id=#companyId# AND device_state=0 AND device_type=#userType#
+			GROUP BY company_id,ground_fishpond_num )tdsrc ON tgf.number=tdsrc.ground_fishpond_num
+		LEFT JOIN (
+		 	SELECT COUNT(id) AS warningCnt,ground_fishpond_num FROM t_device_relation 
+			WHERE company_id=#companyId# AND device_state=1 AND device_type=#userType#
+			GROUP BY company_id,ground_fishpond_num 
+		)tdswc ON tgf.number=tdswc.ground_fishpond_num
+		LEFT JOIN (
+			SELECT COUNT(id) AS offlineCnt,ground_fishpond_num FROM t_device_relation 
+			WHERE company_id=#companyId# AND device_state=2 AND device_type=#userType#
+			GROUP BY company_id,ground_fishpond_num 
+		) tdsoc ON tgf.number=tdsoc.ground_fishpond_num
+		<isEqual property="userType" compareValue="0">
+		<!-- 查询农业溯源 -->
+		LEFT JOIN (
+			SELECT COUNT(product_name) AS cropCnt,GROUP_CONCAT(product_name SEPARATOR '|') AS crop
+				,ground_num FROM t_g_source 
+			WHERE company_id=#companyId#
+			GROUP BY company_id,ground_num
+		) tsource ON tgf.number=tsource.ground_num
+		</isEqual>
+		<isEqual property="userType" compareValue="1">
+		<!-- 查询渔业溯源 -->
+		LEFT JOIN (
+			SELECT COUNT(product_name) AS cropCnt,GROUP_CONCAT(product_name SEPARATOR '|') AS crop
+				,fishpond_num FROM t_f_source 
+			WHERE company_id=#companyId#
+			GROUP BY company_id,fishpond_num
+		)tsource ON tgf.number=tsource.fishpond_num
+		
+		</isEqual>
+		<isEqual property="userType" compareValue="2">
+		<!-- 查询大田溯源 -->
+		LEFT JOIN (
+			SELECT COUNT(product_name) AS cropCnt,GROUP_CONCAT(product_name SEPARATOR '|') AS crop
+				,datian_num FROM t_t_source 
+			WHERE company_id=#companyId#
+			GROUP BY company_id,datian_num
+		)tsource ON tgf.number=tsource.datian_num
+		</isEqual>
+		LEFT JOIN(
+			SELECT sum_data,gf_num FROM t_data_sum 
+			WHERE company_id=#companyId# 
+			<isEqual property="userType" compareValue="0">
+				AND device_id = 1
+			</isEqual>
+			<isEqual property="userType" compareValue="1">
+				AND device_id = 31
+			</isEqual>
+			<isEqual property="userType" compareValue="2">
+				AND device_id = 200
+			</isEqual>
+			AND `year` = DATE_FORMAT(NOW(),'%Y') GROUP BY gf_num 
+		)tdata1 ON tgf.number=tdata1.gf_num
+		LEFT JOIN(
+			SELECT sum_data,gf_num FROM t_data_sum 
+			WHERE company_id=#companyId# 
+			<isEqual property="userType" compareValue="0">
+				AND device_id = 1
+			</isEqual>
+			<isEqual property="userType" compareValue="1">
+				AND device_id = 31
+			</isEqual>
+			<isEqual property="userType" compareValue="2">
+				AND device_id = 200
+			</isEqual>
+			AND `year` = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 YEAR),'%Y') 
+			GROUP BY gf_num 
+		)tdata2 ON tgf.number=tdata2.gf_num
+		LEFT JOIN(
+			SELECT sum_data,gf_num FROM t_data_sum 
+			WHERE company_id=#companyId# 
+			<isEqual property="userType" compareValue="0">
+				AND device_id = 12
+			</isEqual>
+			<isEqual property="userType" compareValue="1">
+				AND device_id = 44
+			</isEqual>
+			<isEqual property="userType" compareValue="2">
+				AND device_id = 213
+			</isEqual>
+			AND `year` = DATE_FORMAT(NOW(),'%Y') GROUP BY gf_num 
+		)tdata3 ON tgf.number=tdata3.gf_num
+		LEFT JOIN(
+			SELECT sum_data,gf_num FROM t_data_sum 
+			WHERE company_id=#companyId# 
+			<isEqual property="userType" compareValue="0">
+				AND device_id = 12
+			</isEqual>
+			<isEqual property="userType" compareValue="1">
+				AND device_id = 44
+			</isEqual>
+			<isEqual property="userType" compareValue="2">
+				AND device_id = 213
+			</isEqual>
+			AND `year` = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 YEAR),'%Y') 
+			GROUP BY gf_num 
+		)tdata4 ON tgf.number=tdata4.gf_num
+		GROUP BY tgf.id
+		ORDER BY tgf.id
+	</select>
+	
+	<select id="getGFTTemAndLight" parameterClass="map" resultClass="java.lang.String">
+		SELECT IFNULL(SUM(`data`),0) AS `data` 
+		FROM 
+		<isEqual property="userType" compareValue="0">
+			t_g_data_collection 
+			WHERE `device_id`=1
+			AND ground_num = #gfNum#
+		</isEqual>
+		<isEqual property="userType" compareValue="1">
+			t_f_data_collection 
+			WHERE `device_id`=31
+			AND fishpond_num = #gfNum#
+		</isEqual>
+		<isEqual property="userType" compareValue="2">
+			t_t_data_collection 
+			WHERE `device_id`=200
+			AND datian_num = #gfNum#
+		</isEqual>
+		AND company_id=#companyId#
+		AND `year`= DATE_FORMAT(NOW(),'%Y')	
+		
+		UNION ALL
+		
+		SELECT IFNULL(SUM(`data`),0) AS `data` 
+		FROM 
+		<isEqual property="userType" compareValue="0">
+			t_g_data_collection 
+			WHERE `device_id`=1
+			AND ground_num = #gfNum#
+		</isEqual>
+		<isEqual property="userType" compareValue="1">
+			t_f_data_collection 
+			WHERE `device_id`=31
+			AND fishpond_num = #gfNum#
+		</isEqual>
+		<isEqual property="userType" compareValue="2">
+			t_t_data_collection 
+			WHERE `device_id`=200
+			AND datian_num = #gfNum#
+		</isEqual>
+		AND company_id=#companyId#
+		AND `year`= DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 YEAR),'%Y')	
+		
+		UNION ALL
+		
+		SELECT IFNULL(SUM(`data`),0) AS `data` 
+		FROM 
+		<isEqual property="userType" compareValue="0">
+			t_g_data_collection 
+			WHERE `device_id`=12
+			AND ground_num = #gfNum#
+		</isEqual>
+		<isEqual property="userType" compareValue="1">
+			t_f_data_collection 
+			WHERE `device_id`=44
+			AND fishpond_num = #gfNum#
+		</isEqual>
+		<isEqual property="userType" compareValue="2">
+			t_t_data_collection 
+			WHERE `device_id`=213
+			AND datian_num = #gfNum#
+		</isEqual>
+		AND company_id=#companyId#
+		AND `year`= DATE_FORMAT(NOW(),'%Y')	
+		
+		UNION ALL
+		
+		SELECT IFNULL(SUM(`data`),0) AS `data` 
+		FROM 
+		<isEqual property="userType" compareValue="0">
+			t_g_data_collection 
+			WHERE `device_id`=12
+			AND ground_num = #gfNum#
+		</isEqual>
+		<isEqual property="userType" compareValue="1">
+			t_f_data_collection 
+			WHERE `device_id`=44
+			AND fishpond_num = #gfNum#
+		</isEqual>
+		<isEqual property="userType" compareValue="2">
+			t_t_data_collection 
+			WHERE `device_id`=213
+			AND datian_num = #gfNum#
+		</isEqual>
+		AND company_id=#companyId#
+		AND `year`= DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 YEAR),'%Y')
+	</select>
+	
+	
+	
+	<!-- V2.0弃用.暂时保留 -->
+	<select id="getGroundFishpondListById" parameterClass="map" resultClass="cn.lookout.base.bean.GroundFishpondBean">
+		SELECT tgf.id,tgf.number,tgf.`type`,tgf.company_id AS companyId ,tgs.crop,IFNULL(tgs.cropCnt,0) AS cropCnt,
+			IFNULL(tds.deviceCnt,0) AS deviceCnt,IFNULL(tdsrc.runingCnt,0) AS runingCnt
+			,IFNULL(tdsoc.offlineCnt,0) AS offlineCnt,IFNULL(tdswc.warningCnt,0) AS warningCnt
+			,IFNULL(tgdc1.`data`,0) AS temperature,IFNULL(tgdc2.`data`,0) AS temperaturePre
+			,CONVERT(IFNULL((tgdc3.`data`/(SELECT COUNT(id) FROM t_ground_fishpond WHERE company_id=#companyId#)),0),DECIMAL(20,2)) AS light 
+			,CONVERT(IFNULL((tgdc4.`data`/(SELECT COUNT(id) FROM t_ground_fishpond WHERE company_id=#companyId#)),0),DECIMAL(20,2)) AS lightPre
+		FROM(
+			SELECT id,number,`type`,company_id FROM t_ground_fishpond 
+			WHERE company_id=#companyId# AND is_del=0
+			ORDER BY id
+		)tgf
+		<isEqual property="userType" compareValue="3">
+			LEFT JOIN ( SELECT COUNT(product_name) AS cropCnt,GROUP_CONCAT(product_name SEPARATOR '|') AS crop,ground_num FROM t_g_source WHERE company_id=#companyId#
+				GROUP BY company_id,ground_num)tgs ON tgf.number=tgs.ground_num
+		</isEqual>
+		<isEqual property="userType" compareValue="4">
+			LEFT JOIN ( SELECT COUNT(product_name) AS cropCnt,GROUP_CONCAT(product_name SEPARATOR '|') AS crop,fishpond_num FROM t_f_source  WHERE company_id=#companyId#
+				GROUP BY company_id,fishpond_num )tgs ON tgf.number=tgs.fishpond_num
+		</isEqual>
+		LEFT JOIN ( SELECT COUNT(id) AS deviceCnt,ground_fishpond_num FROM t_device_relation WHERE company_id=#companyId#
+			GROUP BY company_id,ground_fishpond_num )tds ON tgf.number=tds.ground_fishpond_num
+		LEFT JOIN ( SELECT COUNT(id) AS runingCnt,ground_fishpond_num FROM t_device_relation WHERE company_id=#companyId# AND device_state=0 
+			GROUP BY company_id,ground_fishpond_num )tdsrc ON tgf.number=tdsrc.ground_fishpond_num
+		LEFT JOIN ( SELECT COUNT(id) AS offlineCnt,ground_fishpond_num FROM t_device_relation WHERE company_id=#companyId# AND device_state=2 
+			GROUP BY company_id,ground_fishpond_num )tdsoc ON tgf.number=tdsoc.ground_fishpond_num
+		LEFT JOIN ( SELECT COUNT(id) AS warningCnt,ground_fishpond_num FROM t_device_relation WHERE company_id=#companyId# AND device_state=1 
+			GROUP BY company_id,ground_fishpond_num )tdswc ON tgf.number=tdswc.ground_fishpond_num
+		<isEqual property="userType" compareValue="3">
+			LEFT JOIN ( 
+				SELECT SUM(`data`) AS `data`,ground_num,`year` FROM t_g_data_collection WHERE company_id=#companyId# AND `device_id`=1
+					AND `year`= DATE_FORMAT(NOW(),'%Y')	
+					GROUP BY company_id,ground_num) tgdc1 ON tgf.number=tgdc1.ground_num
+			LEFT JOIN ( 
+				SELECT SUM(`data`) AS `data`,ground_num,`year` FROM t_g_data_collection WHERE company_id=#companyId# AND `device_id`=1
+					AND `year`= DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 YEAR),'%Y')	
+					GROUP BY company_id,ground_num) tgdc2 ON tgf.number=tgdc2.ground_num
+			LEFT JOIN ( 
+			SELECT SUM(`data`) AS `data`,ground_num,`year` FROM t_g_data_collection WHERE company_id=#companyId# AND `device_id`=12
+				AND `year`= DATE_FORMAT(NOW(),'%Y')	
+				GROUP BY company_id,ground_num) tgdc3 ON 1=1
+			LEFT JOIN ( 
+			SELECT SUM(`data`) AS `data`,ground_num,`year` FROM t_g_data_collection WHERE company_id=#companyId# AND `device_id`=12
+				AND `year`= DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 YEAR),'%Y')	
+				GROUP BY company_id,ground_num) tgdc4 ON 1=1
+		</isEqual>
+		<isEqual property="userType" compareValue="4">
+			LEFT JOIN ( 
+				SELECT SUM(`data`) AS `data`,fishpond_num,`year` FROM t_f_data_collection WHERE company_id=#companyId# AND `device_id`=31
+					AND `year`= DATE_FORMAT(NOW(),'%Y')	
+					GROUP BY company_id,fishpond_num) tgdc1 ON tgf.number=tgdc1.fishpond_num
+			LEFT JOIN ( 
+				SELECT SUM(`data`) AS `data`,fishpond_num,`year` FROM t_f_data_collection WHERE company_id=#companyId# AND `device_id`=31
+					AND `year`= DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 YEAR),'%Y')	
+					GROUP BY company_id,fishpond_num) tgdc2 ON tgf.number=tgdc2.fishpond_num
+			LEFT JOIN ( 
+			SELECT SUM(`data`) AS `data`,fishpond_num,`year` FROM t_f_data_collection WHERE company_id=#companyId# AND `device_id`=44
+				AND `year`= DATE_FORMAT(NOW(),'%Y')	
+				GROUP BY company_id,fishpond_num) tgdc3 ON 1=1
+			LEFT JOIN ( 
+			SELECT SUM(`data`) AS `data`,fishpond_num,`year` FROM t_f_data_collection WHERE company_id=#companyId# AND `device_id`=44
+				AND `year`= DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 YEAR),'%Y')	
+				GROUP BY company_id,fishpond_num) tgdc4 ON 1=1
+		</isEqual>
+		GROUP BY tgf.id
+		ORDER BY tgf.id
+	</select>
+	
+	<select id="getGroundFishpondList" parameterClass="map" resultClass="cn.lookout.base.bean.GroundFishpondBean">
+		SELECT id,`number`,`type` ,display_name AS displayName
+		FROM t_ground_fishpond 
+		WHERE company_id=#companyId# 
+		AND `type`=#userType# AND is_del=0
+	</select>
+	
+	<select id="getDeviceListTj" parameterClass="map" resultClass="cn.lookout.base.bean.DeviceInfo">
+		SELECT id,name AS deviceName FROM t_device 
+		WHERE device_type=1
+		AND need_tatistics=1 
+		AND `type`=#userType#
+	</select>
+	
+	<insert id="saveFeedBack" parameterClass="map">
+		INSERT INTO t_feedback(content,img,contacts,user_id) VALUES(#content#,#img#,#contacts#,#companyId#)
+	</insert>
+	
+	<update id="updatePushState" parameterClass="map">
+		UPDATE t_user SET push_state=#pushState# WHERE id=#id#
+	</update>
+	
+	<update id="updateDisplayName" parameterClass="map">
+		UPDATE t_ground_fishpond SET display_name=#displayName# WHERE id=#id#
+	</update>
+	
+ </sqlMap>

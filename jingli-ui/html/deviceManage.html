@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>设备管理</title>
+<link rel="stylesheet" href="../dist/css/normalize.css">
+<link rel="stylesheet" href="../dist/css/bootstrap.css">
+<link rel="stylesheet" href="../dist/css/index_public.css">
+<link rel="stylesheet" href="../dist/css/webuploader.css">
+<link rel="stylesheet" href="../dist/css/device_manage.css">
+<link rel="stylesheet" href="../dist/css/font-awesome.min.css">
+<link rel="stylesheet" href="../dist/css/iCheck/custom.css">
+<link rel="stylesheet" href="../dist/css/switchery.css">
+<link rel="stylesheet" href="../dist/css/animate.css">
+<link rel="stylesheet" href="../dist/css/toastr.min.css">
+<script src="../dist/js/jquery-1.9.1.min.js"></script>
+<script src="../dist/js/widgets/switchery.js"></script>
+<script src="../dist/js/iCheck/icheck.min.js"></script>
+<script src="../dist/js/js/comm.js"></script>
+<script src="../dist/js/js/index_head_left.js"></script>
+<script src="../dist/js/My97DatePicker_ie9/WdatePicker.js"></script>
+<script src="../dist/js/bootstrap.min.js"></script>
+<script src="../dist/js/widgets/webuploader.min.js"></script>
+<script src="../dist/js/js/device_manage.js"></script>
+<script src="../dist/js/js/webVideoCtrl.js"></script>
+<!-- Toastr script -->
+<script src="../dist/js/widgets/toastr.min.js"></script>
+<!-- Toastr style -->
+<link rel="stylesheet" href="../dist/css/sweetalert.css">
+<script src="../dist/js/widgets/sweetalert.min.js"></script>
+<script type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+<style>
+  .toast-title {
+  color: #FFFFFF;
+  }
+
+  .toast-message {
+  color: #FFFFFF;
+  }
+
+  .mask {
+  position: absolute;
+  top: 0px;
+  filter: alpha(opacity=60);
+  background-color: #777;
+  z-index: 1002;
+  left: 0px;
+  opacity: 0.5;
+  -moz-opacity: 0.5;
+  display: none;
+  }
+
+  #myTab>li {
+  float: left;
+  width: 200px;
+  text-align: center;
+  }
+
+  #myTab>li:hover {
+  cursor: pointer
+  }
+
+  #myTab>li>a {
+  color: #A8A9AB;
+  font-size: 14px
+  }
+
+  .disconnectionEquipmentBg {
+  background: url("../img/qietu/linkHas.png") no-repeat;
+  }
+
+  .disconnectionEquipmentBgNo {
+  background: url("../img/qietu/linkNo.png") no-repeat;
+  }
+
+  .normalList {
+  border: 1px solid #ddd;
+  margin-left: 7px;
+  float: left;
+  width: 100%;
+  text-align: center;
+  }
+
+  .normalList>li {
+  float: left;
+  width: 50%;
+  height: 80px;
+  line-height: 80px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 50px;
+  border-bottom: 1px dashed #ddd;
+  }
+
+  .normalList li span {
+  font-family: "impact","Microsoft YaHei","SimHei";
+  font-size: 16px;
+  color: #666585;
+  }
+
+  .normalList>li>a {
+  color: #7F8387
+  }
+
+  .clearfix::after {
+  content: "";
+  display: block;
+  clear: both;
+  }
+
+  .linkNormal a {
+  color: #828689;
+  font-size: 14px;
+  }
+
+  .linkNormal b {
+  color: #656486;
+  font-size: 16px;
+  }
+
+  .noImg {
+  text-align: center;
+  margin-top: 100px;
+  }
+
+  .noImg>p {
+  font-size: 14px;
+  }
+
+  #title_company_name {
+  font-size: 20px;
+  font-family: "黑体"
+  }
+
+  #triangle-right {
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-left: 6px solid #A9A9A9;
+  border-bottom: 5px solid transparent;
+  }
+  /* TODO */
+  .quyu-wra {
+  height: 60px;
+  line-height: 60px;
+  padding-left: 20px;
+  font-size: 18px;
+  }
+
+  .quyu-wra select {
+  display: inline-block;
+  width: 120px;
+  font-size: 14px;
+  padding: 8px 0;
+  text-indent: 1em;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  outline: none;
+  }
+
+  .quyu-search {
+  display: inline-block;
+  width: 100px;
+  text-align: center;
+  cursor: pointer;
+  }
+
+  .shipin-wra {
+  width: 110px;
+  height: 36px;
+  line-height: 36px;
+  margin-top: 12px;
+  margin-right: 20px;
+  border: 1px solid #1885dc;
+  color: #1885dc;
+  text-align: center;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  cursor: pointer;
+  }
+
+  .kongzhi-wra {
+    /*height: 40px;*/
+  font-size: 0;
+  }
+
+  .kongzhi-wra .tit {
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  color: #000;
+  font-weight: 600;
+  }
+
+  .kongzhi-wra .sxj {
+  display: inline-block;
+  width: 100px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  color: #444;
+  text-align: center;
+  }
+
+  .sxj-btn {
+  display: inline-block;
+  transform: translateY(-6px);
+  -webkit-transform: translateY(-6px);
+  }
+
+  .controller-items {
+  display: flex;
+  -webkit-display: flex;
+  -ms-display: flex;
+  -moz-display: flex;
+  width: 100%;
+  }
+
+  .controller-item {
+  flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  -moz-flex: 1;
+  border: 1px solid #e5ebfc;
+  text-align: center;
+  }
+
+  .controller-items li+li {
+  margin-left: 20px;
+  }
+
+  .controller-item-set {
+  display: block;
+  width: 80px;
+  height: 24px;
+  line-height: 24px;
+  margin: 22px auto 40px auto;
+  border: 1px solid #1885dc;
+  font-size: 12px;
+  color: #1885dc;
+  text-align: center;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  }
+
+  .controller-item-icon {
+  display: block;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+  /*background: url(../img/icon/icon-11.png) no-repeat center;*/
+  }
+
+  /*.controller-item:nth-child(2) i {
+  background: url(../img/icon/icon-22.png) no-repeat center;
+  }
+
+  .controller-item:nth-child(3) i {
+  background: url(../img/icon/icon-33.png) no-repeat center;
+  }
+
+  .controller-item:nth-child(4) i {
+  background: url(../img/icon/icon-44.png) no-repeat center;
+  }
+
+  .controller-item:nth-child(5) i {
+  background: url(../img/icon/icon-55.png) no-repeat center;
+  }
+
+  .controller-item:nth-child(6) i {
+  background: url(../img/icon/icon-66.png) no-repeat center;
+  }*/
+
+  .controller-item-tit {
+  display: block;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  margin-bottom: 30px;
+  font-size: 14px;
+  color: #444a50;
+  }
+
+  .shezhi-tt-head {
+  width: 100%;
+  height: 58px;
+  font-size: 0;
+  border-bottom: 1px solid #efefef;
+  }
+
+  .shezhi-tt-head span {
+  display: inline-block;
+  width: 90%;
+  height: 58px;
+  line-height: 58px;
+  font-size: 20px;
+  color: #000;
+  font-weight: 600;
+  text-indent: 1.5em;
+  }
+
+  .shezhi-tt-head i {
+  display: inline-block;
+  width: 10%;
+  height: 58px;
+  line-height: 58px;
+  font-size: 20px;
+  /*font-style: normal;
+  font-family: "sans-serif";
+  text-align: center;*/
+  cursor: pointer;
+  }
+
+  .shezhi-tt-con-tit {
+  width: 80%;
+  height: 36px;
+  margin: 20px auto 0 auto;
+  border: 1px solid #efefef;
+  display: flex;
+  -webkit-display: flex;
+  -moz-display: flex;
+  -ms-display: flex;
+  }
+
+  .shezhi-tt-con-tit li {
+  flex: 1;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  color: #393d41;
+  font-size: 14px;
+  }
+
+  .shezhi-tt-con-tit li+li {
+  border-left: 1px solid #efefef;
+  }
+
+  .shezhi-tt-content {
+  width: 80%;
+  margin: 0 auto;
+  }
+
+  .shezhi-tt-con {
+  height: 36px;
+  display: flex;
+  -webkit-display: flex;
+  -moz-display: flex;
+  -ms-display: flex;
+  border: 1px solid #efefef;
+  border-top: none;
+  }
+
+  .shezhi-tt-con li {
+  flex: 1;
+  -webkit-flex: 1;
+  -moz-flex: 1;
+  -ms-flex: 1;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  color: #393d41;
+  font-size: 14px;
+  }
+
+  .shezhi-tt-con li+li {
+  border-left: 1px solid #efefef;
+  }
+
+  .shezhi-tt-con .shezhi-btn {
+  cursor: pointer;
+  }
+
+  .shezhi-foot {
+  width: 80%;
+  margin: 80px auto 0 auto;
+  padding-bottom: 30px;
+  text-align: right;
+  }
+
+  .shezhi-foot span {
+  display: inline-block;
+  width: 90px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+  }
+
+  .shezhi-cancel {
+  border: 1px solid #dcdcdc;
+  background: #fff;
+  font-size: 14px;
+  color: #6b8299;
+  }
+
+  .shezhi-confirm {
+  border: 1px solid #1885dc;
+  background: #1885dc;
+  font-size: 14px;
+  color: #fff;
+  }
+
+  .plugin-btn {
+  display: none;
+  position: absolute;
+  top: 500px;
+  left: 50%;
+  z-index: 1111;
+  width: 600px;
+  height: 66px;
+  margin-left: -300px;
+  font-size: 0;
+  text-align: center;
+  }
+
+  .plugin-btn span {
+  display: inline-block;
+  width: 66px;
+  height: 66px;
+  background: url(../img/icon/icon-p-1.png) no-repeat center;
+  cursor: pointer;
+  margin-left: 18px;
+  user-select: none;
+  -webkit-user-select: none;
+  }
+
+  .plugin-btn span:nth-child(2) {
+  background: url(../img/icon/icon-p-2.png) no-repeat center;
+  }
+
+  .plugin-btn span:nth-child(3) {
+  background: url(../img/icon/icon-p-3.png) no-repeat center;
+  }
+
+  .plugin-btn span:nth-child(4) {
+  background: url(../img/icon/icon-p-4.png) no-repeat center;
+  }
+
+  .plugin-btn span:nth-child(5) {
+  background: url(../img/icon/icon-p-5.png) no-repeat center;
+  }
+
+  .plugin-btn span:nth-child(6) {
+  background: url(../img/icon/icon-p-6.png) no-repeat center;
+  }
+  .smallBox{
+    border-bottom: 1px solid #EAEEFD;
+  }
+  .toushi{
+    display: none;
+  }
+  .set-pattern-wra{
+    width: 800px;
+    background: #fff;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+  }
+  .set-pattern-item{
+    width: 80%;
+    margin: 0 auto;
+    padding: 18px 0;
+    font-size: 0;
+  }
+  .set-pattern-item span{
+    display: inline-block;
+    width: 200px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    box-sizing: border-box;
+    padding-right: 20px;
+    text-align: right;
+  }
+  .set-pattern-use, .set-pattern-par{
+    display: inline-block;
+    width: 230px;
+    height: 40px;
+    border: 1px solid #d1d1d1;
+    text-indent: 1em;
+    font-size: 16px;
+    color: #333;
+  }
+  .set-pattern-sub-wra{
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px 0 40px 0;
+    text-align: center;
+  }
+  .set-pattern-sub{
+    display: inline-block;
+    width: 186px;
+    height: 36px;
+  }
+  .audio-hide{
+    display: none;
+    height: 0;
+    opacity: 0;
+  }
+</style>
+</head>
+<body>
+<script type="text/javascript">
+  //--------->websocket连接
+  var socketState = false;
+  var webSocket = new WebSocket(WebSocketURL);
+  webSocket.onerror = function(event) {
+    onError(event)
+  };
+
+  webSocket.onopen = function(event) {
+    onOpen(event)
+  };
+
+  webSocket.onmessage = function(event) {
+    onMessage(event)
+  };
+  var defalutColor = '#FE8110';
+  var switcheryColor = "#11367A"; //按钮颜色
+  //------->初始化按钮控件
+  var water_con;
+  var water_con1;
+  var window_con;
+  var window_con1;
+  var co2_con;
+  var co2_con1;
+  var hot_con;
+  var hot_con1;
+  var light_con;
+  var light_con1;
+  var wind_con;
+  var wind_con1;
+  var water_in_con;
+  var water_in_con1;
+  var water_out_con;
+  var water_out_con1;
+  var feed_con;
+  var feed_con1;
+  var o2_con;
+  var o2_con1;
+  var camera_con;
+  var camera_con1;
+  //<------初始化按钮End
+  //--------->设备状态
+  var connects = ","; //连接正常
+  var disConnects = "," //断线
+  var warnings = ","; //预警
+  var runnings = ","; //运行
+  //<------设备状态
+  var szIP = "";
+  var szPort = "";
+  var szUsername = "";
+  var szPassword = "";
+  var isLogin = false;
+
+  $(document).ready(function() {
+    $("#div1").load('../include/left_title.html', function() {
+      menu();
+    })
+    $("#loadHeader").load("../include/header.html", function() {
+      header();
+    })
+    $("#personal").load("../include/modelpersonal.html", function() {
+      personalModel();
+    })
+    $(".icheckbox").iCheck({
+      checkboxClass: 'icheckbox_square-green',
+    });
+    $(".farm-type").css('display', 'none');
+    $(".fish-type").css('display', 'none');
+    initData();
+
+    //水泵 等的 设置
+    $(".shezhi-tt-content").on("click", ".shezhi-btn", function() {
+      var name = $(this).parents(".shezhi-tt-con").find("li:eq(0)").attr("data-name");
+      var val = $(this).parents(".shezhi-tt-con").find(".shezhi_").attr("data-val");
+      console.log($(this).parents(".shezhi-tt-con").find(".shezhi_"));
+      var num = $(this).parents(".shezhi-tt-con").find(".shezhi_").attr("data-index");
+    	// var name  = $(".shezhi-tt-con li:eq(0)").html();
+    	// var val = $("#shezhi-1").val();
+      // $("#shezhi-tt").modal('hide');
+    	showKzDeviceDiv(val, name, num);
+    })
+
+    // 搜索查询
+    $("#gf_num_list").on("change", function() {
+      getData();
+    })
+  });
+
+  var type_;
+  var loginInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
+  if (loginInfo.type_ && loginInfo.type_ == 3) {
+    type_ = 3;
+  } else {
+    type_ = loginInfo.type;
+  }
+  $("#audioErrorPlay").on("click", function() {
+    document.getElementById("audioError").play();
+  })
+</script>
+<script src="../dist/js/js/deviceManage.js"></script>
+<div id="mask" class="mask" onclick="hideMask()"></div>
+<div class="container-fluid">
+	<!-- header  -->
+	<div class="nav row " id="loadHeader">
+	</div>
+	<div class="row neirong">
+		<!-- 侧边导航 -->
+		<div id="div1" class="sidebar col-xs-2">
+		</div>
+		<!-- 主题内容 -->
+		<div class="main col-xs-10 row animated fadeInRight" style="min-height:800px;background-color:#F4F7FE;">
+			<div style="height:60px;background: #fff;width:97%;margin-left:20px;margin-top:15px;display: flex;justify-content: space-between;">
+				<div class="quyu-wra">
+              区域：
+					<select id="gf_num_list">
+					</select>
+					<!-- <span class="quyu-search">查询</span> -->
+				</div>
+				<div class="shipin-wra" onclick="showVideo()">
+              点击视频
+				</div>
+			</div>
+			<div class="col-xs-12 row" id="main" style="margin-top:10px;background-color:#FFFFFF;">
+				<div class="col-xs-12" id="sensor">
+					<h4 style="margin-left:-10px;font-weight:normal;color:#070612;font-size:18px">传感器</h4>
+          <!-- TODO -->
+          <div class="sensorDel row sensor-wra">
+            <!-- <div class="col-xs-4 smallBox">
+              <div class="minWidth">
+                XXXX
+              </div>
+              <div id="temperature" class="right"></div>
+              <div class="setup">
+                <table>
+                <tr>
+                  <td>
+                    <a onclick="showReport(1)" class="btn btn-white btn-bitbucket">
+                    <i class="baobiao setPublic">&nbsp;报表</i>
+                    </a>
+                  </td>
+                  <td>
+                    <a onclick="showCjDeviceDiv(1,'空气温度')" class="btn btn-white btn-bitbucket">
+                    <i class="shezhi setPublic">&nbsp;设置</i>
+                    </a>
+                  </td>
+                </tr>
+                </table>
+              </div>
+            </div> -->
+          </div>
+          <h3></h3>
+					<div class="sensorDel row farm-type" style="display: none;height: 0;overflow: hidden;">
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								空气温度
+							</div>
+							<div id="temperature" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(1)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(1,'空气温度')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								空气湿度
+							</div>
+							<div id="humidity" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(2)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(2,'空气湿度')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-4 smallBox" style="border-right:0">
+							<div class="minWidth">
+								CO2浓度
+							</div>
+							<div id="co2" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(3)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(3,'CO2浓度')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="sensorDel row farm-type" style="display: none;height: 0;overflow: hidden;border-top:0;border-bottom:0;">
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								光照强度
+							</div>
+							<div id="light" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(4)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(4,'光照强度')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								土壤温度
+							</div>
+							<div id="soilTem" class="col-xs-6 right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(5)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(5,'土壤温度')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-4 smallBox" style="border-right:0">
+							<div class="minWidth">
+								土壤水分
+							</div>
+							<div id="soilHum" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(6)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(6,'土壤水分')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="sensorDel row farm-type" style="display: none;height: 0;overflow:hidden;border-bottom:0;">
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								土壤PH
+							</div>
+							<div id="soilPh" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(7)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(7,'土壤PH')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								叶面温度
+							</div>
+							<div id="leafTem" class="right">
+							</div>
+							<div class="setup">
+								<a onclick="showCjDeviceDiv(17,'叶面温度')" class="btn btn-white btn-bitbucket">
+								<i class="shezhi setPublic">&nbsp;设置</i>
+								</a>
+							</div>
+						</div>
+						<div class="col-xs-4 smallBox" style="border-right:0">
+							<div class="minWidth">
+								叶面湿度
+							</div>
+							<div id="leafHum" class="right">
+							</div>
+							<div class="setup">
+								<a onclick="showCjDeviceDiv(18,'叶面湿度')" class="btn btn-white btn-bitbucket">
+								<i class="shezhi setPublic">&nbsp;设置</i>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="sensorDel row farm-type" style="display: none;height: 0;overflow: hidden;">
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								果实尺寸
+							</div>
+							<div id="fruitSize" class="right">
+							</div>
+							<div class="setup">
+								<a onclick="showCjDeviceDiv(19,'果实尺寸')" class="btn btn-white btn-bitbucket">
+								<i class="shezhi setPublic">&nbsp;设置</i>
+								</a>
+							</div>
+						</div>
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								茎秆尺寸
+							</div>
+							<div id="stalkSize" class="right">
+							</div>
+							<div class="setup">
+								<a onclick="showCjDeviceDiv(20,'茎秆尺寸')" class="btn btn-white btn-bitbucket">
+								<i class="shezhi setPublic">&nbsp;设置</i>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="sensorDel row fish-type" style="display: none;height: 0;overflow: hidden;">
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								鱼池水温
+							</div>
+							<div id="fishTem" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(31)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(31,'鱼池水温')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								溶氧含量
+							</div>
+							<div id="dissolvedOxygen" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(32)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(32,'溶氧含量')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-4 smallBox" style="border-right:0">
+							<div class="minWidth">
+								水PH
+							</div>
+							<div id="waterPh" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(33)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(33,'水PH')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="sensorDel row fish-type" style="display: none;height: 0;overflow:hidden;border-top:0;border-bottom:0;">
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								氨氮含量
+							</div>
+							<div id="ammoniaNitrogen" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(34)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(34,'氨氮含量')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								蓝藻含量
+							</div>
+							<div id="blueAlgae" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(35)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(35,'蓝藻含量')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-4 smallBox" style="border-right:0">
+							<div class="minWidth">
+								水浊度
+							</div>
+							<div id="waterTurbidity" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(36)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(36,'水浊度')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="sensorDel row fish-type" style="display: none;height: 0;overflow: hidden;">
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								亚硝盐量
+							</div>
+							<div id="nitrate" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(37)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(37,'亚硝盐量')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-4 smallBox">
+							<div class="minWidth">
+								饲料余量
+							</div>
+							<div id="feedSurplus" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(38)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(38,'饲料余量')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+						<div class="col-xs-4 smallBox" style="border-right:0">
+							<div class="minWidth">
+								饲料投放量
+							</div>
+							<div id="feedDelivery" class="right">
+							</div>
+							<div class="setup">
+								<table>
+								<tr>
+									<td>
+										<a onclick="showReport(39)" class="btn btn-white btn-bitbucket">
+										<i class="baobiao setPublic">&nbsp;报表</i>
+										</a>
+									</td>
+									<td>
+										<a onclick="showCjDeviceDiv(39,'饲料投放量')" class="btn btn-white btn-bitbucket">
+										<i class="shezhi setPublic">&nbsp;设置</i>
+										</a>
+									</td>
+								</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12" style="margin-top:15px;margin-left:-10px;">
+					<div class="kongzhi-wra">
+						<span class="tit">控制器</span>
+						<span class="sxj" style="display: none;">网络摄像机</span>
+						<div class="sxj-btn" style="display: none;">
+							<input onchange="showVideo()" id="camera_con" type="checkbox"/>
+						</div>
+					</div>
+					<!-- TODO -->
+					<ul class="controller-items" data-show="1">
+            <!-- <li class="controller-item" onclick="showWin(1)">
+            	<span class="controller-item-set">设置</span>
+            	<i class="controller-item-icon"></i>
+            	<span class="controller-item-tit">水泵364E</span>
+            </li>
+						<li class="controller-item" onclick="showWin(2)">
+						<span class="controller-item-set">设置</span>
+						<i class="controller-item-icon"></i>
+						<span class="controller-item-tit">天窗NTU-3</span>
+						</li>
+						<li class="controller-item" onclick="showWin(2)">
+						<span class="controller-item-set">设置</span>
+						<i class="controller-item-icon"></i>
+						<span class="controller-item-tit">CO2NT42-1</span>
+						</li>
+						<li class="controller-item" onclick="showWin(2)">
+						<span class="controller-item-set">设置</span>
+						<i class="controller-item-icon"></i>
+						<span class="controller-item-tit">供热NT43-8</span>
+						</li>
+						<li class="controller-item" onclick="showWin(2)">
+						<span class="controller-item-set">设置</span>
+						<i class="controller-item-icon"></i>
+						<span class="controller-item-tit">补光NT56-4</span>
+						</li>
+						<li class="controller-item" onclick="showWin(2)">
+						<span class="controller-item-set">设置</span>
+						<i class="controller-item-icon"></i>
+						<span class="controller-item-tit">风机NT346-5</span>
+						</li>
+						<li class="controller-item" onclick="showWin(2)">
+						<span class="controller-item-set">设置</span>
+						<i class="controller-item-icon"></i>
+						<span class="controller-item-tit">水泵364E</span>
+						</li> -->
+					</ul>
+					<div class="controlDel farm-type" style="display: none;height: 0;overflow: hidden;">
+						<div class="waterpump" style="margin-left:0px">
+							<div onclick="showKzDeviceDiv(61,'水泵')">
+								<img src="../img/monitor/waterpump.png" alt="" style="width:35px;height:35px;">
+								<p>
+									水泵
+								</p>
+							</div>
+							<span id="water_con_state"></span><br>
+							<br>
+							<input onchange="conDeviceOpenClose(this)" id="water_con" type="checkbox" value="61"/>
+						</div>
+						<div class="skylight waterpump">
+							<div onclick="showKzDeviceDiv(62,'天窗')">
+								<img src="../img/monitor/window.png" alt="" style="width:35px;height:35px;">
+								<p>
+									天窗
+								</p>
+							</div>
+							<span id="window_con_state"></span><br>
+							<br>
+							<input onchange="conDeviceOpenClose(this)" id="window_con" type="checkbox" value="62"/>
+						</div>
+						<div class="waterpump CO2">
+							<div onclick="showKzDeviceDiv(64,'CO2发生器')">
+								<img src="../img/monitor/co2.png" alt="" style="width:35px;height:35px;">
+								<p>
+									CO2发生器
+								</p>
+							</div>
+							<span id="co2_con_state"></span><br>
+							<br>
+							<input onchange="conDeviceOpenClose(this)" id="co2_con" type="checkbox" value="64"/>
+						</div>
+						<div class="heataddition waterpump">
+							<div onclick="showKzDeviceDiv(63,'供热')">
+								<img src="../img/monitor/hot.png" alt="" style="width:35px;height:35px;">
+								<p>
+									供热
+								</p>
+							</div>
+							<span id="hot_con_state"></span><br>
+							<br>
+							<input onchange="conDeviceOpenClose(this)" id="hot_con" type="checkbox" value="63"/>
+						</div>
+						<div class="waterpump lighting">
+							<div onclick="showKzDeviceDiv(65,'补光')">
+								<img src="../img/monitor/light.png" alt="" style="width:35px;height:35px;">
+								<p>
+									补光
+								</p>
+							</div>
+							<span id="light_con_state"></span><br>
+							<br>
+							<input onchange="conDeviceOpenClose(this)" id="light_con" type="checkbox" value="65"/>
+						</div>
+						<div class="waterpump fan">
+							<div onclick="showKzDeviceDiv(66,'风机')">
+								<img src="../img/monitor/wind.png" alt="" style="width:35px;height:35px;">
+								<p>
+									风机
+								</p>
+							</div>
+							<span id="wind_con_state"></span><br>
+							<br>
+							<input onchange="conDeviceOpenClose(this)" id="wind_con" type="checkbox" value="66"/>
+						</div>
+					</div>
+					<div class="controlDel fish-type" style="display: none;height: 0;overflow: hidden;">
+						<div class="waterpump" style="margin-left:0px">
+							<div onclick="showKzDeviceDiv(71,'进水开关')">
+								<img src="../img/monitor/in_water.png" alt="" style="width:35px;height:35px;">
+								<p>
+									进水开关
+								</p>
+							</div>
+							<span id="water_in_con_state"></span><br>
+							<br>
+							<input onchange="conDeviceOpenClose(this)" id="water_in_con" type="checkbox" value="71"/>
+						</div>
+						<div class="skylight waterpump">
+							<div onclick="showKzDeviceDiv(72,'出水开关')">
+								<img src="../img/monitor/out_water.png" alt="" style="width:35px;height:35px;">
+								<p>
+									出水开关
+								</p>
+							</div>
+							<span id="water_out_con_state"></span><br>
+							<br>
+							<input onchange="conDeviceOpenClose(this)" id="water_out_con" type="checkbox" value="72"/>
+							<!--                                 	<input type="checkbox" class="js-switch"/> -->
+						</div>
+						<div class="waterpump CO2">
+							<div onclick="showKzDeviceDiv(74,'增氧开关')">
+								<img src="../img/monitor/o2.png" alt="" style="width:35px;height:35px;">
+								<p>
+									增氧开关
+								</p>
+							</div>
+							<span id="o2_con_state"></span><br>
+							<br>
+							<input onchange="conDeviceOpenClose(this)" id="o2_con" type="checkbox" value="74"/>
+							<!-- 	                                <input type="checkbox" class="js-switch"/> -->
+						</div>
+						<div class="heataddition waterpump">
+							<div onclick="showKzDeviceDiv(73,'投食开关')">
+								<img src="../img/monitor/toushikaiguan.png" alt="" style="width:35px;height:35px;">
+								<p>
+									投食开关
+								</p>
+							</div>
+							<span id="feed_con_state"></span><br>
+							<br>
+							<input onchange="conDeviceOpenClose(this)" id="feed_con" type="checkbox" value="73"/>
+							<!-- 	                                <input type="checkbox" class="js-switch"/> -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 			<div style="margin-top:15px;position: fixed;bottom:10px;width:100%;" > -->
+			<div style="margin-top:550px;width:100%;padding-top: 116px;padding-bottom: 16px;">
+				<table style="margin:0 auto;">
+				<tr>
+					<td>
+						<div style="background-color:#177AD5;width:8px;height:8px">
+						</div>
+					</td>
+					<td width="8px">
+					</td>
+					<td onclick="getDataSet(this)" style="cursor: pointer;font-size:14px;" data-id="0" data-color="177AD5" class="clickState hoverColor">
+						连接正常
+					</td>
+					<td width="16px">
+					</td>
+					<td>
+						<div style="background-color:#F9A123;width:8px;height:8px">
+						</div>
+					</td>
+					<td width="8px">
+					</td>
+					<td onclick="getDataSet(this)" style="cursor: pointer;font-size:14px;" data-id="1" data-color="F9A123" class="clickState hoverColor">
+						设备预警
+					</td>
+					<td width="16px">
+					</td>
+					<td>
+						<div style="background-color:#14CB66;width:8px;height:8px">
+						</div>
+					</td>
+					<td width="8px">
+					</td>
+					<td onclick="getDataSet(this)" style="cursor: pointer;font-size:14px;" data-id="2" data-color="14CB66" class="clickState hoverColor">
+						正在运行
+					</td>
+					<td width="8px">
+					</td>
+					<td>
+						<div style="background-color:#F52B3B;width:8px;height:8px">
+						</div>
+					</td>
+					<td width="8px">
+					</td>
+					<td onclick="getDataSet(this)" style="cursor: pointer;font-size:14px;" data-id="3" data-color="F52B3B" class="clickState hoverColor">
+						设备断开
+					</td>
+				</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="row" id="divFooter">
+	</div>
+</div>
+<!-- 个人信息 -->
+<div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+</div>
+<div class="modal fade" id="camera_setting" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	<div class="modal-dialog" role="document" style="width:400px">
+		<div class="modal-content">
+			<div class="modal-header">
+				<label style="margin-left:130px">网络摄像机配置</label>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body" id="tf">
+				<table>
+				<tr>
+					<td>
+						<label>摄像头IP</label>
+					</td>
+					<td width="20">
+					</td>
+					<td>
+						<input type="text" class="form-control" id="camera_ip" style="width:150px">
+					</td>
+				</tr>
+				<tr height="20">
+				</tr>
+				<tr>
+					<td>
+						<label>摄像头端口</label>
+					</td>
+					<td width="20">
+					</td>
+					<td>
+						<input type="text" class="form-control" id="camera_port" style="width:150px">
+					</td>
+				</tr>
+				<tr height="20">
+				</tr>
+				<tr>
+					<td>
+						<label>摄像头手机访问端口</label>
+					</td>
+					<td width="20">
+					</td>
+					<td>
+						<input type="text" class="form-control" id="phone_port" style="width:150px">
+					</td>
+				</tr>
+				<tr height="20">
+				</tr>
+				<tr>
+					<td>
+						<label>摄像头账号</label>
+					</td>
+					<td width="20">
+					</td>
+					<td>
+						<input type="text" class="form-control" id="camera_uname" style="width:150px">
+					</td>
+				</tr>
+				<tr height="20">
+				</tr>
+				<tr>
+					<td>
+						<label>摄像头密码</label>
+					</td>
+					<td width="20">
+					</td>
+					<td>
+						<input type="text" class="form-control" id="camera_upwd" style="width:150px">
+					</td>
+				</tr>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary" onclick="saveCameraSetting()">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- TODO display:none -->
+<div id="divPlugin" class="plugin" style="position:absolute;top:100px;left:50%;z-index:1003;background-color:#FFFFFF;width:600px;height:400px;margin-left: -300px;display:none;">
+</div>
+<!-- <div class="plugin-btn" style="display:none;"> -->
+<div class="plugin-btn">
+	<span onmousedown="PTZZoomout()" onmouseup="PTZZoomStop()">-</span>
+	<span onmousedown="PTZZoomIn()" onmouseup="PTZZoomStop()">+</span>
+	<!-- <span onclick="PTZZoomout()">-</span>
+	<span onclick="PTZZoomIn()">+</span> -->
+	<span onmousedown="mouseDownPTZControl(1)" onmouseup="mouseUpPTZControl()">上</span>
+	<span onmousedown="mouseDownPTZControl(2)" onmouseup="mouseUpPTZControl()">下</span>
+	<span onmousedown="mouseDownPTZControl(3)" onmouseup="mouseUpPTZControl()">左</span>
+	<span onmousedown="mouseDownPTZControl(4)" onmouseup="mouseUpPTZControl()">右</span>
+</div>
+<div id="download_plugin" style="position:absolute;top:30%;left:35%;z-index:1003;background-color:#FFFFFF;min-width:500px;min-height:300px;display:none;text-align:center">
+	<p style="margin-top:100px">
+		检测到您还未安装播放插件
+	</p>
+	<p style="margin-top:20px">
+		请安装插件后重启浏览器
+	</p>
+	<button style="margin-top:20px" onclick="installPlugin()" type="button" class="btn btn-w-m btn-default">安装插件</button>
+</div>
+<!-- 20181031 模式设置 -->
+<div class="modal fade" id="set-pattern" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog set-pattern-wra" role="document">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body" style="padding:0px 30px">
+      <div class="set-pattern-item">
+        <span>使用模式</span>
+        <select class="set-pattern-use" name="">
+          <option value=0>自动</option>
+          <option value=1>手动</option>
+        </select>
+      </div>
+      <div class="set-pattern-item">
+        <span>固定参数</span>
+        <input type="text" class="set-pattern-par" name="" value="">
+      </div>
+      <div class="set-pattern-sub-wra">
+        <input type="button" class="set-pattern-sub" value="提交">
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 采集器设置 -->
+<div class="modal fade" id="cj_device_div" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	<div class="modal-dialog" role="document" style="width:800px;">
+		<div class="modal-content" style="min-height:450px;padding-bottom:30px">
+			<div class="modal-header">
+				<input id="cj_device_num" type="hidden">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">×</span>
+				</button>
+				<h4 id="cj_device_name" style="text-align:center"></h4>
+			</div>
+			<div class="modal-body" style="padding:0px 30px">
+				<div class="tabs-container">
+					<div class="tabs-left" style="width:740px">
+						<ul id="ul_cj_device_left" class="nav nav-tabs" style="background:#ffffff;width:200px;height:100%;">
+							<li id="cj_device_new" class="active">
+							<a data-toggle="tab" onclick="showCjDeviceData(0)" ondragstart="return false">新建</a>
+							</li>
+						</ul>
+						<div class="tab-content " style="margin-left:65px">
+							<div id="cj_device" class="tab-pane active">
+								<div class="panel-body" style="text-align:center">
+									<input id="cj_device_setting_id" type="hidden">
+									<table style="text-align:left;margin:0 auto">
+									<tr>
+										<td width="100">
+											<span>开始时间</span>
+										</td>
+										<td width="150">
+											<input type="text" name="start_time" style="background-color:#FFFFFF" id="start_time_top" class="form-control" onfocus="WdatePicker({ dateFmt: 'HH:mm', readOnly: true });" value="">
+										</td>
+										<td>
+										</td>
+									</tr>
+									<tr height="20">
+									</tr>
+									<tr>
+										<td width="100">
+											<span>结束时间</span>
+										</td>
+										<td width="150">
+											<input type="text" name="end_time" style="background-color:#FFFFFF" id="end_time_top" class="form-control" onfocus="WdatePicker({ dateFmt: 'HH:mm', readOnly: true });" value="">
+										</td>
+										<td>
+										</td>
+									</tr>
+									<tr height="20">
+									</tr>
+									<tr>
+										<td width="100">
+											<span>采集数值小于</span>
+										</td>
+										<td width="150">
+											<input id="input_cj_data_left" type="number" class="form-control" style="width:150px;height:30px">
+										</td>
+										<td style="text-align:left;padding-left:20px">
+											报警
+										</td>
+									</tr>
+									<tr height="20">
+									</tr>
+									<tr>
+										<td width="100">
+											<span>采集数值大于</span>
+										</td>
+										<td width="150">
+											<input id="input_cj_data_right" type="number" class="form-control" style="width:150px;height:30px">
+										</td>
+										<td style="text-align:left;padding-left:20px">
+											报警
+										</td>
+									</tr>
+									<tr height="20">
+									</tr>
+									<tr>
+										<td width="100">
+											<span>是否启用</span>
+										</td>
+										<td>
+											<select id="cj_device_state" class="form-control" style="width:150px;height:35px">
+												<option value="1">启用</option>
+												<option value="0">禁用</option>
+											</select>
+										</td>
+									</tr>
+									</table>
+									<div style="margin-top:40px;text-align:center">
+										<button data-dismiss="modal" id="btn_cj_setting_cancel" type="button" class="btn btn-w-m btn-default" style="margin-right:10px">取消</button>
+										<button id="btn_cj_setting_del" type="button" class="btn btn-w-m btn-danger" style="margin-right:10px" onclick="deleteCjSetting()">删除</button>
+										<button type="button" class="btn btn-w-m btn-primary" style="margin-left:10px" onclick="saveAndUpdateSetting()">保存</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- TODO -->
+<div class="modal fade" id="shezhi-tt" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	<div class="modal-dialog" role="document" style="width:600px;background: #fff;">
+		<div class="shezhi-tt-head">
+			<span>天窗</span>
+			<i onclick="hideShezhi()" class="glyphicon glyphicon-remove"></i>
+		</div>
+		<ul class="shezhi-tt-con-tit">
+			<li>设备</li>
+			<li>状态</li>
+			<li>状态</li>
+		</ul>
+		<div class="shezhi-tt-content">
+			<!-- <ul class="shezhi-tt-con">
+				<li>一号通风口</li>
+				<li><input onchange="conDeviceOpenClose22(this)" type="checkbox" id="shezhi-1" name="name" value=""></li>
+				<li><span class="shezhi-btn">设置</span></li>
+			</ul>-->
+			<!-- <ul class="shezhi-tt-con">
+				<li>一号通风口</li>
+				<li><input type="checkbox" id="shezhi-2" name="name" value=""></li>
+				<li><span class="shezhi-btn">设置</span></li>
+			</ul> -->
+		</div>
+		<div class="shezhi-foot">
+			<span class="shezhi-cancel" onclick="hideShezhi()">返回</span>
+			<span class="shezhi-confirm" onclick="hideShezhi()">确定</span>
+		</div>
+	</div>
+</div>
+<!-- 控制器设置 -->
+<div class="modal fade" id="kz_device_div" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	<div class="modal-dialog" role="document" style="width:1000px;height:100%">
+		<div class="modal-content" style="min-height:550px;padding-bottom:40px;">
+			<div class="modal-header">
+				<input id="kz_device_num" type="hidden">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">×</span>
+				</button>
+				<h4 id="kz_device_name" style="text-align:center"></h4>
+			</div>
+			<div class="modal-body" style="padding:0px 30px">
+				<div class="tabs-container">
+					<div class="tabs-left" style="width:940px">
+						<ul id="ul_kz_device_left" class="nav nav-tabs" style="background:#ffffff;width:200px;height:100%;">
+							<li id="kz_device_new" class="active">
+							<a data-toggle="tab" onclick="showKzDeviceData(0)" ondragstart="return false">新建</a>
+							</li>
+						</ul>
+						<div class="tab-content" style="margin-left:15px">
+							<div id="kz_device" class="tab-pane active">
+								<div class="panel-body" style="text-align:center">
+									<input id="kz_device_setting_id" type="hidden">
+									<table style="text-align:left;margin:0 auto;width:600px">
+									<tr>
+										<td width="20%">
+											<span>设置模式</span>
+										</td>
+										<td width="80%" colspan="3">
+											<select disabled="disabled" onchange="changeKzType()" id="kz_device_model" class="form-control" style="width:150px;height:35px">
+												<option value="0">单次定时</option>
+												<option value="1">循环定时</option>
+												<option id="option_device_model" value="2">智能控制</option>
+											</select>
+										</td>
+									</tr>
+									<tr height="20">
+									</tr>
+									<tr>
+										<td>
+											<span>开始时间</span>
+										</td>
+										<td colspan="3">
+											<input type="text" name="start_time" style="background-color:#FFFFFF;width:150px" id="kz_device_start_time" class="form-control" onfocus="WdatePicker({ dateFmt: 'HH:mm', readOnly: true });" value="">
+										</td>
+									</tr>
+									<tr class="tr_kz_device_end_time" height="20">
+									</tr>
+									<tr class="tr_kz_device_end_time">
+										<td>
+											<span>结束时间</span>
+										</td>
+										<td colspan="3">
+											<input type="text" name="end_time" style="background-color:#FFFFFF;width:150px" id="kz_device_end_time" class="form-control" onfocus="WdatePicker({ dateFmt: 'HH:mm', readOnly: true });" value="">
+										</td>
+									</tr>
+									<tr class="kz_device_loop" height="20">
+									</tr>
+									<tr class="kz_device_loop">
+										<td>
+											持续时间(分)
+										</td>
+										<td colspan="3">
+											<input id="input_kz_cxsj" type="number" class="form-control" style="width:150px;height:30px">
+										</td>
+									</tr>
+									<tr class="kz_device_loop" height="20">
+									</tr>
+									<tr class="kz_device_loop">
+										<td>
+											间隔时间(分)
+										</td>
+										<td colspan="3">
+											<input id="input_kz_jg" type="number" class="form-control" style="width:150px;height:30px">
+										</td>
+									</tr>
+									<tr class="kz_device_loop" height="20">
+									</tr>
+									<tr class="kz_device_loop">
+										<td>
+											结束标识
+										</td>
+										<td colspan="3">
+											<select onchange="changeLoopEndType()" id="kz_device_end_state" class="form-control" style="width:150px;height:35px">
+												<option value="0">按时间</option>
+												<option value="1">按循环次数</option>
+											</select>
+										</td>
+									</tr>
+									<tr class="kz_device_loop" height="20">
+									</tr>
+									<tr class="kz_device_loop" id="tr_loop_end_time" style="display:none">
+										<td>
+											结束时间
+										</td>
+										<td colspan="3">
+											<input type="text" name="end_time" style="background-color:#FFFFFF;width:150px;" id="end_time_loop" class="form-control" onfocus="WdatePicker({ dateFmt: 'HH:mm', readOnly: true });" value="">
+										</td>
+									</tr>
+									<tr class="kz_device_loop" id="tr_loop_end_cnt" style="display:none">
+										<td>
+											循环次数
+										</td>
+										<td colspan="3">
+											<input id="input_kz_loop_cnt" type="number" class="form-control" style="width:150px;height:30px">
+										</td>
+									</tr>
+									<tr class="kz_device_zn" height="20">
+									</tr>
+									<tr class="kz_device_zn">
+										<td>
+														打开条件
+										</td>
+										<td>
+											<select id="kz_device_open_device" class="form-control" style="width:150px;height:35px">
+											</select>
+										</td>
+										<td>
+											<select id="kz_device_open_type" class="form-control" style="width:150px;height:35px;text-align:center">
+												<option value="0">&gt;</option>
+												<option value="1">&lt;</option>
+											</select>
+										</td>
+										<td>
+											<input id="kz_device_open_val" type="number" class="form-control" style="width:150px;height:35px">
+										</td>
+									</tr>
+									<tr class="kz_device_zn" height="20">
+									</tr>
+									<tr class="kz_device_zn">
+										<td>
+														关闭条件
+										</td>
+										<td>
+											<select id="kz_device_close_device" class="form-control" style="width:150px;height:35px;">
+											</select>
+										</td>
+										<td>
+											<select id="kz_device_close_type" class="form-control" style="width:150px;height:35px;text-align:center">
+												<option value="0">&gt;</option>
+												<option value="1">&lt;</option>
+											</select>
+										</td>
+										<td>
+											<input id="kz_device_close_val" type="number" class="form-control" style="width:150px;height:35px">
+										</td>
+									</tr>
+									<tr height="20">
+									</tr>
+									<tr>
+										<td width="20%">
+											<span>周期</span>
+										</td>
+										<td colspan="3">
+											<input class="icheckbox" type="checkbox" data="1">&nbsp;周一
+											<input class="icheckbox" type="checkbox" data="2">&nbsp;周二
+											<input class="icheckbox" type="checkbox" data="3">&nbsp;周三
+											<input class="icheckbox" type="checkbox" data="4">&nbsp;周四
+											<input class="icheckbox" type="checkbox" data="5">&nbsp;周五
+											<input class="icheckbox" type="checkbox" data="6">&nbsp;周六
+											<input class="icheckbox" type="checkbox" data="7">&nbsp;周日
+										</td>
+									</tr>
+									<tr height="20"></tr>
+									<tr>
+										<td>
+											是否启用
+										</td>
+										<td colspan="3">
+											<select id="kz_device_state" class="form-control" style="width:150px;height:35px">
+												<option value="1">启用</option>
+												<option value="0">禁用</option>
+											</select>
+										</td>
+									</tr>
+                  <tr height="20"></tr>
+                  <tr class="toushi">
+                    <td>工作时长</td>
+                    <td>
+                      <input id="workTime" type="number" class="form-control" placeholder="投食机推送工作时长" />&nbsp;秒
+                    </td>
+                  </tr>
+                  <tr height="20"></tr>
+                  <tr class="toushi">
+                    <td>停止时长</td>
+                    <td>
+                      <input id="stopTime" type="number" class="form-control" placeholder="投食机推送停止时长"/>&nbsp;秒
+                    </td>
+                  </tr>
+                  <tr class="toushi">
+                    <td>
+                      <button class="btn btn-w-m btn-primary" type="button" onclick="feedingMachinePush()">投食机推送</button>
+                    </td>
+                  </tr>
+									</table>
+									<div style="margin-top:40px;text-align:center">
+										<button data-dismiss="modal" id="btn_kz_setting_cancel" type="button" class="btn btn-w-m btn-default" style="margin-right:10px">取消</button>
+										<button id="btn_kz_setting_del" type="button" class="btn btn-w-m btn-danger" style="margin-right:10px" onclick="deleteKzSetting()">删除</button>
+										<button type="button" class="btn btn-w-m btn-primary" style="margin-left:10px" onclick="saveAndUpdateKzSetting()">保存</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 运行状态  12.26-->
+<div class="modal fade" id="runningState" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+	<div class="modal-dialog" role="document" style="width:900px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">×</span>
+				</button>
+				<div class="head_option">
+					<ul id="myTab">
+						<li class="linkNormal" onclick="getDataSet(this)" data-id="0">
+						<i class="linkNormalBgNo"></i>
+						<a>连接正常</a>
+						</li>
+						<li class="sensingAlarm"  onclick="getDataSet(this)" data-id="1">
+						<i class="senseNo"></i>
+						<a>传感预警</a>
+						</li>
+						<li class="running"  onclick="getDataSet(this)" data-id="2">
+						<i class="runningBgNo"></i>
+						<a>正在运行</a>
+						</li>
+						<li class="disconnectionEquipment"  onclick="getDataSet(this)" data-id="3">
+						<i class="disconnectionEquipmentBgNo"></i>
+						<a>设备断开</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="modal-body" style="min-height:400px;padding-left:0">
+				<div class="tab-content">
+					<div class="clearfix">
+						<!-- <ul class="normalList" style="height: 0;display: none;overflow: hidden;"> -->
+						<ul class="normalList">
+							<!-- <li class="device_state_li1">
+							<a>空气温度</a>
+							<b class="temperature_group"></b>
+							</li>
+							<li class="device_state_li2">
+							<a>空气湿度</a>
+							<b class="humidity_group"></b>
+							</li>
+							<li class="device_state_li3">
+							<a>Co2浓度</a>
+							<b class="co2_group"></b>
+							</li>
+							<li class="device_state_li4">
+							<a>光照强度</a>
+							<b class="light_group"></b>
+							</li>
+							<li class="device_state_li5">
+							<a>土壤温度</a>
+							<b class="soilTem_group"></b>
+							</li>
+							<li class="device_state_li6">
+							<a>土壤水分</a>
+							<b class="soilHum_group"></b>
+							</li>
+							<li class="device_state_li7">
+							<a>土壤PH</a>
+							<b class="soilPh_group"></b>
+							</li>
+							<li class="device_state_li17">
+							<a>叶面温度</a>
+							<b class="leafTem_group"></b>
+							</li>
+							<li class="device_state_li18">
+							<a>叶面湿度</a>
+							<b class="leafHum_group"></b>
+							</li>
+							<li class="device_state_li19">
+							<a>果实尺寸</a>
+							<b class="fruitSize_group"></b>
+							</li>
+							<li class="device_state_li20">
+							<a>茎秆尺寸</a>
+							<b class="stalkSize_group"></b>
+							</li> -->
+							<li class="device_state_li61">
+							<a>水泵</a>
+							<b class="water_con_state_group"></b>
+							</li>
+							<li class="device_state_li62">
+							<a>天窗</a>
+							<b class="window_con_state_group"></b>
+							</li>
+							<li class="device_state_li63">
+							<a>供热</a>
+							<b class="hot_con_state_group"></b>
+							</li>
+							<li class="device_state_li64">
+							<a>Co2发生器</a>
+							<b class="co2_con_state_group"></b>
+							</li>
+							<li class="device_state_li65">
+							<a>补光</a>
+							<b class="light_con_state_group"></b>
+							</li>
+							<li class="device_state_li66">
+							<a>通风</a>
+							<b class="wind_con_state_group"></b>
+							</li>
+							<li class="device_state_li31">
+							<a>鱼池水温</a>
+							<b class="fishTem_group"></b>
+							</li>
+							<li class="device_state_li32">
+							<a>溶氧含量</a>
+							<b class="dissolvedOxygen_group"></b>
+							</li>
+							<li class="device_state_li33">
+							<a>水PH</a>
+							<b class="waterPh_group"></b>
+							</li>
+							<li class="device_state_li34">
+							<a>氨氮含量</a>
+							<b class="ammoniaNitrogen_group"></b>
+							</li>
+							<li class="device_state_li35">
+							<a>蓝藻含量</a>
+							<b class="blueAlgae_group"></b>
+							</li>
+							<li class="device_state_li36">
+							<a>水浊度</a>
+							<b class="waterTurbidity_group"></b>
+							</li>
+							<li class="device_state_li37">
+							<a>亚硝酸盐含量</a>
+							<b class="nitrate_group"></b>
+							</li>
+							<li class="device_state_li38">
+							<a>饲料余量</a>
+							<b class="feedSurplus_group"></b>
+							</li>
+							<li class="device_state_li39">
+							<a>饲料投放量</a>
+							<b class="feedDelivery_group"></b>
+							</li>
+							<li class="device_state_li71">
+							<a>进水开关</a>
+							<b class="water_in_con_state_group"></b>
+							</li>
+							<li class="device_state_li72">
+							<a>出水开关</a>
+							<b class="water_in_con_state_group"></b>
+							</li>
+							<li class="device_state_li73">
+							<a>投食开关</a>
+							<b class="o2_con_state_group"></b>
+							</li>
+							<li class="device_state_li74">
+							<a>增氧开关</a>
+							<b class="o2_con_state_group"></b>
+							</li>
+						</ul>
+						<div class="noImg" style="display:none;">
+							<img src="../img/qietu/noEquipment.png" alt="" srcset="">
+							<p>
+								暂无设备
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<audio src="../dist/error.mp3" class="audio-hide" id="audioError" loop="false"></audio>
+<a id="audioErrorPlay" class="audio-hide"></a>
+</body>
+</html>

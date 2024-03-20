@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <meta http-equiv="pragma" content="no-cache">  
+	<meta http-equiv="cache-control" content="no-cache">  
+	<meta http-equiv="expires" content="0"> 
+    <title>大棚鱼塘管理</title>
+    <script src="dist/js/jquery-1.9.1.min.js"></script> 
+    <link rel="stylesheet" href="dist/css/normalize.css">
+    <link rel="stylesheet" href="dist/css/bootstrap.css">
+    <link rel="stylesheet" href="dist/css/index_public.css">
+    <link rel="stylesheet" href="dist/css/index_table.css">
+    <link rel="stylesheet" href="dist/css/ladda/ladda-themeless.min.css">
+    <script src="dist/js/js/index_head_left.js"></script>
+    <link rel="stylesheet" href="dist/css/toastr.min.css" >
+	<script src="dist/js/widgets/toastr.min.js"></script>
+	<script type="text/javascript" src="dist/js/widgets/jquery.nicescroll.min.js"></script>
+    <!-- alert11.17 -->
+    <link rel="stylesheet" href="dist/css/sweetalert.css">
+    <script src="dist/js/widgets/sweetalert.min.js"></script>
+    <style>
+    	.option{line-height:0;width:97%;margin-left:1%;border:1px solid #ECEFF5;border-bottom:0;padding-top:5px;}
+    	input{outline:none;}
+    	.ladda-label{color:#fff;}
+    	#add label{width:150px;text-align:right;}
+    	#revise label{width:150px;text-align:right;}
+    </style>
+	</head>
+    <script>
+         $(document).ready(function(){
+            $("#div1").load('include/left_title.html',function(){
+                menu(); 
+            })
+            $("#loadHeader").load("include/header.html",function(){
+                header();
+            })
+            $('#add').on('hidden.bs.modal', function () {
+                $("#add .modal-body>div>input").val('');
+         	})
+         	$('#revise').on('hidden.bs.modal', function () {
+				$("#revise input").val('');
+			})
+    	});
+         
+        function getData(){
+        	var name = $("#serarch_name").val();
+        	$("#hidden_company_id").val();
+        	$.ajax({
+     			type:"POST",
+     			url:"actionServlet",
+     			data:{"actionName":"permissionService","method":"getGfListInfo","mobile":name},
+     			dataType:"JSON",
+     			success:function(data){
+     				if(data.statusCode == 100){
+		 				toastr.error('请联系管理员','未拥有权限');
+		 				return;
+		 			}
+     				if(data.statusCode == -2){
+		 				toastr.warning('搜索的用户不存在','提示');
+		 				return;
+		 			}
+     				if(data.statusCode == 1){
+     					var htmlStr = $("#demo_tr").html();
+     					$("#user_table").empty();
+     					$("#user_table").append("<tr id='demo_tr' style='display:none'>" + htmlStr+ "</tr>");
+     					var companyId = data.result.companyId;
+     					var type = data.result.type;
+     					
+     					$("#hidden_company_id").val(companyId)
+     					$("#hidden_company_type").val(type)
+     					
+     					var list = data.result.list;
+     					for(var i=0;i<list.length;i++){
+     						var newStr = "<tr>" + htmlStr+"</tr>";
+     						newStr = newStr.replace("#id#",list[i].id);
+     						newStr = newStr.replace("#createTime#",list[i].createTime);
+     						var type = list[i].type;
+     						var gfNum = list[i].gfNum;
+     						if(type == '0'){
+     							gfNum += "号大棚"
+     						}else{
+     							gfNum += "号鱼塘"
+     						}
+     						newStr = newStr.replace("#number#",gfNum);
+     						newStr = newStr.replace("#number1#",gfNum);
+     						$("#user_table").append(newStr);
+     					}
+     					
+     				}
+     			}
+     		});
+        }
+        
+        function openAddDiv(){
+        	
+        	var companyId = $("#hidden_company_id").val();
+        	var type = $("#hidden_company_type").val();
+        	if(companyId == ''){
+        		toastr.warning('请先搜索要操作的账号','提示');
+        		return;
+        	}
+        	var title = "新增";
+        	if(type == '3'){
+        		title += "大棚"
+        	}else if(type == '4'){
+        		title += "鱼塘"
+        	}
+        	
+        	swal({ 
+        		  title: title, 
+        		  text: "请输入新增编号",
+        		  type: "input", 
+        		  showCancelButton: true, 
+        		  closeOnConfirm: false, 
+        		  confirmButtonText: '确定',
+       		   	  cancelButtonText: '取消',
+        		  animation: "slide-from-top"
+        		},
+        		function(inputValue){ 
+        		  if (inputValue === false) 
+        			  return false; 
+        		  if (inputValue === "") { 
+        			toastr.warning('请输入新增编号','提示');
+        		    return false 
+        		  } 
+        		  
+        		  $.ajax({
+   	     			type:"POST",
+   	     			url:"actionServlet",
+   	     			data:{"actionName":"permissionService","method":"updateGfFishInfo"
+   	     				,"searchCompanyId":companyId,"searchCompanyType":type,"num":inputValue},
+   	     			dataType:"JSON",
+   	     			success:function(data){
+   	     				if(data.statusCode == 100){
+   			 				toastr.error('请联系管理员','未拥有权限');
+   			 				return;
+   			 			}
+   	     				if(data.statusCode == 1){
+   	     					getData();
+   	     					swal({
+   	      			            title: "",
+   	      			            text: "操作成功!",
+   	      			            type: "success"
+   	      			        });
+   	     				}else{
+   	     					swal({
+	      			            title: "",
+	      			            text: data.message,
+	      			            type: "error"
+	      			        });
+   	     				}
+   	     			}
+   	    	   });
+        		  
+        	});
+        	
+        }
+        
+        function deleteNumber(id,number){
+        	
+        	var companyId = $("#hidden_company_id").val();
+        	var type = $("#hidden_company_type").val();
+        	if(companyId == ''){
+        		toastr.warning('请先搜索要操作的账号','提示');
+        		return;
+        	}
+        	 swal({
+      		   title: "确认要删除" + number + "么",
+      		   text: '',
+      		   type: 'warning',
+      		   showCancelButton: true,
+      		   closeOnConfirm: false, 
+      		   confirmButtonText: '确定',
+      		   cancelButtonText: '取消',
+      		 }, function() { 
+      			 
+      			$.ajax({
+   	     			type:"POST",
+   	     			url:"actionServlet",
+   	     			data:{"actionName":"permissionService","method":"updateGfFishInfo"
+   	     				,"searchCompanyId":companyId,"id":id,"searchCompanyType":type},
+   	     			dataType:"JSON",
+   	     			success:function(data){
+   	     				if(data.statusCode == 100){
+   			 				toastr.error('请联系管理员','未拥有权限');
+   			 				return;
+   			 			}
+   	     				if(data.statusCode == 1){
+   	     					getData();
+   	     					swal({
+   	      			            title: "",
+   	      			            text: "操作成功!",
+   	      			            type: "success"
+   	      			        });
+   	     				}else{
+   	     					swal({
+	      			            title: "",
+	      			            text: data.message,
+	      			            type: "error"
+	      			        });
+   	     				}
+   	     			}
+   	    	   });
+      			 
+      		}); 
+        	
+        }
+		     
+    </script>
+<body>
+ <div class="container-fluid">
+     <!-- header  -->
+    <div class="nav row " id="loadHeader">
+    </div>
+    <div class="row neirong" >
+        <!-- 侧边导航 -->
+         <div id="div1" class="sidebar col-xs-2">
+        </div>
+        <!-- 主题内容 -->
+        <div class="main col-xs-10 row " style="min-height:800px">
+                <h4 class="col-xs-12">大棚鱼塘管理</h4>
+                <div class="col-xs-12 row option">
+                        <a class="btn btn-primary" onclick="openAddDiv()" style="margin-left:-8px;">
+                            	新增
+                        </a>
+<!--                         <a onclick="getData()" class="btn btn-primary" style="float:right">搜索</a> -->
+                        <a onclick="getData()" class="btn btn-primary" style="float:right;border-radius:0;border-top-right-radius: 3px;border-bottom-right-radius: 3px;background:#1986DF;border-color:#1986DF">
+                        	<span class="glyphicon glyphicon-search" style="color:#fff;"></span>
+                        </a>
+                        <input id="serarch_name" type="text" class="form-control" style="float:right;width:300px;height:34px;border-radius:0;border-top-left-radius: 3px;border-bottom-left-radius: 3px;border-color:#1986DF;" placeholder="请输入账号或企业名称"> 
+                </div>
+               <input id="hidden_company_id" type="hidden"/>
+               <input id="hidden_company_type" type="hidden"/>
+             <table class="col-xs-12" id="clerka" style="width:97%;margin-left:1%;">
+                <thead>
+                    <tr>
+                       <th>组织编号</th>
+                       <th>创建时间</th>
+                       <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="user_table">
+                    <tr id="demo_tr" style="display:none">
+                        <td>#number#</td>
+                        <td>#createTime#</td>
+                        <td>
+                            <a class="btn btn-danger" onclick="deleteNumber('#id#','#number1#')">删除</a> 
+                        </td> 
+                    </tr>
+                </tbody>
+            </table>                   
+        </div>
+        </div>
+         <div class="row" id="divFooter"></div> 
+        </div>
+        
+	
+
+<script src="dist/js/bootstrap.min.js"></script>
+<script src="dist/js/ladda/spin.min.js"></script>
+<script src="dist/js/ladda/ladda.min.js"></script>
+<script src="dist/js/ladda/ladda.jquery.min.js"></script>
+</body>
+</html>

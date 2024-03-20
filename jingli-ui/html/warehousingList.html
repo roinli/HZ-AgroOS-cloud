@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>入库列表</title>
+    <link rel="stylesheet" href="../dist/css/toastr.min.css" >
+    <link rel="stylesheet" href="../dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../dist/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../dist/css/ladda/ladda-themeless.min.css">
+    <link rel="stylesheet" href="../dist/css/sweetalert.css">
+    <link rel="stylesheet" href="../dist/css/index_public.css">
+    <link rel="stylesheet" href="../dist/css/warehousingList.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <!-- header  -->
+    <div class="nav row " id="loadHeader"></div>
+    <div class="row neirong" >
+      <!-- 侧边导航 -->
+      <div id="div1" class="sidebar col-xs-2"></div>
+      <!-- 主题内容 -->
+      <div class="main col-xs-10 row animated fadeInRight" style="min-height:800px;background-color:#F4F7FE;padding:15px 0;">
+        <div id="companyInfoDiv" class="col-xs-12">
+          <div class="wareList-wrapper">
+            <div class="wareList-head">
+              <span class="wareList-head-tit">入库列表</span>
+              <div class="wareList-head-add-wra">
+                <span class="wareList-head-add">新增入库</span>
+              </div>
+            </div>
+            <ul class="wareList-nav">
+              <li class="wareList-nav-items">
+                <span class="wareList-nav-items-t1">筛选查询</span>
+                <!-- <div class="wareList-nav-items-hide">
+                  <i class="wareList-nav-items-hide-icon glyphicon glyphicon-chevron-down"></i>
+                  <span class="wareList-nav-items-t2">收起筛选</span>
+                </div>
+                <span class="wareList-nav-items-t3">查询结果</span> -->
+              </li>
+              <li class="wareList-nav-items-cons">
+                <!-- <div class="wareList-nav-items-con">
+                  <span>种类:</span>
+                  <select class="wareList-nav-items-con-zl">
+                    <option value=0>1号仓库</option>
+                    <option value=1>1号仓库</option>
+                  </select>
+                </div> -->
+                <div class="wareList-nav-items-con">
+                  <span>仓库:</span>
+                  <select class="wareList-nav-items-con-ck form-control">
+                  </select>
+                </div>
+                <!-- <div class="wareList-nav-items-con">
+                  <span>输入搜索:</span>
+                  <select class="wareList-nav-items-con-ss">
+                    <option value=0>产品名称</option>
+                    <option value=1>产品名称</option>
+                  </select>
+                </div> -->
+              </li>
+            </ul>
+            <div class="wareList-content">
+              <div class="wareList-content-head">
+                <span class="wareList-content-head-name">入库列表</span>
+                <div class="wareList-content-head-num">
+                  <!-- <div class="wareList-content-head-show">
+                    <span>显示条数</span>
+                    <i class="wareList-content-head-icon glyphicon glyphicon-chevron-down"></i>
+                  </div>
+                  <select class="wareList-content-show-num" value="20">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                  </select> -->
+                </div>
+              </div>
+              <div class="wareList-content-nav">
+                <span>编号</span>
+                <span>产品名称</span>
+                <span>产品种类</span>
+                <span>入库量</span>
+                <span>入库合格率</span>
+                <span>仓库名称</span>
+                <span>入库时间</span>
+                <span>操作人</span>
+              </div>
+              <div class="wareList-content-con-wra">
+                <!-- <div class="wareList-content-con">
+                  <span class="wareList-content-con-index">
+                    <input type="checkbox" name="" value="">
+                  </span>
+                  <span>100001</span>
+                  <span>大麦</span>
+                  <span>粮食</span>
+                  <span>983</span>
+                  <span>100%</span>
+                  <span>1号仓库</span>
+                  <span>2018-08-08</span>
+                  <span>吕珊珊</span>
+                </div> -->
+              </div>
+            </div>
+            <div class="wareList-foot">
+              <!-- 底部 分页 -->
+              <div class="M-box1"></div>
+            </div>
+
+            <div class="addWare-wra" style="display: none;">
+              <div class="addWare">
+                <div class="addWare-head">
+                  <span>新增入库</span>
+                  <div class="addWare-head-close-wra">
+                    <i class="addWare-head-close glyphicon glyphicon-remove"></i>
+                  </div>
+                </div>
+                <ul class="addWare-items">
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      产品名称
+                    </div>
+                    <div class="addWare-item-cons">
+                      <input class="addWare-item-con addWare-name" type="text" placeholder="请输入产品名称">
+                    </div>
+                  </li>
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      产品种类
+                    </div>
+                    <div class="addWare-item-cons addWare-item-cons-type">
+                      <!-- <select class="addWare-item-con" value="请选择产品种类">
+                        <option value="0">1</option>
+                      </select> -->
+                      <input class="addWare-item-con addWare-type" type="text" />
+                    </div>
+                  </li>
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      入库量
+                    </div>
+                    <div class="addWare-item-cons">
+                      <input class="addWare-item-con addWare-num" type="text" placeholder="请输入1000斤">
+                    </div>
+                  </li>
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      合格率
+                    </div>
+                    <div class="addWare-item-cons">
+                      <input class="addWare-item-con addWare-qualified" type="text" placeholder="请输入">
+                    </div>
+                  </li>
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      入库时间
+                    </div>
+                    <div class="addWare-item-cons">
+                      <input class="addWare-item-con addWare-time" id="add_time" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm', readOnly: true});" format="yyyy-MM-dd HH:mm"  type="text" placeholder="请输入时间">
+                    </div>
+                  </li>
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      仓库
+                    </div>
+                    <div class="addWare-item-cons">
+                      <select class="addWare-item-con addWare-ware">
+                        <option value="0">1</option>
+                      </select>
+                    </div>
+                  </li>
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      操作员
+                    </div>
+                    <div class="addWare-item-cons">
+                      <input type="text" class="addWare-item-con addWare-oper" disabled="disabled">
+                    </div>
+                  </li>
+                </ul>
+                <div class="addWare-mange">
+                  <div class="addWare-mange-cancel addWare-mange-op">
+                    <i class="glyphicon glyphicon-floppy-remove"></i>
+                    <span>取消</span>
+                  </div>
+                  <div class="addWare-mange-confirm addWare-mange-op">
+                    <i class="glyphicon glyphicon-floppy-saved"></i>
+                    <span>确定</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- 11.17 -->
+        <!-- <div class="M-box1 col-xs-12" style="text-align:right;">
+          456
+        </div> -->
+      </div>
+    </div>
+    <div class="row" id="divFooter"></div>
+  </div>
+  <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"></div>
+
+  <script type="text/javascript" type="text/javascript" src="../dist/js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+  <script type="text/javascript" type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+  <script type="text/javascript" src="../dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/webuploader.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/jquery.pagination.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/sweetalert.min.js"></script>
+  <script type="text/javascript" src="../dist/js/My97DatePicker_ie9/WdatePicker.js"></script>
+  <script type="text/javascript" src="../dist/js/js/comm.js"></script>
+  <script type="text/javascript" src="../dist/js/js/index_head_left.js"></script>
+  <script type="text/javascript">
+      $(document).ready(function(){
+
+        // 获取登陆信息
+        var loginInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
+        var page = 1;
+        var pageSize = 10;
+
+        $("#div1").load('../include/left_title.html',function(){
+          menu();
+        })
+        $("#loadHeader").load("../include/header.html",function(){
+          header();
+        })
+        $("#personal").load("../include/modelpersonal.html",function(){
+          personalModel();
+        })
+
+        // var URLAPI= "http://chipcity.6655.la:10145/";
+        var warehouseArr = [];
+
+        // 入库展示
+        $(".wareList-head-add").on("click", function() {
+          $(".addWare-name").val("");
+          $(".addWare-num").val("");
+          $(".addWare-qualified").val("");
+          $(".addWare-time").val("");
+          $(".addWare-wra").show();
+          // 初始化参数
+          var id = $(".wareList-nav-items-con-ck").val();
+          invType(id);
+          $(".addWare-oper").val(loginInfo.name);
+          $(".addWare-oper").attr("data-id", loginInfo.id);
+          // 窗口
+          showSreen();
+        })
+        // 新增入库
+        $(".addWare-mange-confirm").on("click", function() {
+          addWare();
+        })
+
+        // 改变仓库
+        $(".wareList-nav-items-con-ck").on("change", function() {
+          page = 1;
+          var id = $(this).val();
+          var text = $('.wareList-nav-items-con-ck option:selected').text();
+          $(".wareList-content-con-wra").attr("data-name", text);
+          showlist(id);
+          showListCount(id);
+        })
+
+        // 模态框的隐藏
+        $(".addWare-head-close").on("click", function() {
+          $(".addWare-wra").hide();
+        })
+        $(".addWare-mange-cancel").on("click", function() {
+          $(".addWare-wra").hide();
+        })
+
+        $(".wareList-content-head-show").on("click", function () {
+          $(this).hide();
+          $(".wareList-content-show-num").show();
+        })
+        $(".wareList-content-show-num").on("change", function() {
+          page = $(this).val();
+          var val = $(".wareList-nav-items-con-ck").val();
+          showlist(val);
+        })
+
+        init();
+        // ----------------------------------------------------
+        function init() {
+          // 7.查下仓库下拉框
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              'actionName': 'warehouseService',
+              'method': 'frontWareHouseList',
+              'userType': 3,
+              'companyId': loginInfo.id,
+              "token": getCookie("token")
+            },
+            dataType: 'json',
+            type: 'post',
+            success: function(msg) {
+              if (msg.statusCode == 1 || msg.statusCode == '1') {
+                var str = '';
+                var str = '<option value=""> == 请选择 == </option>';
+                var str1 = '';
+                warehouseArr.length = 0;
+                msg.result.forEach(function(item, index) {
+                  warehouseArr.push(item);
+                  str += '<option value="'+item.id+'">'+item.warehouse_name+'</option>'
+                  str1 += '<option value="'+item.id+'">'+item.warehouse_name+'</option>'
+                })
+                $(".wareList-nav-items-con-ck").html(str);
+                $(".addWare-ware").html(str1);
+                showlist();
+                showListCount();
+              } else {
+                toastr.error('查询仓库数据失败','请联系管理员');
+              }
+            }
+          })
+        }
+
+        // 入库列表
+        function showlist(id) {
+          var id;
+          if (!id) id = "";
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              "actionName": "warehouseService",
+              "method": "insertWarehousesList",
+              "companyId": loginInfo.id,
+              "warehouseId": id,
+              "ioType": 1,
+              "page": page,
+              "pageSize": pageSize,
+              "token": getCookie("token")
+            },
+            dateType: "json",
+            type: "post",
+            success: function(msg) {
+              console.log(msg);
+              $(".wareList-content-con").remove();
+              if (msg.statusCode == 1) {
+                if (msg.result.length == 0) return false;
+                var str = '';
+                msg.result.forEach(function(item) {
+                  str += '<div class="wareList-content-con">'
+                          +'<span>'+item.id+'</span>'
+                          +'<span>'+item.name+'</span>'
+                          +'<span>'+item.typeName+'</span>'
+                          +'<span>'+item.size+'</span>'
+                          +'<span>'+item.qualified+'</span>'
+                          +'<span>'+getWareName(item.warehouse_id)+'</span>'
+                          +'<span>'+item.create_time.substr(0,16)+'</span>'
+                          +'<span>'+loginInfo.name+'</span>'
+                        +'</div>';
+                })
+                $(".wareList-content-con-wra").html(str);
+              } else {
+                toastr.error('查询仓库入库数据失败','请联系管理员');
+              }
+            }
+          })
+        }
+
+        // 入库列表number
+        function showListCount(id) {
+          var id;
+          if (!id) id = "";
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              "actionName": "warehouseService",
+              "method": "insertWarehousesCount",
+              "companyId": loginInfo.id,
+              "warehouseId": id,
+              "ioType": 1,
+              "token": getCookie("token")
+            },
+            dateType: "json",
+            type: "post",
+            success: function(msg) {
+              if (msg.statusCode == 1) {
+                // 分页
+                if(msg.result) $(".M-box1").show();
+                $('.M-box1').pagination({
+                    totalData: msg.result,  //数据总条数
+                    showData: pageSize,   //每页显示的条数
+                    coping: false,
+                    current: page,      //当前第几页
+                    prevContent: "上一页",	//上一页内容
+                    nextContent: "下一页",	//下一页内容
+                    jumpBtn: "确定",
+                    callback: searchWare
+                });
+              }
+            }
+          })
+        }
+
+        function searchWare(msg) {
+          page = msg.getCurrent();
+          var id = $(".wareList-nav-items-con-ck").val();
+          showlist(id);
+        }
+
+        // 新增入库
+        function addWare(){
+          var warehouseId = $(".addWare-ware").val();
+          var name = $(".addWare-name").val();
+          var type = $(".addWare-item-cons-type select").val();
+          var size = $(".addWare-num").val();
+          var io_time = $(".addWare-time").val();
+          var qualified = $(".addWare-qualified").val();
+          var operator = $(".addWare-oper").attr("data-id");
+          if (!warehouseId) {
+            $(".wareList-nav-items-con-ck").focus();
+            return false;
+          }
+          if (!name) {
+            $(".addWare-name").focus();
+            return false;
+          }
+          if (!type) {
+            $(".addWare-type").focus();
+            return false;
+          }
+          if (!io_time) {
+            $(".addWare-time").focus();
+            return false;
+          }
+          if (!size) {
+            $(".addWare-num").focus();
+            return false;
+          }
+          if (!qualified) {
+            $(".addWare-qualified").focus();
+            return false;
+          }
+          if (!operator) {
+            $(".addWare-oper").focus();
+            return false;
+          }
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              "actionName": "warehouseService",
+              "method": "insertWarehousing",
+              "warehouseId": warehouseId,
+              "name": name,
+              "type": type,
+              "size": size,
+              "qualified": qualified,
+              "operator": operator,
+              "io_time": io_time,
+              "io_type": 1,
+              "companyId": loginInfo.id,
+              "token": getCookie("token")
+            },
+            dataType: "json",
+            type: "post",
+            success: function(msg) {
+              console.log(msg);
+              $(".addWare-wra").hide();
+              if (msg.statusCode == 1) {
+                swal({
+  	 	    	  		title: "保存成功",
+  	 	          		text: "",
+  	 	          		type: "success"
+  	 	         	});
+                init();
+              } else {
+                swal({
+  	 	    	  		title: "保存失败",
+  	 	          	text: "",
+  	 	          	type: "error"
+  	 	         	});
+              }
+
+            }
+          })
+        }
+
+        // 产品种类
+        function invType(id) {
+          var id = id || "224286";
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              "actionName": "warehouseService",
+              "method": "getInventoryType",
+              "warehouseId": id,
+              "token": getCookie("token")
+            },
+            dataType: "json",
+            type: "post",
+            success: function(msg) {
+              console.log(msg);
+              if (msg.statusCode == 1) {
+                // TODO
+                var str = "";
+                if (msg.result.length > 0) {
+                  str += '<select class="addWare-item-con">';
+                  msg.result.forEach(function(item) {
+                    str += '<option value="'+item.id+'">'+item.name+'</option>';
+                  })
+                  str += '</select>';
+                } else {
+                  str = '<input class="addWare-item-con addWare-type" type="text" />';
+                }
+                $(".addWare-item-cons-type").html(str);
+              } else {
+                toastr.error('获取仓库种类列表失败','');
+              }
+            }
+          })
+        }
+
+        function getWareName(id) {
+          var name;
+          warehouseArr.forEach(function(item) {
+            if (item.id == id) {
+              name = item.display_name;
+            }
+          })
+          return name;
+        }
+
+        // 窗口
+        function showSreen() {
+          var a = $(".addWare").height();
+          var b = document.documentElement.clientHeight || document.body.clientHeight;
+          if (b - 60 < a) {
+            $(".addWare").css({
+              "height": (b-60) + "px",
+              "overflow-y": "auto"
+            })
+          }
+        }
+      });
+    </script>
+</body>
+</html>

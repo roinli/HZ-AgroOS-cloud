@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link rel="stylesheet" href="dist/css/normalize.css">
+    <link rel="stylesheet" href="dist/css/font-awesome.min.css">
+    <link rel="stylesheet" href="dist/css/bootstrap.css">
+    <link rel="stylesheet" href="dist/css/index_public.css">
+    <link rel="stylesheet" href="dist/css/traceSource.css">
+    <link rel="stylesheet" href="dist/css/toastr.min.css" >
+	<link rel="stylesheet" href="dist/css/chosen/amazeui.chosen.css">
+	<link rel="stylesheet" href="dist/css/sweetalert.css">
+	<link rel="stylesheet" href="dist/css/iCheck/custom.css">
+	<link rel="stylesheet" href="dist/css/ladda/ladda-themeless.min.css">
+	<link rel="stylesheet" href="dist/css/font-awesome.min.css">
+	
+	<script src="dist/js/jquery-1.9.1.min.js"></script> 
+	<script src="dist/js/js/index_head_left.js"></script>
+    <script src="dist/js/js/traceSource.js"></script>
+    <script src="dist/js/My97DatePicker_ie9/WdatePicker.js"></script>
+	<script src="dist/js/widgets/toastr.min.js"></script>
+	<script src="dist/js/widgets/amazeui.chosen.min.js"></script>
+	<script src="dist/js/widgets/sweetalert.min.js"></script>
+	<script src="dist/js/iCheck/icheck.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+</head>
+	<style>
+		.toast-title{
+			color:#FFFFFF;
+		}
+		.toast-message{
+			color:#FFFFFF;
+		}
+		.mask {       
+            position: absolute; top: 0px; filter: alpha(opacity=60); background-color: #777;     
+            z-index: 9990; left: 0px;     
+            opacity:0.5; -moz-opacity:0.5;     
+            display:none;
+        } 
+        .form_div {
+		  position: relative;
+		  width: 200px;
+		}
+		.d1 {background: #ffffff;;width:200px;float:left;height:35px}
+		.d1 input {
+		  width: 100%;
+		  height: 42px;
+		  padding-left: 10px;
+		  border: 1px solid #1785DC;
+		  border-radius: 5px;
+		  outline: none;
+		  background: #ffffff;
+		  color: #000000;
+		  height:35px
+		}
+		.d1 button {
+		  position: absolute; 
+		  top: 0;
+		  right: 0px;
+		  width: 42px;
+		  height: 42px;
+		  border: none;
+		  background: #1785DC;
+		  border-radius: 0 5px 5px 0;
+		  cursor: pointer;
+		  height:35px
+		}
+		.d1 button:before {
+		  content: "\f002";
+		  font-family: FontAwesome;
+		  font-size: 16px;
+		  color: #FFFFFF;
+		  height:35px
+		}
+	</style>
+	 <style>
+	      .hideDiv>p{font-size: 16px;}
+	      .hideDiv{display: none;}
+	  </style>
+	  <style media="print">
+	    .hideDiv{display:block}
+	  </style>
+    <script>
+	   $(document).ready(function(){
+           $("#div1").load('include/left_title.html',function(){
+               menu(); 
+           })
+           $("#loadHeader").load("include/header.html",function(){
+               header();
+           })
+           $("#personal").load("include/modelpersonal.html",function(){
+               personalModel();
+           })
+           getEmployeeList();
+           getGroundFishpondList();
+	       scroll('#batch_list');
+	       scroll('#theList');
+	       scroll('#batch_list');
+	       scroll('#viewTheFiles');
+	       scroll('#addBatchDiv');
+	       scroll('#updateArchivesDiv');
+	   });
+	   
+    </script>
+<body>
+	<div id="mask" class="mask" onclick="hideMask()"></div>
+	<div id="big_img_div" style="display:none;position:fixed;top:50%;left:50%;z-index:999;width:500px;height:500px;margin:-250px 0 0 -250px;text-align:center;">
+	    	<img id="big_img" style="min-width:50%;max-width:100%;">
+	    </div>
+    <div class="container-fluid">
+        <!-- header  -->
+        <div class="nav row " id="loadHeader">
+        </div>
+        <div class="row neirong" >
+            <!-- 侧边导航 -->
+            <div id="div1" class="sidebar col-xs-2">
+                
+            </div>
+        
+            <!-- 主题内容 -->
+        <div class="main col-xs-10 row " style="min-height:800px;background:#F4F7FE">
+        	<div class="col-xs-12 row top" style="height:60px;min-width:1100px;padding-top:10px;background:#FFFFFF">
+<!--        			<a class="btn btn-primary" onclick="openCreateProductDiv()">创建产品</a> -->
+<!--        			<a class="btn btn-warning" onclick="openScanStatistics('1',this)">扫码统计</a> -->
+<!--        			<input type="hidden" value="0"> -->
+				<div style="float:left;margin:5px">
+<!-- 					<a onclick="openCreateProductDiv()" style="padding-top:10px"> -->
+<!-- 						<i class="fa fa-inbox" style="color:#808790;font-size:16px"></i> -->
+<!-- 	               		<span style="margin-left:2px;font-size:16px">创建产品</span> -->
+<!-- 	               	</a> -->
+	               	<a onclick="openCreateProductDiv()" style="padding-top:10px">
+						<i class="xinjian" style="color:#808790;font-size:16px"></i>
+	               		<span style="margin-left:2px;font-size:16px">创建产品</span>
+	               	</a>
+	               	<span style="margin:0 5px">|</span>
+<!-- 	               	<a onclick="openScanStatistics('1',this)"> -->
+<!-- 	               		<i class="fa fa-bar-chart" style="color:#808790;font-size:16px"></i> -->
+<!-- 	               		<span style="margin-left:2px;font-size:16px">扫码统计</span> -->
+<!-- 	               		<input type="hidden" value="0"> -->
+<!-- 	               	</a> -->
+	               	<a onclick="openScanStatistics('1',this)">
+	               		<i class="saoma" style="color:#808790;font-size:16px"></i>
+	               		<span style="margin-left:2px;font-size:16px">扫码统计</span>
+	               		<input type="hidden" value="0">
+	               	</a>
+	             </div>
+                <table style="float:right">
+                	<tr>
+                    	<td><label style="margin:0;">请选择大棚</label></td>
+                    	<td width="10"></td>
+                        <td>
+                        	<select class="gf_num_list" id="gf_num_list" class="form-control" style="height:35px;width:100px;">
+		                    </select>
+                       	</td>
+                       	<td width="10"></td>
+<!--                        	<td> -->
+<!--                        		<input id="serarch_name" type="text" class="form-control" style="width:130px;height:35px" placeholder="请输入产品名称" > -->
+<!--                         </td> -->
+                        <td width="10"></td>
+                        <td>
+               				<input style="height:35px;width:110px;" type="text" id="search_start_time" class="" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true ,maxDate:'#F{$dp.$D(\'search_end_time\')||\'%y-%M-%d\'}'});" format="yyyy-MM-dd" value="" placeholder="开始时间">
+               			</td>
+               			<td width="5"></td>
+               			<td>至</td>
+               			<td width="5"></td>
+               			<td>
+               				<input style="height:35px;width:110px;" type="text"  id="search_end_time" class="" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true ,minDate:'#F{$dp.$D(\'search_start_time\')}',maxDate:'%y-%M-%d-%H-%m-%s',});" format="yyyy-MM-dd" value="" placeholder="结束时间">    
+               			</td>
+               			<td width="10"></td>
+               			<td>
+               				<div class="search d1">
+							  <div class="form_div">
+								  <input id="serarch_name" type="text" placeholder="关键字查询">
+								  <button onclick="getSourceList(1)"></button>
+							  </div>
+							</div>
+               			</td>
+               		</tr>
+               	</table>
+        	</div>
+            <table class="col-xs-12" id="traceabilityForm">
+            	 <thead>
+                	<tr style="background-color:#F9FDFF">
+                    	<th style="border-left:1px solid #E5EBFD">商品图片</th>
+                        <th>商品名称</th>
+                        <th>种植时间</th>
+                        <th>作物</th>
+                        <th>品种</th>
+                        <th>已添加批次</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+				<tbody id="data_table" style="background:#FFFFFF">
+					<tr id="demo_tr" style="display:none" height="120">
+			            <td onclick="openBatchList('#source_id#','#source_img#','#prduct_name#','#product_date#')" >
+			                <img onmouseenter="showBigPic(this,event)" onmouseleave="hideBigPic()" width="100px" height="100px" src="#source_img#" alt="">
+			            </td>
+			            <td onclick="openBatchList('#source_id#','#source_img#','#prduct_name#','#product_date#')" >#prduct_name#</td>
+			            <td onclick="openBatchList('#source_id#','#source_img#','#prduct_name#','#product_date#')" >#product_date#</td>
+			            <td onclick="openBatchList('#source_id#','#source_img#','#prduct_name#','#product_date#')" >#product_crop#</td>
+			            <td onclick="openBatchList('#source_id#','#source_img#','#prduct_name#','#product_date#')" >#product_varieties#</td>
+			            <td onclick="openBatchList('#source_id#','#source_img#','#prduct_name#','#product_date#')" >#product_batch#次</td>
+			            <td>
+			            	<label style="display:#product_finish#">采集完毕</label>
+			                <ul class="operation" style="display:#product_not_finish#">
+			                    <li class="addBatch">
+			                        <a onclick="openAddBatch('#source_id#','0')">添加批次</a>
+			                    </li>
+			                    <li data-target="#createFiles" class="maintenanceOfArchives">
+			                        <a onclick="openUpdateArchives('#source_id#')">维护档案</a>
+			                    </li>
+			                    <li class="more" >
+			                        <a href="" class="dropdown-toggle" data-toggle="dropdown">
+			                           	 更多
+			                            <b class="caret"></b>
+			                        </a>
+			                        <ul class="dropdown-menu" style="top:16px;left:-20px;">
+			                            <li >
+			                                <a onclick="pigeonhole('#source_id#')">归档</a>
+			                            </li>
+			                            <li>
+			                                <a onclick="deleteArchives('#source_id#')">删除档案</a>
+			                            </li>
+			                        </ul>
+			                    </li>
+			                </ul>
+			            </td>
+			        </tr>
+				</tbody>
+           </table>                   
+           <div class="M-box1 col-xs-12" style="text-align:right;"></div>
+        </div>
+        </div>
+        <div class="row" id="divFooter"></div>
+       		
+      </div> 
+    <!-- 个人信息 -->
+    <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">  
+    </div> 
+
+    <!-- 新建新产品 -->
+    <div class="modal fade" id="addNewProduct"> 
+        <div class="modal-dialog" role="document" style="min-width:800px;">  
+            <div class="modal-content">  
+                <div class="modal-header"> 
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span  aria-hidden="true">×</span>
+                    </button>
+                    <h4 style="text-align:center">新建产品</h4>
+                </div>  
+                <div class="modal-body new"> 
+                    <div id="modelLeft">
+                    	<div class="form-group">
+                    		<label for="message-text" class="control-label">产品图片</label>
+                    		<a id="saveNewProductUploadPicBtn" class="btn btn-primary" onclick="choosePic(this)">上传图片</a>
+                    		<img id="saveNewProductUploadPicPic" src="" alt="" style="width:150px;height:150px;" onclick="choosePic(this)" />
+                    		<input id="saveNewProductUploadPicFile" type="file" class="filehide" name="filehide" onchange="filechange(this)" />
+                    	</div>
+                        <div class="form-group">
+                        	<label for="message-text" class="control-label">产品名称</label>
+                            <input id="pro_name" type="text" class="form-control" style="width:150px;height:35px" placeholder="请输入产品名称" >
+                            
+                            <label for="message-text" class="control-label" style="margin-left:10px">种植区域</label>
+                            <select class="gf_num_list" id="newProductGfNum" style="height:35px;width:150px;">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                                <label for="message-text" class="control-label">种植时间</label>
+                                <input style="height:35px;width:150px;" type="text" name="planting_time" id="newProductPlantTime" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" value="" placeholder="请选择种植时间">
+                                <label for="message-text" class="control-label" style="margin-left:10px">种植季次</label>   
+                                <select id="newProductBatch" style="height:35px;width:150px;">
+                                    <option value="1">第一季</option>
+                                    <option value="2">第二季</option>
+                                    <option value="3">第三季</option>
+                                    <option value="4">第四季</option>
+                                </select>
+                        </div>
+                        <div class="form-group">
+                                <label for="message-text" class="control-label">种植作物</label>
+                                <input class="form-control" style="height:35px;width:150px;" type="text" placeholder="请填写种植作物" id="newProductCrop">
+                                <label for="message-text" class="control-label" style="margin-left:10px">种植品种</label>   
+                                <input class="form-control" style="height:35px;width:150px;" type="text" placeholder="请填写种植品种" id="newProductVarieties">
+                        </div>
+                        <div class="form-group">
+                                <label for="message-text" class="control-label">负责人</label>
+                                <select data-placeholder="请选择负责人" class="chosen-select" id="newProductleader" style="height:35px;width:150px;">
+                                	<option value="0"></option>
+                                </select>
+                        </div>
+                        <div class="form-group ">
+                        	<label for="message-text" class="control-label lastLabel">产品简介</label>
+                            <textarea name="" id="newProductInfo" cols="60" rows="10" placeholder="详细描述产品"></textarea>
+                        </div> 
+                    </div> 
+                </div>  
+                <div class="modal-footer">  
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>  
+                    <button type="button" class="btn btn-primary ladda-button btn-ladda-demo2" data-style="zoom-out" onclick="saveNewProduct()">确定</button>  
+                </div>  
+            </div>  
+        </div>  
+    </div>
+
+
+    <!-- 维护档案 -->
+    <div class="modal fade" id="updateArchivesDiv" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"> 
+        <div class="modal-dialog" role="document"  style="min-width:800px;">  
+            <div class="modal-content">  
+                <div class="modal-header"> 
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span  aria-hidden="true">×</span>
+                    </button>
+                    <h4 style="text-align:center">维护档案</h4>
+                    <input type="hidden" id="update_archives_id" value="">
+                </div>  
+                <div class="modal-body">  
+                	<table style="width:100%">
+                		<tr>
+                			<td width="100px" style="text-align:center">
+                				<label>产品名称</label>
+                			</td>
+                			<td colspan="3">
+                				<input class="form-control" style="height:35px;width:200px;" type="text" id="update_archives_product_name" placeholder="请输入产品名称">
+                			</td>
+                		</tr>
+                		<tr height="10"></tr>
+                		<tr>
+                			<td style="text-align:center">
+                				<label>产品图片</label>
+                			</td>
+                			<td colspan="3">
+                				<img onclick="choosePic(this)" width="200px" height="200px" src="" id="update_archives_product_pic">
+	                            <input id="update_archives_product_file" type="file" class="filehide" name="filehide" onchange="filechange(this)" /> 
+                			</td>
+                		</tr>
+                		<tr height="10"></tr>
+                		<tr>
+                			<td style="text-align:center">
+                				<label>种植时间</label>
+                			</td>
+                			<td width="200px">
+                				<input style="height:35px;width:200px;" type="text" name="" id="plantingTime" class="" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" value="" placeholder="请输入种植时间">
+                			</td>
+                			<td width="100px" style="text-align:center">
+                				<label>种植季度</label>
+                			</td>
+                			<td>
+	                			<select id="update_archives_batch" style="height:35px;width:200px;">
+		                            <option value="1">第一季度</option>
+		                            <option value="2">第二季度</option>
+		                            <option value="3">第三季度</option>
+		                            <option value="4">第四季度</option>
+	                        	</select>
+                			</td>
+                		</tr>
+                		<tr height="10"></tr>
+                		<tr>
+                			<td style="text-align:center">
+                				<label>种植作物</label>
+                			</td>
+                			<td width="200px">
+                				 <input style="height:35px;width:200px;" type="text" id="update_archives_crop" placeholder="请填写种植作物 ">
+                			</td>
+                			<td width="100px" style="text-align:center">
+                				<label>种植品种</label>
+                			</td>
+                			<td>
+                				<input style="height:35px;width:200px;" type="text" id="update_archives_varieties" placeholder="请填写种植品种">
+                			</td>
+                		</tr>
+                		<tr height="10"></tr>
+                		<tr>
+                			<td width="100px" style="text-align:center">
+                				<label>负责人</label>
+                			</td>
+                			<td colspan="3">
+                				<select data-placeholder="请选择负责人" class="chosen-select" id="update_archives_leader" style="height:35px;width:200px;">
+                                	<option value="0"></option>
+                                </select>
+                			</td>
+                		</tr>
+                		<tr height="10"></tr>
+                		<tr>
+                			<td width="100px" style="text-align:center">
+                				<label>产品简介</label>
+                			</td>
+                			<td colspan="3">
+                				<textarea name="" id="update_archives_product_info" cols="60" rows="6"></textarea>
+                			</td>
+                		</tr>
+                		<tr height="10"></tr>
+                	</table>
+                    <h4 style="margin-left:20px;margin-bottom:20px"><strong>品质保证</strong></h4>
+                    <div style="width:100%;height:1px;background:#CCCCCC;"></div>
+                    <!-- 生长期图片 -->
+                    <div class="form-group flexBox" style="margin-top:20px;padding:0px 30px">
+                    	<label for="message" class="control-label">生长期图片</label>
+                        <p onclick="growPicAddRemove(1)" for="" class="control-right" id="add_grow">+</p>
+                    </div>
+                    <div id="add_grow_div">
+                    	<div class="add_box" style="position:relative;margin-top:20px;padding:10px 30px;display:none">
+	                     	<table style="width:100%">  
+						        <tr>  
+						            <td>
+						            	<span style="font-size:14px;color:#9DA1A3">拍照日期</span>
+						            </td> 
+						            <td width="10"></td> 
+						            <td>
+						            	<input style="height:35px;width:150px;" type="text" class="grow_pic_date" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" value="" placeholder="请输入拍照日期">
+						            </td>
+						            <td width="30"></td>
+						            <td rowspan="5">
+						            	<a class="growPicUploadPicBtn btn btn-primary" onclick="choosePic(this)" >上传图片</a>
+			                    		<img class="growPicUploadPicPic" src="" alt="" style="width:180px;height:180px;display:none" onclick="choosePic(this)" />
+			                    		<input style="display:none" class="growPicUploadPicFile" type="file" onchange="filechange(this)" />
+						            </td>  
+						        </tr>  
+						        <tr height="10"></tr>
+						        <tr>  
+						        	<td>
+						            	<span style="font-size:14px;color:#9DA1A3">地理位置</span>
+						            </td> 
+						            <td width="10"></td> 
+						            <td>
+						            	<input style="height:35px;width:150px;" type="text" class="grow_pic_position" placeholder="请填写位置信息">
+						            </td>
+						        </tr>  
+						        <tr height="10"></tr>
+						        <tr>  
+						        	<td>
+						            	<span style="font-size:14px;color:#9DA1A3">图片描述</span>
+						            </td> 
+						            <td width="10"></td> 
+						            <td>
+						            	<textarea class="grow_pic_desc" cols="50" rows="10" placeholder="请输入图片描述"></textarea>
+						            </td>
+						        </tr> 
+						    </table>
+						    <div onclick="growPicAddRemove('2',this)" class="delete_add_boxRow">
+                            	<a class="btn btn-primary"><i class="fa fa-trash"  style="color:#ffffff"></i> &nbsp;删除</a>
+                            </div> 
+	                     </div>
+                    </div>
+                     
+                    <div class="form-group flexBox" style="margin-top:20px;padding:0px 30px">
+                    	<label for="message" class="control-label">施肥记录</label>
+                        <p onclick="addFertilization('1',this)" for="" class="control-right" id="add_fertilization">+</p>
+                    </div>
+                    <div id="add_fertilization_div" class="add_box" style="display:none">
+                    	<div id="add_fertilization_record_div">
+	                    	<table id="add_fertilization_table" class="add_fertilization_table" style="margin-top:10px;display:none">
+	                           	<tr>
+	                           		<td>
+	                           			<label>施肥时间</label>
+	                           			<input class="ferilization_time" type="text" style="width:110px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="请选择施肥时间" >
+	                           		</td>
+	                           		<td width="5"></td>
+	                           		<td>
+	                           			<label>化肥名称</label>
+	                           			<input type="text" class="form-control ferilization_name" style="width:120px;height:35px" placeholder="化肥名称" >
+	                           		</td>
+	                           		<td width="5"></td>
+	                           		<td>
+	                           			<label>化肥类型</label>
+	                           			<input type="text" class="form-control ferilization_type" style="width:100px;height:35px" placeholder="化肥类型" >
+	                       			</td>
+	                      			 <td width="5"></td>
+	                      			 <td>
+	                      			 	<label>化肥用量</label>
+	                           			<input type="text" class="form-control ferilization_cnt" style="width:100px;height:35px" placeholder="化肥用量" >
+	                       			</td>
+	                       			<td width="5"></td>
+	                      			 <td>
+	                      			 	<label>化肥品牌</label>
+	                           			<input type="text" class="form-control ferilization_pp" style="width:100px;height:35px" placeholder="化肥品牌" >
+	                       			</td>
+	                       			<td width="5"></td>
+	                      			 <td>
+	                      			 	<label>化肥供应商</label>
+	                           			<input type="text" class="form-control ferilization_gys" style="width:100px;height:35px" placeholder="化肥供应商" >
+	                       			</td>
+	                       			<td width="5"></td>
+	                       			<td onclick="addFertilization('2',this)" style="vertical-align:bottom;">
+	                       				<a class="btn btn-primary"><i class="fa fa-trash"  style="color:#ffffff"></i> &nbsp;删除</a>
+	                       			</td>
+	                           	</tr>
+	                        </table>
+                        </div>
+                        <table id="add_fertilization_info_div" style="margin-top:10px;display:none">
+                        	<tr>
+                        		<td>
+                        			<label>土壤壤情</label>
+                        			<input id="soil_info" type="text" class="form-control" style="width:150px;height:35px" placeholder="土壤壤情" >
+                        		</td>
+                        		<td width="20"></td>
+                        		<td>
+                        			<label>检测人员</label>
+                        			<select data-placeholder="检测人员" class="chosen-select" id="update_archives_check_employee" style="height:35px;width:200px;">
+	                                </select>
+                        		</td>
+                        		<td width="20"></td>
+                        		<td>
+                        			<label>施肥操作员</label>
+                        			<select data-placeholder="施肥操作员" class="chosen-select" id="update_archives_deal_employee" style="height:35px;width:200px;">
+	                                </select>
+                        		</td>
+                        	</tr>
+                        </table>
+                    </div>
+                    
+                    <div class="form-group flexBox" style="margin-top:20px;padding:0px 30px">
+                    	<label for="message" class="control-label">用药记录</label>
+                        <p onclick="addAdministration(1,this)" for="" class="control-right" id="add_administration">+</p>
+                    </div>
+                    
+                    <div id="add_administration_div" class="add_box" style="display:none">
+                    	<div id="add_administration_record_div">
+	                    	<table id="add_administration_table" class="add_administration_table" style="margin-top:10px;display:none">
+	                           	<tr>
+	                           		<td>
+	                           			<label>用药时间</label>
+	                           			<input class="administration_time" type="text" style="width:130px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="请选择用药时间" >
+	                           		</td>
+	                           		<td width="10"></td>
+	                           		<td>
+	                           			<label>药品名称</label>
+	                           			<input type="text" class="form-control administration_name" style="width:120px;height:35px" placeholder="药品名称" >
+	                           		</td>
+	                           		<td width="10"></td>
+	                      			 <td>
+	                      			 	<label>药品用量</label>
+	                           			<input type="text" class="form-control administration_count" style="width:120px;height:35px" placeholder="药品用量" >
+	                       			</td>
+	                       			<td width="10"></td>
+	                      			 <td>
+	                      			 	<label>药品品牌</label>
+	                           			<input type="text" class="form-control administration_pp" style="width:120px;height:35px" placeholder="药品品牌" >
+	                       			</td>
+	                       			<td width="10"></td>
+	                      			 <td>
+	                      			 	<label>药品供应商</label>
+	                           			<input type="text" class="form-control administration_gys" style="width:120px;height:35px" placeholder="药品供应商" >
+	                       			</td>
+	                       			<td width="10"></td>
+	                       			<td onclick="addAdministration('2',this)" style="vertical-align:bottom;">
+	                       				<a class="btn btn-primary"><i class="fa fa-trash"  style="color:#ffffff"></i> &nbsp;删除</a>
+	                       			</td>
+	                           	</tr>
+	                        </table>
+                        </div>
+                        <table id="add_administration_info_div" style="margin-top:10px;display:none">
+                        	<tr>
+                        		<td>
+                        			<label>病因</label>
+                        			<input id="administration_reason" type="text" class="form-control" style="width:150px;height:35px" placeholder="病因" >
+                        		</td>
+                        		<td width="20"></td>
+                        		<td>
+                        			<label>检测人员</label>
+                        			<select data-placeholder="病因检测人员" class="chosen-select" id="administration_check_employee" style="height:35px;width:200px;">
+	                                </select>
+                        		</td>
+                        		<td width="20"></td>
+                        		<td>
+                        			<label>打药人员</label>
+                        			<select data-placeholder="打药操作人员" class="chosen-select" id="administration_deal_employee" style="height:35px;width:200px;">
+	                                </select>
+                        		</td>
+                        		<td width="20"></td>
+                        		<td>
+                        			<label>农药出厂日期</label>
+                        			<input id="drug_out_factory_time" type="text" style="width:130px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="农药出厂日期" >
+                        		</td>
+                        	</tr>
+                        </table>
+                    </div>
+                    
+                    <div class="form-group flexBox" style="margin-top:20px;padding:0px 30px">
+                    	<label for="message" class="control-label">农事记录</label>
+                        <p onclick="addFarming(1,this,0)" for="" class="control-right" id="add_farming">+</p>
+                    </div>
+                    <div id="add_farming_div" class="add_box" style="display:none">
+                    	<div id="add_farming_record_div">
+	                    	<table id="add_farming_table" class="add_farming_table" style="margin-top:10px;display:none">
+	                           	<tr>
+	                           		<td>
+	                           			<label>农事时间</label>
+	                           			<input class="farm_record_time" type="text" style="width:150px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="请选择农事时间" >
+	                           		</td>
+	                           		<td width="20"></td>
+	                           		<td>
+	                           			<label>农事内容</label>
+	                           			<input type="text" class="form-control farm_record_content" style="width:150px;height:35px" placeholder="请填写农事内容" >
+	                           		</td>
+	                           		<td width="20"></td>
+	                           		<td class="farm_record_employee_td">
+	                           			<label>操作人员</label>
+	                        			<select class="farm_record_employee" data-placeholder="操作人员" class="chosen-select " style="height:35px;width:200px;">
+	                                	</select>
+	                        		</td>
+	                           		<td width="20"></td>
+	                       			<td onclick="addFarming('2',this,0)" style="vertical-align:bottom;">
+	                       				<a class="btn btn-primary"><i class="fa fa-trash"  style="color:#ffffff"></i> &nbsp;删除</a>
+	                       			</td>
+	                           	</tr>
+	                        </table>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group flexBox" style="margin-top:20px;padding:0px 30px">
+                    	<label for="message" class="control-label">认证信息</label>
+                        <p onclick="addCredentials(1,this)" for="" class="control-right" id="add_credentials">+</p>
+                    </div>
+                    <div id="add_credentials_div" >
+                    	<div id="add_credentials_info_div" class="add_box add_credentials_info_div" style="position:relative;display:none">
+	                    	<table style="margin-left:30px">
+	                    		<tr>
+	                    			<td>
+	                    				<label>认证类型</label>
+	                    			</td>
+	                    			<td width="15"></td>
+	                    			<td>
+	                    				<select class="form-control credentials_type" style="height:35px;width:150px;">
+	                    					<option value="0">请选择证书类型</option>
+	                    					<option value="1">农药残留检测</option>
+	                    					<option value="2">无公害农产品认证</option>
+	                    					<option value="3">绿色食品认证</option>
+	                    					<option value="4">有机食品认证</option>
+	                    					<option value="5">HACCP认证</option>
+	                    					<option value="6">土壤检测报告</option>
+	                    					<option value="7">国家地理认证</option>
+	                    					<option value="8">食品安全检测报告</option>
+	                    					<option value="9">ISO质量管理体系认证</option>
+	                    					<option value="10">优良种子认证</option>
+	                    					<option value="11">ISO食品安全管理体系认证</option>
+	                    					<option value="12">大米检测报告</option>
+	                    					<option value="13">营养检测报告</option>
+	                    					<option value="14">QS食品质量安全认证</option>
+	                    					<option value="15">食品流通许可证</option>
+	                    					<option value="16">大米监测报告</option>
+	                    					<option value="17">其他认证</option>
+	                    				</select>
+	                    			</td>
+	                    			<td width="50"></td>
+	                    			<td>
+	                    				<label>颁证日期</label>
+	                    			</td>
+	                    			<td width="15"></td>
+	                    			<td>
+	                           			<input class="credentials_date" type="text" style="width:150px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="请选择颁证日期" >
+	                           		</td>
+	                    		</tr>
+	                    		<tr height="20"></tr>
+	                    		<tr>
+	                    			<td>
+	                    				<label>认证编号</label>
+	                    			</td>
+	                    			<td width="15"></td>
+	                    			<td>
+	                    				<input type="text" class="form-control credentials_num" style="width:150px;height:35px" placeholder="请填写证书编号" >
+	                    			</td>
+	                    			<td width="50"></td>
+	                    			<td>
+	                    				<label>有效日期</label>
+	                    			</td>
+	                    			<td width="15"></td>
+	                    			<td>
+	                           			<input class="credentials_end_date" type="text" style="width:150px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="请选择证书有效日期" >
+	                           		</td>
+	                    		</tr>
+	                    		<tr height="20"></tr>
+	                    		<tr>
+	                    			<td>
+	                    				<label>颁证机构</label>
+	                    			</td>
+	                    			<td width="15"></td>
+	                    			<td>
+	                    				<input type="text" class="form-control credentials_jg" style="width:150px;height:35px" placeholder="请填写颁证机构" >
+	                    			</td>
+	                    		</tr>
+	                    		<tr height="20"></tr>
+	                    		<tr>
+	                    			<td>
+	                    				<label>检测图片</label>
+	                    			</td>
+	                    			<td width="15"></td>
+	                    			<td>
+			                            <a class="addCredentialsUploadPicBtn btn btn-primary" onclick="choosePic(this)" >上传图片</a>
+			                    		<img class="addCredentialsUploadPicPic" src="" alt="" style="width:100px;height:100px;display:none" onclick="choosePic(this)" />
+			                    		<input style="display:none" class="addCredentialsUploadPicFile" type="file" onchange="filechange(this)" />
+	                    			</td>
+	                    		</tr>
+	                    	</table>
+	                    	<div onclick="addCredentials('2',this)" class="delete_add_boxRow">
+                            	<a class="btn btn-primary"><i class="fa fa-trash"  style="color:#ffffff" ></i> &nbsp;删除</a>
+                            </div> 
+	                    </div>
+                    </div>
+                    
+                    <div class="form-group flexBox" style="margin-top:20px;padding:0px 30px">
+                    	<label>种植周期信息</label>
+                    </div>
+                    
+                    <div class="add_box" style="padding-left:50px">
+                    	<table id="farm_week_info">
+                    		<tr>
+                    			<td>
+                    				<label>播种日期</label>
+                    			</td>
+                    			<td width="10"></td>
+                    			<td>
+                    				<input class="farm_week_date" type="text" style="width:120px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="播种日期" >
+                    			</td>
+                    			<td width="20"></td>
+                    			<td>
+                    				<label>幼苗存活率</label>
+                    			</td>
+                    			<td width="10"></td>
+                    			<td>
+                    				<input type="text" class="form-control farm_week_ymchl" style="width:120px;height:35px" placeholder="幼苗存活率" >
+                    			</td>
+                    			<td width="20"></td>
+                    			<td>
+                    				<label>挂果日期</label>
+                    			</td>
+                    			<td width="10"></td>
+                    			<td>
+                    				<input class="farm_week_gg_date" type="text" style="width:120px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="挂果日期" >
+                    			</td>
+                    		</tr>
+                    		<tr height="10"></tr>
+                    		<tr>
+                    			<td>
+                    				<label>成熟日期</label>
+                    			</td>
+                    			<td width="10"></td>
+                    			<td>
+                    				<input class="farm_week_cs_date" type="text" style="width:120px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="成熟日期" >
+                    			</td>
+                    			<td width="20"></td>
+                    			<td>
+                    				<label>收获日期</label>
+                    			</td>
+                    			<td width="10"></td>
+                    			<td>
+                    				<input class="farm_week_recv_date" type="text" style="width:120px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="收获日期" >
+                    			</td>
+                    			<td width="20"></td>
+                    			<td>
+                    				<label>挂果率</label>
+                    			</td>
+                    			<td width="10"></td>
+                    			<td>
+                    				<input type="text" class="form-control farm_week_ggl" style="width:120px;height:35px" placeholder="挂果率" >
+                    			</td>
+                    		</tr>
+                    		<tr height="10"></tr>
+                    		<tr>
+                    			<td>
+                    				<label>化肥残留量</label>
+                    			</td>
+                    			<td width="10"></td>
+                    			<td>
+                    				<input type="text" class="form-control farm_week_hfcll" style="width:120px;height:35px" placeholder="化肥残留量" >
+                    			</td>
+                    			<td width="20"></td>
+                    			<td>
+                    				<label>记录日期</label>
+                    			</td>
+                    			<td width="10"></td>
+                    			<td>
+                    				<input class="farm_week_record_date" type="text" style="width:120px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="记录日期" >
+                    			</td>
+                    			<td width="20"></td>
+                    			<td>
+                    				<label>记录人</label>
+                    			</td>
+                    			<td width="10"></td>
+                    			<td>
+                    				<select id="farm_week_record_employee" data-placeholder="记录人" class="chosen-select " style="height:35px;width:120px;">
+	                                </select>
+                    			</td>
+                    		</tr>
+                    	</table>
+                    </div>
+                    
+                    <div class="form-group flexBox" style="margin-top:20px;padding:0px 30px">
+                    	<label>种源来源</label>
+                    </div>
+                    
+                    <div class="add_box" style="padding-left:50px">
+                    	<label>类型</label>
+                    	<select id="seedType" onchange="chooseSeedType()" class="form-control" style="height:35px;width:150px;margin-left:110px">
+                            <option value="1">种子</option>
+                            <option value="2">种苗</option>
+                        </select>
+                    	<table style="margin-top:10px;" id="table_seed">
+                    		<tr>
+                    			<td>
+                    				<label>种子名称</label>
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input type="text" class="form-control seed_name" style="width:150px;height:35px" placeholder="请填写种子名称" >
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<label>种子生产厂家</label>
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input type="text" class="form-control seed_cj" style="width:150px;height:35px" placeholder="请填写种子生产厂家" >
+                    			</td>
+                    		</tr>
+                    		<tr height="10"></tr>
+                    		<tr>
+                    			<td>
+                    				<label>采购与入库日期</label>
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input class="seed_buy_date" type="text" style="width:150px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="请选择日期" >
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<label>种子出厂日期</label>
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input class="seed_out_date" type="text" style="width:150px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="请选择出厂日期" >
+                    			</td>
+                    		</tr>
+                    		<tr height="10"></tr>
+                    		<tr>
+                    			<td>
+                    				<label>采购人</label>
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<select id="seed_buy_employee" data-placeholder="采购人" class="chosen-select " style="height:35px;width:150px;">
+	                                </select>
+                    			</td>
+                    		</tr>
+                    		<tr height="10"></tr>
+                    		<tr>
+                    			<td><label>生产合格证</label></td>
+                    			<td width="15"></td>
+                   				<td>
+		                            <a class="seedCertificateUploadPicBtn btn btn-primary" onclick="choosePic(this)" >上传合格证</a>
+		                    		<img class="seedCertificateUploadPicPic" src="" alt="" style="width:100px;height:100px;display:none" onclick="choosePic(this)" />
+		                    		<input style="display:none" class="seedCertificateUploadPicFile" type="file" onchange="filechange(this)" />
+                    			</td>
+                    		</tr>
+                    		<tr height="10"></tr>
+                    		<tr>
+                    			<td><label>销售商的记录或证书</label></td>
+                    			<td width="15"></td>
+                   				<td>
+		                            <a class="seedSaleUploadPicBtn btn btn-primary" onclick="choosePic(this)" >上传证书</a>
+		                    		<img class="seedSaleUploadPicPic" src="" alt="" style="width:100px;height:100px;display:none" onclick="choosePic(this)" />
+		                    		<input style="display:none" class="seedSaleUploadPicFile" type="file" onchange="filechange(this)" />
+                    			</td>
+                    		</tr>
+                    		<tr height="10"></tr>
+                    		<tr>
+                    			<td><label>非转基因证明</label></td>
+                    			<td width="15"></td>
+                   				<td>
+		                            <a class="seedTransgeneUploadPicBtn btn btn-primary" onclick="choosePic(this)" >上传图片</a>
+		                    		<img class="seedTransgeneUploadPicPic" src="" alt="" style="width:100px;height:100px;display:none" onclick="choosePic(this)" />
+		                    		<input style="display:none" class="seedTransgeneUploadPicFile" type="file" onchange="filechange(this)" />
+                    			</td>
+                    		</tr>
+                    	</table>
+                    	<table style="margin-top:10px;display:none" id="table_seed_source">
+                    		<tr>
+                    			<td>
+                    				<label>种苗名称</label>
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input type="text" class="form-control seedling_name" style="width:150px;height:35px" placeholder="请填写种苗名称" >
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<label>种苗生产厂家</label>
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input type="text" class="form-control seedling_cj" style="width:150px;height:35px" placeholder="请填写种苗生产厂家" >
+                    			</td>
+                    		</tr>
+                    		<tr height="10"></tr>
+                    		<tr>
+                    			<td>
+                    				<label>种苗存活率</label>
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input type="text" class="form-control seedling_chl" style="width:150px;height:35px" placeholder="请填写种苗存活率" >
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<label>种苗尺寸</label>
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input type="text" class="form-control seedling_size" style="width:150px;height:35px" placeholder="请填写种苗尺寸" >
+                    			</td>
+                    		</tr>
+                    		<tr height="10"></tr>
+                    		<tr>
+                    			<td>
+                    				<label>采购与入库日期</label>
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input class="seedling_buy_date" type="text" style="width:150px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="请选择日期" >
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<label>采购人</label>
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<select id="seedling_buy_employee" data-placeholder="采购人" class="chosen-select " style="height:35px;width:150px;">
+	                                </select>
+                    			</td>
+                    		</tr>
+                    		<tr height="10"></tr>
+                    		<tr>
+                    			<td><label>生产合格证</label></td>
+                    			<td width="15"></td>
+                   				<td>
+		                            <a class="seedSourceCertificateUploadPicBtn btn btn-primary" onclick="choosePic(this)" >上传合格证</a>
+		                    		<img class="seedSourceCertificateUploadPicPic" src="" alt="" style="width:100px;height:100px;display:none" onclick="choosePic(this)" />
+		                    		<input style="display:none" class="seedSourceCertificateUploadPicFile" type="file" onchange="filechange(this)" />
+                    			</td>
+                    		</tr>
+                    		<tr height="10"></tr>
+                    		<tr>
+                    			<td><label>销售商的记录或证书</label></td>
+                    			<td width="15"></td>
+                   				<td>
+		                            <a class="seedSourceSaleUploadPicBtn btn btn-primary" onclick="choosePic(this)" >上传证书</a>
+		                    		<img class="seedSourceSaleUploadPicPic" src="" alt="" style="width:100px;height:100px;display:none" onclick="choosePic(this)" />
+		                    		<input style="display:none" class="seedSourceSaleUploadPicFile" type="file" onchange="filechange(this)" />
+                    			</td>
+                    		</tr>
+                    		<tr height="10"></tr>
+                    		<tr>
+                    			<td><label>非转基因证明</label></td>
+                    			<td width="15"></td>
+                   				<td>
+		                            <a class="seedSourceTransgeneUploadPicBtn btn btn-primary" onclick="choosePic(this)" >上传图片</a>
+		                    		<img class="seedSourceTransgeneUploadPicPic" src="" alt="" style="width:100px;height:100px;display:none" onclick="choosePic(this)" />
+		                    		<input style="display:none" class="seedSourceTransgeneUploadPicFile" type="file" onchange="filechange(this)" />
+                    			</td>
+                    		</tr>
+                    	</table>
+                    </div>
+                    
+                    
+                    <div class="form-group flexBox" style="margin-top:20px;padding:0px 30px">
+                    	<label>环境数据</label>
+                    </div>
+                    <div class="add_box" style="padding-left:50px">
+                    	<table>
+                    		<tr>
+                    			<td>
+                    				<input val="1" class="farm_device_choose" type="checkbox" value="1">&nbsp;空气温度
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input val="2" class="farm_device_choose" type="checkbox" value="2">&nbsp;空气湿度
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input val="3" class="farm_device_choose" type="checkbox" value="3">&nbsp;CO2浓度
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input val="4" class="farm_device_choose" type="checkbox" value="4">&nbsp;光照强度
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input val="5" class="farm_device_choose" type="checkbox" value="5">&nbsp;土壤温度
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input val="6" class="farm_device_choose" type="checkbox" value="6">&nbsp;土壤水分
+                    			</td>
+                    			<td width="15"></td>
+                    			<td>
+                    				<input val="7" class="farm_device_choose" type="checkbox" value="7">&nbsp;土壤PH
+                    			</td>
+                    		</tr>
+                    	</table>
+                    	
+                    </div>
+                  
+<!--                   <div style="width:100%;height:1px;background:#CCCCCC;"></div> -->
+                    
+                    <h4 style="margin:20px 20px"><strong>购买信息</strong></h4>
+                    
+                    <div class="add_box" style="padding-left:50px">
+                    	<table id="buy_web" style="border-collapse:separate;border-spacing:0px 15px;">
+                    		<tr>
+                    			<td width="100"><label>网店链接</label></td>
+                    			<td width="20"></td>
+                    			<td width="300">
+                    				<input type="text" class="form-control web_link" style="width:300px;height:35px" placeholder="请填写网店链接" >
+                    			</td>
+                    			<td width="20"></td>
+                    			<td>
+              						<a class="add_new_web_link" onclick="buyInfo(1,this)" style="font-size:18px" ><i class="fa fa-plus-square-o"></i></a>
+              						<a onclick="buyInfo(2,this)" style="font-size:18px;margin-left:10px" ><i class="fa fa-minus-square-o"></i></a>
+              					</td>
+                    		</tr>
+                    	</table>
+                    	<table id="buy_shop" style="border-collapse:separate;border-spacing:0px 15px;">
+                    		<tr>
+                    			<td width="100"><label>实体店地址</label></td>
+                    			<td width="20"></td>
+                    			<td width="300">
+                    				<input type="text" class="form-control shop_address" style="width:300px;height:35px" placeholder="请填写实体店地址" >
+                    			</td>
+                    			<td width="20"></td>
+                    			<td>
+              						<a class="add_new_shop_address" onclick="buyInfo(1,this)" style="font-size:18px" ><i class="fa fa-plus-square-o"></i></a>
+              						<a onclick="buyInfo(2,this)" style="font-size:18px;margin-left:10px" ><i class="fa fa-minus-square-o"></i></a>
+              					</td>
+                    		</tr>
+                    	</table>
+                    	<table id="sale_employee" style="border-collapse:separate;border-spacing:0px 15px;">
+                    		<tr>
+                    			<td width="100"><label>销售人员信息</label></td>
+                    			<td width="20"></td>
+                    			<td width="300">
+                    				<select id="sale_employee_list" style="height:35px;width:300px" class="chosen-select" multiple data-placeholder="请选择销售人员">
+                                	</select>
+                    			</td>
+                    			<td width="20"></td>
+                    		</tr>
+                    	</table>
+                    </div>
+                     
+	                <div class="form-group flexBox" style="margin-top:20px;padding:0px 30px;display:none">
+	                	<a class="btn btn-default" onclick="addCustomDiv(1,null)"><i class="fa fa-plus" style="margin-right:10px"></i>自定义模块</a>
+	                </div>
+	                
+	                <div id="custom_div" style="display:none" >
+	                	<div id="custom_div_demo" class="add_box" style="margin-top:10px;display:none">
+		                	<table style="width:100%">
+		                		<tr>
+		                			<td width="80%">
+		                				<input type="text" class="form-control custom_name" style="width:300px;height:35px" value="自定义模块名称">
+		                			</td>
+		                			<td width="20%">
+		                				<a onclick="addCustomDiv(2,this)" class="btn btn-primary"><i class="fa fa-trash"  style="color:#ffffff" ></i> &nbsp;删除模块</a>
+		                			</td>
+		                		</tr>
+		                	</table>
+		                	<table style="margin-top:20px;border-collapse:separate;border-spacing:0px 10px;" >
+		                		<tr>
+		                			<td>
+		                				<label>时间</label>
+		                			</td>
+		                			<td width="5"></td>
+		                			<td>
+		                				<input class="custom_time" type="text" style="width:150px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="请选择日期" >
+		                			</td>
+		                			<td width="10"></td>
+		                			<td>
+		                				<label>内容</label>
+		                			</td>
+		                			<td width="5"></td>
+		                			<td>
+		                				<input type="text" class="form-control custom_content" style="width:300px;height:35px" placeholder="内容" >
+		                			</td>
+		                			<td width="10"></td>
+		                			<td>
+	               						<a class="addCustomContent" onclick="addCustomContentDiv(1,this)" style="font-size:18px" ><i class="fa fa-plus-square-o"></i></a>
+	               						<a class="removeCustomContent" onclick="addCustomContentDiv(2,this)" style="font-size:18px;margin-left:10px"><i class="fa fa-minus-square-o"></i></a>
+	               					</td>
+		                		</tr>
+		                	</table>
+		                </div>
+		                
+	                </div>
+	                
+                
+                </div>  
+               
+                
+                <div class="modal-footer">  
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>  
+                    <button type="button" class="btn btn-primary ladda-button btn-ladda-demo3" data-style="zoom-out" onclick="saveUpdateArchives()">确定</button>  
+                </div>  
+            </div>  
+        </div>  
+    </div>
+    
+    
+    <!-- 批次列表 -->
+    <div class="modal fade" id="batch_list"> 
+		<div class="modal-dialog" role="document" style="min-width:900px;">  
+        	<div class="modal-content">  
+            	<div class="modal-header"> 
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span  aria-hidden="true">×</span>
+	                    <input id="batch_list_source_id" type="hidden" >
+	                </button>
+                </div>  
+                    <div class="modal-body"> 
+                    	<table>  
+					        <tr>  
+					            <td rowspan="2">
+					            	<img id="batchListImg" width="100px" height="100px" style="float:left" >
+					            </td> 
+					            <td width="20"></td> 
+					            <td>
+					            	<h3 id="batchListPrduct"></h3>
+					            </td>  
+					        </tr>  
+					        <tr>  
+					        	<td width="20"></td> 
+					            <td>	
+					            	<label id="batchListTime"></label>
+					            </td>  
+					        </tr>  
+					    </table>  
+                            <ul id="theList" style="margin-top:20px">
+                                <li id="batchListLi" class="theListBox"  style="height:150px;display:none">
+                                    <div class="theListBox_left">
+                                    	<input class="#batch_list_checkbox#" type="checkbox" value="#batch_id#">
+                                    </div>
+                                    <div class="theListBox_right"> 
+                                        <div class="theList_rightMsg">
+                                            <span>上市时间</span>
+                                            <p  class="rightMsg_time">#batchListMarketTime#</p>
+                                            <p>
+                                                <img width="200px" height="40px" src="#batchListBarCodeImg#" alt="">
+                                            </p>
+                                            <span>#batchListBarCode#</span>
+                                             <div class="hideDiv">
+                                                   <p></p>
+                                                   <p></p>
+                                              </div> 
+                                        </div>
+                                        <div class="show_qr_code_div" onmouseenter="batchListInOut('1',this)" >
+                                            <table style="height:100%">
+                                            	<tr>
+                                            		<td style="vertical-align:bottom;padding-bottom:10px">
+                                            			<span>审核通过</span>
+                                            		</td>
+                                            		<td width="10"></td>
+                                            		<td style="vertical-align:bottom;padding-bottom:10px">|</td>
+                                            		<td width="10"></td>
+                                            		<td style="vertical-align:bottom;padding-bottom:10px">
+                                            			<span>#batchState#</span>
+                                            		</td>
+                                            		<td width="20"></td>
+                                            		<td>
+                                            			<img width="110px" height="110px" src="#batchListQrCodeImg#" alt="">
+                                            			<div class="hideDiv">
+		                                                        <p></p>
+		                                                        <p></p>
+		                                                        <p></p>
+		                                                 </div>   
+                                            		</td>
+                                            	</tr>
+                                            </table>
+                                        </div>
+                                        <div class="theList_rightHide" onmouseleave="batchListInOut('2',this)" style="display:none">
+                                            <p class="rightHide_option" style="width:315px;">
+                                                <a class="preview" data-toggle="modol" data-target="#viewTheFiles" onClick="preview('#batchListBarCode#')">预览</a>
+                                                <a class="printBarCode">打印条码</a>
+                                                <a class="printTwoCode">打印二维码</a>
+                                                <a class="scanStatistics" onclick="openScanStatistics('1',this)">扫码统计</a> 
+                                                <input type="hidden" value='#source_id#'>
+                                            </p> 
+                                            <p class="xiugai"> 
+                                                <button class="correct" onclick="updateBatchInfo(#batch_id#)">修改信息</button>    
+                                            </p>   
+                                        </div>  
+                                    </div>
+                                </li>
+                            </ul>
+                    </div>  
+                    <div class="modal-footer" id="footer">  
+                        <div class="footerMsg">   
+                            <div class="addFiles">
+                                <button onclick="openAddBatch('0','0')">添加批次</button>
+                            </div>
+                            <div class="footer_option">
+                                <a onclick="batchListOperation(1)" class="grounding">上架</a>
+                                <a onclick="batchListOperation(2)" class="undercarriage">下架</a>
+                                <button onclick="batchListOperation(3)">删除</button>
+                            </div>
+                        </div>
+                    </div>  
+                </div>  
+            </div>  
+    </div>
+
+      <!-- 添加批次 编辑批次 -->
+    <div class="modal fade" id="addBatchDiv" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"> 
+            <div class="modal-dialog" role="document" style="min-width:800px;">  
+                <div class="modal-content">  
+                    <div class="modal-header"> 
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span  aria-hidden="true">×</span>
+                        </button>
+                        <h4 id="batch_div_info" style="text-align:center"></h4>
+                        <input type="hidden" id="addBatchSourceId" >
+                        <input type="hidden" id="updateBatchId" >
+                    </div>  
+                    <div class="modal-body">
+                    	<table>
+                    		<tr>
+                    			<td>
+                    				<label>上市时间</label>
+                    			</td>
+                    			<td width="30"></td>
+                    			<td>
+                    				<input style="width:150px;height:35px;margin-left:40px" type="text" id="addBatch_time_to_market" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" value="" placeholder="选择上市时间">
+                    			</td>
+                    		</tr>
+                    		<tr height="10"></tr>
+                    		<tr>
+                    			<td>
+                    				<label>指标描述</label>
+                    			</td>
+                    			<td width="30"></td>
+                    			<td>
+                    				<textarea style="margin-left:40px"id="addBatch_description" cols="60" rows="10" placeholder="请输入具体的描述"></textarea>
+                    			</td>
+                    		</tr>
+                    	</table>
+                        <div class="form-group flexBox">
+                        	<label for="message" class="control-label">检测记录</label>
+                            <p onclick="addBatchCheckRecord('1',this)" for="" class="control-right" id="add_Bigbox">+</p>
+                        </div>
+    					
+                            <div id="detectionRecord">
+                            	<div class="add_box" style="position:relative;display:none">
+                                    <table style="width:100%">
+                                    	<tr>
+                                    		<td style="width:80px">
+                                    			<label>检测时间</label>
+                                    		</td>
+                                    		<td width="30"></td>
+			                    			<td>
+			                    				<input style="width:150px;height:35px;" type="text" class="addBatch_check_date" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" value="#time#" placeholder="选择检测时间">
+			                    			</td>
+                                    	</tr>
+                                    	<tr height="10"></tr>
+                                    	<tr>
+                                    		<td style="width:80px">
+                                    			<label>检测项目</label>
+                                    		</td>
+                                    		<td width="30"></td>
+			                    			<td>
+			                    				 <select class="form-control" style="height:35px;width:150px;">
+                                                    <option value="1">农残检测</option>
+                                                </select>
+			                    			</td>
+                                    	</tr>
+                                    	<tr height="10"></tr>
+                                    	<tr>
+                                    		<td><label>检查明细</label></td>
+                                    		<td width="30"></td>
+                                    		<td>
+                                    			<table border="1" bordercolor="#AAAAAA" style="border-collapse:collapse;text-align:center;">
+                                    				<tr height="50px">
+                                    					<td width="180px">检测指标</td>
+                                    					<td width="180px">检测值</td>
+                                    					<td width="180px">操作</td>
+                                    				</tr>
+                                    				<tr height="50px"  class="addBatchCheckDetails">
+                                    					<td>
+                                    						<select class="form-control addBatchCheckDetailsType" style="height:35px;width:150px;">
+			                                                    <option value="1">抑制率</option>
+			                                                    <option value="2">敌敌畏</option>
+			                                                    <option value="3">敌百虫</option>
+			                                                    <option value="4">联苯菊酯</option>
+			                                                    <option value="5">丁草胺</option>
+			                                                    <option value="6">涕灭威</option>
+			                                                </select>
+                                    					</td>
+                                    					<td>
+                                    						<input type="text" class="form-control addBatchCheckDetailsVal" style="width:150px;height:35px" placeholder="请输入检测值" >
+                                    					</td>
+                                    					<td>
+                                    						<a class="checkRecordAdd" style="font-size:18px" onclick="checkRecordOperation('1',this)"><i class="fa fa-plus-square-o"></i></a>
+                                    						<a class="checkRecordRemove" style="font-size:18px;margin-left:10px" onclick="checkRecordOperation('2',this)"><i class="fa fa-minus-square-o"></i></a>
+                                    					</td>
+                                    				</tr>
+                                    			</table>
+                                    		</td>
+                                    	</tr>
+                                    	<tr height="10"></tr>
+                                    	<tr>
+                                    		<td><label>检测机构</label></td>
+                                    		<td width="30"></td>
+                                    		<td>
+                                    			<input type="text" class="form-control addBatchCheckMechanism" style="width:150px;height:35px" placeholder="请填写检测机构" value="#mechanism#">
+                                    		</td>
+                                    	</tr>
+                                    	<tr height="10"></tr>
+                                    	<tr>
+                                    		<td><label>检测人员</label></td>
+                                    		<td width="30"></td>
+                                    		<td>
+                                    			 <select class="addBatchCheckEmployee chosen-select" data-placeholder="请选择检测人员" style="height:35px;width:150px;">
+				                                	<option value="0"></option>
+				                                </select>
+                                    		</td>
+                                    	</tr>
+                                    	<tr height="10"></tr>
+                                    	<tr>
+                                    		<td><label>检测图片</label></td>
+                                    		<td width="30"></td>
+                                    		<td>
+                                    			<a class="batchCheckUploadPicBtn btn btn-primary" onclick="choosePic(this)" style="display:#chooseDisplay#">上传图片</a>
+					                    		<img class="batchCheckUploadPicPic" src="#icon#" alt="" style="width:150px;height:150px;display:#imgDisplay#" onclick="choosePic(this)" />
+					                    		<input style="display:none" class="batchCheckUploadPicFile" type="file" onchange="filechange(this)" />
+                                    		</td>
+                                    	</tr>
+                                    </table>
+                                    <div onclick="addBatchCheckRecord('2',this)" class="delete_add_boxRow">
+                                    		<a class="btn btn-primary"><i class="fa fa-trash"  style="color:#ffffff"></i> &nbsp;删除</a>
+                                    </div>
+                                </div>
+                            </div>
+    
+    						
+    						<div class="form-group flexBox">
+	                        	<label for="message" class="control-label">加工记录</label>
+	                            <p onclick="addBatchTranslateRecord('1',this)" for="" class="control-right" id="add_record">+</p>
+	                        </div>
+	                         <div id="batchTranslateRecord">
+                            	<div class="translateRecord" style="position:relative;display:none">
+                                    <table style="width:100%;margin-top:10px">
+                                    	<tr>
+                                    		<td>
+                                    			<input class="translateRecordTime" type="text" style="width:150px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="请选择加工时间" >
+                                    		</td>
+                                    		<td width="10"></td>
+                                    		<td>
+                                    			<input type="text" class="form-control translateRecordContent" style="width:300px;height:35px" placeholder="请填写加工内容" >
+                                    		</td>
+                                    		<td width="20"></td>
+                                    		<td>
+                                    			<select class="addBatchTranslateEmployee chosen-select" data-placeholder="请选择检测人员" style="height:35px;width:150px;">
+				                                	<option value="0"></option>
+				                                </select>
+				                            </td>
+				                            <td width="20"></td>
+				                            <td onclick="addBatchTranslateRecord('2',this)">
+				                            	<a class="btn btn-primary"><i class="fa fa-trash"  style="color:#ffffff"></i> &nbsp;删除</a>
+				                            </td>
+                                    	</tr>
+                                    </table>
+                                </div>
+                             </div>
+    
+	                        <div class="form-group flexBox" style="margin-top:10px">
+	                        	<label for="message" class="control-label">配送记录</label>
+	                            <p onclick="addBatchSendRecord('1',this)" for="" class="control-right" id="add_send_record">+</p>
+	                        </div>
+	                         <div id="batchSendRecord">
+                            	<div class="sendRecord" style="position:relative;display:none">
+                                    <table style="width:100%;margin-top:10px">
+                                    	<tr>
+                                    		<td>
+                                    			<input class="sendRecordTime" type="text" style="width:150px;height:35px" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" placeholder="请选择配送时间" >
+                                    		</td>
+                                    		<td width="10"></td>
+                                    		<td>
+                                    			<input class="sendRecordAddress" type="text" class="form-control" style="width:300px;height:35px" placeholder="请填写配送目的地" >
+                                    		</td>
+                                    		<td width="20"></td>
+                                    		<td>
+                                    			<select class="addBatchSendEmployee chosen-select" data-placeholder="请选择配送人员" style="height:35px;width:150px;">
+				                                	<option value="0"></option>
+				                                </select>
+				                            </td>
+				                            <td width="20"></td>
+				                            <td onclick="addBatchSendRecord('2',this)">
+				                            	<a class="btn btn-primary"><i class="fa fa-trash"  style="color:#ffffff"></i> &nbsp;删除</a>
+				                            </td>
+                                    	</tr>
+                                    </table>
+                                </div>
+                             </div>
+                    </div>  
+                    <div class="modal-footer">  
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>  
+                        <button type="button" class="btn btn-primary ladda-button btn-ladda-demo1" data-style="zoom-out" onclick="saveBatch()">确定</button>  
+                    </div>  
+                </div>  
+            </div>  
+    </div>
+
+    <!-- h5预览 -->
+    <div class="modal fade" id="viewTheFiles"> 
+           <div class="modal-dialog" role="document" style="min-width:1000px;">  
+                <div class="modal-content">  
+                    <div class="modal-header"> 
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span  aria-hidden="true">×</span>
+                        </button>
+                        <h5>
+                            	查看档案
+                        </h5>
+                    </div>  
+                    <div class="modal-body"> 
+                        <div class="modal-body-head">
+                            <div id="modal-body-head-left" > 
+                                <img id="h5_view_pro_pic" alt="">    
+                            </div>
+                            <div id="modal-body-head-center" style="padding-top:40px;padding-left:20px">
+                                <div class="varietyName">
+                                	<input type="hidden" id="h5_view_pro_batch_id">
+                                    <span id="h5_view_pro_name"></span>
+                                </div>
+                                <div>
+									<table style="width:100%;margin-top:20px">
+										<tr>
+											<td width="30%"><span>作物</span></td>
+											<td width="30%"><span>品种</span></td>
+											<td width="30%"><span>上市时间</span></td>
+										</tr>
+										<tr height="10"></tr>
+										<tr>
+											<td width="30%"><span id="h5_view_pro_detail"></span></td>
+											<td width="30%"><span id="h5_view_pro_type"></span></td>
+											<td width="30%"><span id="h5_view_pro_date"></span></td>
+										</tr>
+									</table>
+                                    <div id="cpzb" style="position:relative;top:80px;left:-210px;width:550px;height:80px;overflow:hidden;word-wrap:break-word;text-overflow: ellipsis;">
+                                    	<table>
+                                    		<tr>
+                                    			<td width="100" valign="top"><label>产品指标</label></td>
+                                    			<td>
+                                    				<span id="h5_view_pro_quota_desc"></span>
+                                    			</td>
+                                    		</tr>
+                                    	</table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="modal-body-head-right">
+                                <div class="companyDetail">
+                                    <p>
+                                        <label>公司</label>
+                                        <span id="h5_view_company_name"></span>    
+                                    </p>  
+<!--                                     <p> -->
+<!--                                         <span class="validate">营业执照已验证</span>     -->
+<!--                                     </p>   -->
+                                    <p>
+                                        <label>负责人</label>
+                                        <span id="h5_view_leader"></span>
+                                    </p>
+                                    <p> 
+                                        <label>地址</label>
+                                        <span id="h5_view_company_address"></span>
+                                    </p>
+                                </div>
+                                <!-- 地图 -->
+                                <div id="position_map" style="width:350px;height:200px"></div>
+                            </div>
+                        </div>
+                        <div id="moadl-body-body">
+                                <div class="form-group productIntroduction" id="productIntroduction" style="padding-top:20px">  
+                                    <label style="width:100px">产品简介</label>
+                                    <p id="h5_view_pro_desc">
+                                    </p>
+                                </div> 
+                                <div class="form-group">
+                                    <label for="message-text" class="control-label">溯源档案</label>
+                                    <ul id="traceabilityArchives">
+                                        <li class="growthPhaseBox" onclick="growthPhaseBoxClick(this)" onmouseenter="changePicColor(1,this)" onmouseleave="changePicColor(2,this)">
+                                            <div class="Icon"><img src="img/source/grow.png" alt=""></div>
+                                            <div class="growthPhasePicture publicDiv">生长期图片</div>
+                                        </li>
+                                        <li class="fertilizerUseTableBox" onclick="fertilizerUseTableBoxClick(this)" onmouseenter="changePicColor(1,this)" onmouseleave="changePicColor(2,this)">
+                                            <div class="Icon"><img src="img/source/feed.png" alt=""></div>
+                                            <div class="fertilizerUseTable publicDiv">肥料使用表</div>
+                                        </li>
+                                        <li class="viewLogBox" onclick="viewLogBoxClick(this)" onmouseenter="changePicColor(1,this)" onmouseleave="changePicColor(2,this)">
+                                            <div class="Icon"><img src="img/source/drug.png" alt=""></div>
+                                            <div class="viewLog publicDiv">查看用药记录</div>
+                                        </li>
+                                        <li class="KeyEnvironmentalDataBox" onmouseenter="changePicColor(1,this)" onmouseleave="changePicColor(2,this)">
+                                            <div class="Icon"><img src="img/source/device.png" alt=""></div>
+                                            <div class="KeyEnvironmentalData publicDiv">关键环境数据</div>
+                                        </li>
+                                        <li class="agriculturalRecordsBox" onclick="agriculturalRecordsBoxClick(this)" onmouseenter="changePicColor(1,this)" onmouseleave="changePicColor(2,this)">
+                                            <div class="Icon"><img src="img/source/grow_record.png" alt=""></div>
+                                            <div class="fertilizerUseTable publicDiv">农事记录</div>
+                                        </li>
+                                        <li class="productIntroductionBox"  onmouseenter="changePicColor(1,this)" onmouseleave="changePicColor(2,this)">
+                                            <div class="Icon"><img src="img/source/auth.png" alt=""></div>
+                                            <div class="viewLog publicDiv">认证信息</div>
+                                        </li>
+                                        <li class="seedSourceInformationBox" onclick="seedSourceInformationBoxClick()" onmouseenter="changePicColor(1,this)" onmouseleave="changePicColor(2,this)">
+                                            <div class="Icon"><img src="img/source/seed.png" alt=""></div>
+                                            <div class="KeyEnvironmentalData publicDiv">种子来源信息</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="form-group productIntroduction" id="companyProfile">  
+                                	<label style="width:100px">公司简介</label>
+                                    <p id="h5_view_company_info">
+                                    </p>
+                                </div> 
+
+                                <!-- 12.20 -->
+                                <!--  <div class="form-group productIntroduction" id="productCertification">  
+                                    <label for="message-text" class="control-label">产品认证</label>
+                                    <p>
+                                        
+                                    </p>
+                                </div>-->
+                                <!-- 农事记录 -->
+                                <!--  <div class="form-group productIntroduction" id="agriculturalRecords">  
+                                    <label for="message-text" class="control-label">农事记录</label>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>农事时间</th>
+                                                <th>农事内容</th>
+                                                <th>操作员</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1901-01-01</td>
+                                                <td>1111111</td>
+                                                <td>cccc</td>
+                                            </tr> 
+                                        </tbody>
+                                    </table>
+                                </div>-->
+                                <!-- 加工记录 -->
+                                <!-- <div class="form-group productIntroduction" id="processing">  
+                                    <label for="message-text" class="control-label">加工记录</label>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>加工时间</th>
+                                                <th>加工内容</th>
+                                                <th>操作员</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1901-01-01</td>
+                                                <td>1111111</td>
+                                                <td>cccc</td>
+                                            </tr> 
+                                        </tbody>
+                                    </table>
+                                </div> -->
+                                <!-- 配送记录 -->
+                                <!--  <div class="form-group productIntroduction" id="dispatching">  
+                                    <label for="message-text" class="control-label">配送记录</label>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>配送时间</th>
+                                                <th>配送目的地</th>
+                                                <th>配送员</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td style="width:20%">1901-01-01</td>
+                                                <td>1111111</td>
+                                                <td style="width:20%">cccc</td>
+                                            </tr> 
+                                        </tbody>
+                                    </table>
+                                </div>-->
+                                <!-- 企业自检 -->
+                               <!-- <div class="form-group productIntroduction" id="companyCheck">  
+                                    <label for="message-text" class="control-label">企业自检</label>
+                                    <div id="companyCheckBox">
+                                        <div class="companyCheckDetail">
+                                             <div class="form-group">
+                                                 <label for="message-text" class="control-label">检测项目</label>
+                                                 <span>农残检测</span>
+                                             </div>
+                                             <div class="form-group">
+                                                 <label for="message-text" class="control-label">检测机构</label>
+                                                 <span>1</span>
+                                             </div>
+                                             <div class="form-group">
+                                                 <label for="message-text" class="control-label">检测时间</label>
+                                                 <span>2017-05-08</span>
+                                             </div>
+                                             <div class="form-group">
+                                                 <label for="message-text" class="control-label">检测图片</label>
+                                                 <span>查看图片</span>
+                                             </div>
+                                             <div class="form-group checkDetail">
+                                                <label for="message-text" class="control-label">检测明细</label>
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>检测指标</th>
+                                                            <th>检测值</th>
+                                                            <th style="width:33%">检测指标</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>抑制率</td>
+                                                            <td>10</td>
+                                                            <td style="width:33%">&gt;50</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>敌敌畏</td>
+                                                            <td>10</td>
+                                                            <td style="width:33%">&gt;0.1mg/KG</td>
+                                                     </tr>
+                                                    </tbody>
+                                                </table>
+                                             </div>
+                                        </div>
+                                        <div class="companyCheckDetail"></div>
+                                    </div>
+                                </div> -->
+                                <!-- 自定义模块 -->
+                                <!--  <div id="customModule">
+                                    <div class="form-group productIntroduction">  
+                                        <label for="message-text" class="control-label">使用说明</label>
+                                        <table style="width:85%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>时间</th>
+                                                    <th>内容</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width:30%">1901-01-01</td>
+                                                    <td>1111111</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>-->
+                                <div class="form-group relatedInformation">
+                                        <label for="message-text" class="control-label">购买信息</label>
+                                        
+                                        <table id="view_h5_shop" style="width:100%;border:1px dashed #ddd;border-collapse: separate;padding-right:50px;padding-bottom:15px">
+                                        	<tr valign="top">
+                                        		<td rowspan="10" >实体店购买</td>
+                                        	</tr>
+                                        </table>
+                                        <table id="view_h5_saler" style="width:100%;border:1px dashed #ddd;border-collapse: separate;margin-top:10px;padding-right:50px;padding-bottom:15px">
+                                        	<tr valign="top">
+                                        		<td rowspan="10" >销售人员联系方式</td>
+                                        	</tr>
+                                        </table>
+                                        <table id="view_h5_web" style="width:100%;border:1px dashed #ddd;border-collapse: separate;margin-top:10px;padding-right:50px;padding-bottom:15px">
+                                        	<tr valign="top">
+                                        		<td rowspan="10" >网店链接</td>
+                                        	</tr>
+                                        </table>
+                                </div>
+                        </div>   
+                    </div>  
+                </div>  
+            </div>  
+    </div>
+
+	
+    <div id="h5_view_pic" class="container myCarousel" style="width:800px;height:600px;display:none;position:absolute;top:20%;left:25%;z-index:9999">
+         <div id="carousel-example-generic" class="carousel slide">  
+              <div class="carousel-inner">  
+                  
+              </div>  
+              <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">  
+                  <span class="glyphicon glyphicon-chevron-left"></span>  
+              </a>  
+              <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">  
+                  <span class="glyphicon glyphicon-chevron-right"></span>  
+              </a>  
+          </div>
+   </div>   
+          
+
+    <!-- 图片预览 -->
+    <div class="modal fade" id="picturePreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"> 
+        <div class="modal-dialog" role="document" style="min-width:800px;">  
+            <div class="modal-content">  
+                <div class="modal-header"> 
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span  aria-hidden="true">×</span>
+                    </button>
+                    <h3></h3>
+                </div>  
+                <div class="modal-body">
+                         <div class="container myCarousel">
+                              <div id="carousel-example-generic" class="carousel slide">  
+                                   <div class="carousel-inner">  
+                                       
+                                   </div>  
+                                   <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">  
+                                       <span class="glyphicon glyphicon-chevron-left"></span>  
+                                   </a>  
+                                   <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">  
+                                       <span class="glyphicon glyphicon-chevron-right"></span>  
+                                   </a>  
+                               </div>
+                        </div>   
+                       
+                </div>
+            </div>  
+        </div>  
+    </div>
+	
+    <!-- 表格 -->
+    <div class="modal fade" id="viewTable" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="z-index:9999"> 
+            <div class="modal-dialog" role="document" style="min-width:800px;min-height:500px">  
+                <div class="modal-content">  
+                    <div class="modal-header"> 
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span  aria-hidden="true">×</span>
+                        </button>
+                        <h4></h4>
+                    </div>  
+                    <div class="modal-body">
+                        <table id="useTable" style="width:100%;">
+                        </table>
+                    </div>  
+                </div>  
+            </div>  
+    </div>
+
+
+    <!-- 扫码统计 -->
+    <div class="modal fade" id="scavengingStatistics" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"> 
+            <div class="modal-dialog" role="document" style="min-width:1000px;">  
+                <div class="modal-content">  
+                    <div class="modal-header"> 
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span  aria-hidden="true">×</span>
+                        </button>
+                        <h5>扫码统计</h5>
+                    </div>  
+                    <div class="modal-body"  style="height:500px">
+                        <div id="areaSelectionOptions">
+                        	<!-- 12.26 -->
+                        	<div class="areaSelectionOptionsRight">
+<!--                                 <span onclick="clickScanStatistics('1',this)" class="statisticalCurveReport rightPublic">统计曲线报表</span> -->
+                                 <a class="tjqxbb" onclick="clickScanStatistics('1',this)">
+                                	<i class="tjqxbbI clickI"></i>
+                                	<span style="color:#6A819A">统计曲线报表</span>
+                                	<b style="margin-left:20px;font-size:16px;font-weight:normal;color:#E1E6E8">|</b>
+                                </a>
+                                <input type="hidden" id="aaa" value="">
+<!--                                 <span onclick="openScanStatistics('2','0')" class="scanningAreaDistributionMap ">扫描区域分布图</span> -->
+                                <a class="smqyfbt"  onclick="openScanStatistics('2','0')">
+                                	<i class="smqyfbtI clickI"></i>
+                                	<span style="color:#6A819A">扫描区域分布图</span>
+                                </a>
+                            </div>
+                            <div class="areaSelectionOptionsLeft">
+                            	<input type="text" name="planting_time" id="" class="startTime" onfocus="WdatePicker({ dateFmt: 'yyyy-MM', readOnly: true});" format="yyyy-MM" value="" placeholder="">
+                            	至
+                            	<input type="text" name="planting_time" id="" class="endTime" onfocus="WdatePicker({ dateFmt: 'yyyy-MM', readOnly: true});" format="yyyy-MM" value="" placeholder="">
+                            	<input type="text" class="searchProduct" placeholder="请输入产品名称">
+<!--                             	<span class="btn btn-primary" onClick="scanSearch()">搜索</span> -->
+								<a class="btn btn-primary" onClick="scanSearch()" style="background:#1986DF;border-color:1px solid #1986DF;border-top-left-radius:0;border-bottom-left-radius:0;">
+                            		<span class="glyphicon glyphicon-search" style="color:#fff"></span>
+                            	</a>
+                            </div>
+                        </div>
+                        <div id="container1" class="col-xs-12" style="width:950px;height:400px;margin-top:30px"></div>
+                    </div>  
+                </div>  
+            </div>  
+    </div>
+
+    <!--观看环境数据 -->
+    <div class="modal fade" id="environmentalData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"> 
+            <div class="modal-dialog" role="document" style="min-width:800px;">  
+                <div class="modal-content">  
+                    <div class="modal-header"> 
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span  aria-hidden="true">×</span>
+                        </button>
+                        <h5>观看环境数据</h5>
+                    </div>  
+                    <div class="modal-body"  style="height:500px">
+                        <div id="environmentalDataOptions">
+                        </div>
+                        <div id="div_envdata" class="col-xs-12" style="width:770px;height:400px;"></div> 
+                        <!--  <div id="guangzhao" class="col-xs-12" style="width:770px;height:400px;"></div>-->
+                        <!-- <p id="propmt" style="text-align:center">暂无扫码数据</p> -->
+                    </div>  
+                </div>  
+            </div>  
+    </div>
+
+	<!-- 产品认证 -->
+	<div class="modal fade" id="productCertification" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"> 
+            <div class="modal-dialog" role="document" style="min-width:800px;">  
+                <div class="modal-content">  
+                    <div class="modal-header"> 
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span  aria-hidden="true">×</span>
+                        </button>
+                        <h4>产品认证</h4>
+                    </div>  
+                    <div class="modal-body" style="min-height:300px">
+                        <table id="productTable">
+                            <tbody>
+                            	
+                            </tbody>
+                        </table>
+                    </div>  
+                </div>  
+            </div>  
+    </div>
+	
+	<!-- 种子来源信息 -->
+	<div class="modal fade" id="seedsourceInformation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"> 
+            <div class="modal-dialog" role="document" style="min-width:800px;">  
+                <div class="modal-content">  
+                    <div class="modal-header"> 
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span  aria-hidden="true">×</span>
+                        </button>
+                        <h4>种子信息</h4>
+                    </div>  
+                    <div class="modal-body">
+                        <ul id="souceFormList">
+                       		<li class="form-item">
+                       			<label>种子名称</label>
+                       			<p class="seedName"></p>
+                       		</li>
+                       		<li class="form-item">
+                       			<label>生产厂家</label>
+                       			<p class="venderName"></p>
+                       		</li>
+                       		<li class="form-item">
+                       			<label>购买日期</label>
+                       			<p class="buyDate"></p>
+                       		</li>
+                       		<li class="form-item">
+                       			<label>出厂日期</label>
+                       			<p class="outDate"></p>
+                       		</li>
+                       		<li class="form-item">
+                       			<label>采购人</label>
+                       			<p class="buyEmployee"></p>
+                       		</li>
+                       		<li class="form-item">
+                       			<label>生产合格证</label>
+                       			<p class="scz">
+                       			</p>
+                       		</li>
+                       		<li class="form-item">
+                       			<label>销售商的产品和证书</label>
+                       			<p class="xss">
+                       			</p>
+                       		</li>
+                       		<li class="form-item">
+                       			<label>非转基因证明</label>
+                       			<p class="fzjy">
+                       			</p>
+                       		</li>
+                        </ul>
+                    </div>  
+                </div>  
+            </div>  
+    </div>
+	
+
+<script src="dist/js/bootstrap.min.js"></script>
+<script src="dist/js/widgets/iscroll.js"></script>
+<script src="dist/js/widgets/jquery.pagination.js"></script>
+<!-- 添加批次  进入页面-->
+<script type="text/javascript" src="dist/js/widgets/jquery.nicescroll.min.js"></script>
+<!-- <script src="dist/js/echarts-all.js"></script>  -->
+<script src="dist/js/echarts/location.js"></script>
+<script src="dist/js/echarts/echarts.min.js"></script>
+<script src="dist/js/echarts/macarons.js"></script>
+
+<script src="dist/js/widgets/jquery.jqprint-0.3.js"></script>
+<script src="dist/js/widgets/jquery.migrate.min.js"></script>
+<script src="dist/js/ladda/spin.min.js"></script>
+<script src="dist/js/ladda/ladda.min.js"></script>
+<script src="dist/js/ladda/ladda.jquery.min.js"></script>
+</body>
+</html>

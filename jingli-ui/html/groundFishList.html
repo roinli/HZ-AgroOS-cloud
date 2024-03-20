@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+    <title>大棚鱼塘列表</title>
+    <script src="../dist/js/jquery-1.9.1.min.js"></script>
+    <link rel="stylesheet" href="../dist/css/animate.css" >
+    <link rel="stylesheet" href="../dist/css/normalize.css">
+    <link rel="stylesheet" href="../dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../dist/css/index_public.css">
+    <link rel="stylesheet" href="../dist/css/sweetalert.css">
+    <link rel="stylesheet" href="../dist/css/groundFishList.css">
+    <script src="../dist/js/widgets/sweetalert.min.js"></script>
+    <script src="../dist/js/js/comm.js"></script>
+    <script src="../dist/js/js/index_head_left.js"></script>
+    <script src="../dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../dist/css/toastr.min.css" >
+	  <script src="../dist/js/widgets/toastr.min.js"></script>
+	  <script type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+	  <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $("#div1").load('../include/left_title.html',function(){menu();})
+        $("#loadHeader").load("../include/header.html",function(){header();})
+        $("#personal").load("../include/modelpersonal.html",function(){personalModel();})
+        getGroundFishInfo();
+      });
+
+      var loginInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
+      loginInfo.type_ = "";
+      sessionStorage.setItem("loginInfo",JSON.stringify(loginInfo));
+
+      function setName(id){
+        if (id != "") {
+          $(".rename").show();
+          $(".rename").attr("data-id", id);
+          $(".rename-val").val("");
+        }
+      }
+      function getSetName(id,val){
+        $.ajax({
+            url: URLAPI + "actionServlet",
+            type: "post",
+            dataType: "json",
+            data: {
+                "actionName": "webService",
+                "method": "updateDisplayName",
+                "id": id,
+                "displayName": val,
+                "token": getCookie("token")
+            },
+            success: function(data) {
+                $(".rename").hide();
+                console.log(data);
+                if(data.statusCode == 100) {
+                    toastr.error('请联系管理员','未拥有权限');
+                    return;
+                }
+                if (data.statusCode == 1) {
+                  toastr.success('','修改成功');
+                  location = location;
+                }
+            }
+        })
+      }
+
+    		function getGroundFishInfo(){
+          var loginInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
+    			$.ajax({
+    				type:"POST",
+    	 			url: URLAPI + "actionServlet",
+    	 			data:{
+              "actionName":"webService",
+              "method":"getGroundFishpondListById",
+              "page":"0",
+              "pageSize":"100",
+              "companyId": loginInfo.id,
+              "userType": loginInfo.type,
+              "token": getCookie("token")
+            },
+    	 			dataType:"JSON",
+    	 			success:function(data){
+    	 				if(data.statusCode == 100){toastr.error('请联系管理员','未拥有权限');return;}
+    	 				var result=data.result;
+    	 				var html='';
+    	 				for(var i=0;i<result.length;i++){
+    	 					html+='<div class="Bgbox"><h3 data-id="'+result[i].id+'" data-index='+i+' class="hoverColor listTitle">';
+                 // sult[i].type=='0' || result[i].type== 0){
+                //    html+=result[i].number+'号大棚</h3>';
+                //  }else if(result[i].type=='2' || result[i].type==2) {
+                //    html+=result[i].displayName+'</h3>';
+                //  }else{
+                //    html+=result[i].number+'号鱼塘</h3>';
+                //  }
+                 html+=result[i].displayName+'</h3>';
+    	 					 html+='<span class="cmm" onclick="setName('+result[i].id+')">重命名</span><div class="smBox"><table style="width:240px;"><tbody><tr><td><label class="numericalFont lf">下属组织</label>'+
+    	 					 '<label class="numericalFont rt">'+result[i].cropCnt+'</label></td></tr>';
+    	 					 if(result[i].crop==null){html+='<tr><td><label class="numericalFont lf">作物</label> <label class="specialLabel">无作物</label></td></tr>';}
+    	 					 else{ html+='<tr><td><label class="numericalFont lf">作物</label> <label class="specialLabel">'+result[i].crop+'</label></td></tr>';}
+    	 					html+='<tr><td><label class="numericalFont lf">设备数量</label><label class="numericalFont rt">'+result[i].deviceCnt+'</label></td></tr>'+
+    	 					' <tr><td><label class="numericalFont lf">断线</label><label class="numericalFont rt"> '+result[i].offlineCnt+'</label></td></tr>'+
+    	 					'<tr><td><label class="numericalFont lf">预警</label><label class="numericalFont rt">'+result[i].warningCnt+'</label> </td></tr>'+
+    	 					 '<tr><td><label class="numericalFont lf">正在运行</label><label class="numericalFont rt">'+result[i].runingCnt+'</label></td></tr></tbody></table>'+
+    	 					 '<div class="line"></div>'+
+    	 					 ' <div style="text-align:center;"><label class="numericalFont">年度积溫</label><br>';
+    	 					 if(result[i].temperature.length>5){
+    	 						var a=result[i].temperature.slice(0,2);
+    	 						html+='<label class="cb" title="'+result[i].temperature+'℃">'+a+'...℃</label>'
+    	 					 }else{html+='<label  class="cb" title="'+result[i].temperature+'">'+result[i].temperature+'℃</label>'}
+    	 					 html+='<table style="margin-top:10px;height:100px"><tbody>';
+    	 					 html+='<tr style="vertical-align:bottom;height:60px"><td style="width:30px;">';
+    	 					 var temVal=result[i].temperature;var temPreVal=result[i].temperaturePre;
+    	 					 if(temVal=='0.00'&& temPreVal!='0.00'){
+    	 						html+='<div class="barCb minHt" title="'+result[i].temperature+'℃"></div></td>'+
+    	 						 '<td style="width:10px"></td><td style="width:30px;"><div class="barDd hightest"  title="'+result[i].temperaturePre+'℃"></div></td></tr>';
+    	 					 }else if(temPreVal=='0.00'&&temVal!='0.00'){
+    	 						html+='<div class="barCb hightest" title="'+result[i].temperature+'℃"></div></td>'+
+    	 						 '<td style="width:10px"></td><td style="width:30px;"><div class="barDd minHt" title="'+result[i].temperaturePre+'℃"></div></td></tr>';
+    	 					 }else if(temPreVal=='0.00'&&temVal=='0.00'){
+    	 						html+='<div class="barCb minHt" title="'+result[i].temperature+'℃"></div></td>'+
+    	 						 '<td style="width:10px"></td><td style="width:30px;"><div class="barDd minHt" title="'+result[i].temperaturePre+'℃"></div></td></tr>';
+    	 					 }else if(parseInt(temVal)>parseInt(temPreVal)){
+    	 						html+='<div class="barCb hightest" title="'+result[i].temperature+'℃"></div></td>'+
+    	 						 '<td style="width:10px"></td><td style="width:30px;"><div class="barDd midHt" title="'+result[i].temperaturePre+'℃"></div></td></tr>';
+    	 					 }else if(parseInt(temVal)<parseInt(temPreVal)){
+    	 						html+='<div class="barCb midHt" title="'+result[i].temperature+'℃"></div></td>'+
+    	 						 '<td style="width:10px"></td><td style="width:30px;"><div class="barDd hightest" title="'+result[i].temperaturePre+'℃"></div></td></tr>';
+    	 					 }else{
+    	 						html+='<div class="barCb hightest" title="'+result[i].temperature+'℃"></div></td>'+
+    	 						 '<td style="width:10px"></td><td style="width:30px;"><div class="barDd hightest" title="'+result[i].temperaturePre+'℃"></div></td></tr>';
+    	 					 }
+    	 					 html+='<tr><td>2018</td><td style="width:10px;"></td><td>2017</td></tr></tbody></table></div><div class="line"></div>'+
+    	 					 '<div style="text-align:center;"><label class="numericalFont">年度光照</label><br>';
+    	 					 if(result[i].light.length>5){
+    	 						var b=result[i].light.slice(0,2);
+    	 						 html+='<label class="yincangkuandu cb" title="'+result[i].light+'小时">'+b+'..小时</label>'
+    	 					 }else { html+='<label class="yincangkuandu cb" title="'+result[i].light+'小时">'+result[i].light+'小时</label>'}
+    	 					 html+=' <table style="margin-top:10px;height:100px"><tbody> <tr style="vertical-align:bottom;height:60px">';
+    	 					 if(result[i].light=='0.00'&&result[i].lightPre!='0.00'){
+    	 						 html+=' <td style="width:30px;"><div class="barCb minHt" title="'+result[i].light+'小时"></div></td><td style="width:10px;"></td>'+
+                                     '<td style="width:30px;"><div class="barDd hightest" title="'+result[i].lightPre+'小时"></div></td></tr>'
+    	 					 }else if(result[i].lightPre=='0.00'&&result[i].light!='0.00'){
+    	 						 html+=' <td style="width:30px;"><div class="barCb hightest" title="'+result[i].light+'小时"></div></td><td style="width:10px;"></td>'+
+                                 '<td style="width:30px;"><div class="barDd minHt" title="'+result[i].lightPre+'小时"></div></td></tr>'
+    	 					 }else if(result[i].lightPre=='0.00'&&result[i].light=='0.00'){
+    	 						 html+=' <td style="width:30px;"><div class="barCb minHt" title="'+result[i].light+'小时"></div></td><td style="width:10px;"></td>'+
+                                 '<td style="width:30px;"><div class="barDd minHt" title="'+result[i].lightPre+'小时"></div></td></tr>'
+    	 					 }
+    	 					 else if(parseInt(result[i].light)>parseInt(result[i].lightPre)){
+    	 						 html+=' <td style="width:30px;"><div class="barCb hightest" title="'+result[i].light+'小时"></div></td><td style="width:10px;"></td>'+
+                                 '<td style="width:30px;"><div class="barDd midHt" title="'+result[i].lightPre+'小时"></div></td></tr>'
+    	 					 }else if(parseInt(result[i].light)<parseInt(result[i].lightPre)){
+    	 						 html+=' <td style="width:30px;"><div class="barCb midHt" title="'+result[i].light+'小时"></div></td><td style="width:10px;"></td>'+
+                                 '<td style="width:30px;"><div class="barDd hightest" title="'+result[i].lightPre+'小时"></div></td></tr>'
+    	 					 }else{
+    	 						 html+=' <td style="width:30px;"><div class="barCb hightest" title="'+result[i].light+'小时"></div></td><td style="width:10px;"></td>'+
+                                 '<td style="width:30px;"><div class="barDd hightest" title="'+result[i].lightPre+'小时"></div></td></tr>'
+    	 					 }
+    	 					 html+='<tr><td>2018</td><td style="width:10px;"></td><td>2017</td></tr></tbody></table></div></div></div>';
+    	 				}
+              if (result.length == 0) {
+                html = "<h3>暂无数据</h3>"
+              }
+              $("#ground_fish_div").append(html);
+    	 			}
+    			})
+    		}
+    </script>
+</head>
+<style>
+</style>
+<body>
+ <div class="container-fluid">
+     <!-- header  -->
+    <div class="nav row " id="loadHeader">
+    </div>
+    <div class="row neirong" >
+        <!-- 侧边导航 -->
+        <div id="div1" class="sidebar col-xs-2">
+        </div>
+        <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+ 		</div>
+        <!-- 主题内容 -->
+        <div class="main col-xs-10 row animated fadeInRight" style="background:#F4F7FE;overflow-x:auto;">
+			<div id="ground_fish_div" class="col-xs-12 " style="height:100%;min-height:600px;min-width:1100px;background-color:#F4F7FE;margin:0 auto;">
+				<h2 id="title_company_name" class="col-xs-12" style="font-size:20px;text-align:center;font-family:'黑体'"></h2>
+			</div>
+        </div>
+    </div>
+  <div class="row" id="divFooter"></div>
+ </div>
+
+  <!-- 重命名弹出框 -->
+  <div class="rename">
+    <div class="rename-wra">
+      <div class="rename-head">
+        <span>重命名</span>
+        <i class="glyphicon glyphicon-remove"></i>
+      </div>
+      <div class="rename-content">
+        重命名：
+        <input class="rename-val" type="text" name="name" value="">
+      </div>
+      <div class="rename-footer">
+        <div class="rename-cancel">
+          <i class="glyphicon glyphicon-floppy-remove"></i>
+          <span>取消</span>
+        </div>
+        <div class="rename-submit">
+          <i class="glyphicon glyphicon-floppy-saved"></i>
+          <span>确定</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  $(function(){
+	  $("#ground_fish_div").on('click','.listTitle',function(){
+			var id=$(this).attr('data-id');
+      var index = $(this).attr('data-index');
+      index = parseInt(index)+1;
+			$.ajax({
+	 			type:"POST",
+	 			url: URLAPI + "actionServlet",
+	 			data:{
+          "actionName":"webService",
+          "method":"toDevicePage",
+          "gfNum":id,
+          "token": getCookie("token")
+        },
+	 			dataType:"JSON",
+	 			success:function(data){
+	 				if(data.statusCode == 100){
+		 				toastr.error('请联系管理员','未拥有权限');
+		 				return;
+		 			}
+          // ow.location.href="actionServlet?actionName=webService&method=toPage&page=deviceManage";
+	 				window.location.href="deviceManage.html?gfNum="+index;
+	 			}
+	 		});
+	 })
+
+   $(".rename-head i").on("click", function() {
+     $(".rename").hide();
+   })
+   $(".rename-cancel").on("click", function() {
+     $(".rename").hide();
+   })
+   $(".rename-submit").on("click", function() {
+     var id = $(".rename").attr("data-id");
+     var val = $(".rename-val").val();
+     if(!val) return false;
+     getSetName(id, val);
+   })
+  })
+  </script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>溯源</title>
+    
+    <link rel="stylesheet" href="./page/css/mui.min.css">
+    <link rel="stylesheet" href="./page/css/publicStyle.css">
+    <link rel="stylesheet" href="./dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./dist/css/star-rating.min.css">
+</head>
+<body style="background-color:#efeff4">
+    <header class="mui-bar mui-bar-nav">
+        <h1 class="mui-title">溯源档案</h1>
+    </header>
+    <div class="mui-content" >
+        <div class="title_msg"> 
+            <img id="product_img" alt="" style="width:100%">
+            <p id="product_name"></p>
+        </div>
+        <div class="msgList">
+            <div class="msgItem">
+                <div class="msgItem_title" style="text-align:center">作物</div>
+                <div class="msgItem_content" id="product_detail"></div>
+            </div>
+            <div class="icon">|</div>
+            <div class="msgItem">
+                <div class="msgItem_title" style="text-align:center">品种</div>
+                <div class="msgItem_content" id="product_type"></div>
+            </div>
+            <div class="icon">|</div>
+            <div class="msgItem">
+                <div class="msgItem_title" style="text-align:center">上市时间</div>
+                <div class="msgItem_content" id="product_date"></div>
+            </div>
+        </div>
+        <!-- 指标描述 -->
+        <div class="indexDescription">
+            <h4>指标描述</h4>
+            <p id="description" class="indexDescription_msg">
+            </p>
+        </div>
+        <!-- 地图 -->
+        <div id="companyInformation" style="margin-top:10px;">
+            <div class="companyInformationMsg">
+                <div class="companyNameBox">
+                   <span>公司名称</span>
+                   <div id="companyDetail">
+                       <div id="companyName"></div>
+<!--                        <p>营业执照已认证</p> -->
+                   </div>
+                </div>
+                <div class="companyNameBox">
+                    <span>负责人</span>
+                    <div id="leader"></div>
+                </div>
+                <div class="companyNameBox">
+                    <span>地址</span>
+                    <div id="address"></div>
+                </div>
+            </div>
+            <div class="companyInformationAddress">
+                <button class="mui-btn mui-btn-warning">查看地图</button>
+            </div>
+        </div>
+        <div id="allmap" style="margin-top:10px;"></div>
+        
+        <!-- 溯源档案 -->
+        <div id="traceabilityArchives" style="margin-top:10px;">
+            <h4>溯源档案</h4>
+            <p id="p_start_level">
+               <span class="archivalIntegrity">档案完整度:</span>
+<!--                <span class="starCount"> -->
+<!--                </span> -->
+            </p>
+            <ul id="traceabilityArchivesList">
+                <li id="growthPhasePicture">
+                    <p>
+                        <img src="./img/source/grow_click.png" alt="">
+                    </p>
+                    <p>生长期图片</p>
+                </li>
+                <li id="fertilizerUseTable">
+                    <p>
+                        <img src="./img/source/feed_click.png" alt="">
+                    </p>
+                    <p>肥料使用表</p>
+                </li>
+                <li id="pesticideUseTable">
+                    <p>
+                        <img src="./img/source/drug_click.png" alt="">
+                    </p>
+                    <p>农药使用表</p>     
+                </li>
+                <li id="environmentalData">
+                    <p>
+                        <img src="./img/source/device_click.png" alt="">
+                    </p>
+                    <p>关键环境数据</p>
+                </li>
+                <!-- 12.28 ............................................................-->
+                <li id="agriculturalRecordsTable">
+                    <p>
+                        <img src="./img/source/grow_record_click.png" alt="">
+                    </p>
+                    <p>农事记录</p>
+                </li>
+                <li id="credentialsTable">
+                    <p>
+                        <img src="./img/source/auth_click.png" alt="">
+                    </p>
+                    <p>认证信息</p>     
+                </li>
+                <li id="sourceInformation">
+                    <p>
+                        <img src="./img/source/seed_click.png" alt="">
+                    </p>
+                    <p>种子来源信息</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 产品简介 -->
+        <div id="productIntroduction">
+            <h4>产品简介</h4>
+            <p class="indexDescription_msg productIntroductionMsg">
+            </p>
+        </div>
+
+        <!-- 产品认证  -->
+         <!-- <div id="productCertification">
+            <h4>产品认证</h4>
+            <p class="prompt">暂无数据</p>
+        </div>  -->
+
+        <!-- 企业自检 -->
+        <!-- <div id="companyCheck">
+            <h4>企业自检</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>检测项目</th>
+                        <th>检测图片</th>
+                    </tr>
+                </thead>
+                <tbody> -->
+                    <!-- <tr data-id="123">
+                        <td>农残检测</td>
+                        <td><span class="mui-icon mui-icon-forward"></td>
+                        <td style="display:none">
+                            <input type="hidden" value="">
+                        </td>
+                    </tr>
+                    <tr data-id="456">
+                        <td>农残检测</td>
+                        <td><span class="mui-icon mui-icon-forward"></span></td>
+                        <td style="display:none">
+                            <input type="hidden" value="">
+                        </td>
+                    </tr> -->
+                <!-- </tbody>
+            </table>
+            <p class="prompt">暂无数据</p>
+        </div> -->
+
+        <!-- 农事记录 -->
+        <!-- <div id="agriculturalRecords">
+            <h4>农事记录</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>农事时间</th>
+                        <th>农事内容</th>
+                        <th>操作员</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <p class="prompt">暂无数据</p>
+        </div> -->
+
+        <!-- 加工记录 -->
+        <!-- <div id="processingRecords">
+            <h4>加工记录</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>加工时间</th>
+                        <th>加工内容</th>
+                        <th>操作员</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   
+                </tbody>
+            </table>
+            <p class="prompt">暂无数据</p>
+        </div> -->
+        <!-- 配送纪录 -->
+
+        <!-- <div id="distributionRecord">
+            <h4>配送纪录</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>配送时间</th>
+                        <th>配送目的地</th>
+                        <th>配送员</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <p class="prompt">暂无数据</p>
+        </div> -->
+
+        <!-- 公司简介 -->
+        <div id="companyProfile">
+            <h4>公司简介</h4>
+            <p class="indexDescription_msg companyProfileMsg">
+            </p>
+        </div>
+
+        <!-- 购买信息 -->
+        <div id="purchaseInformation">
+            <h4>购买信息</h4>
+            <div class="indexDescription_msg purchaseInformationMsg">
+                <ul id="operations">
+                    <li class="operationsMsg_left publicStyle">
+                        网店购买
+                    </li>
+                    <li class="operationsMsg_center">
+                        实体店购买
+                    </li>
+                    <li class="operationsMsg_right">
+                        联络方式
+                    </li>
+                </ul>
+                <div id="operationsMsg_left" style="display:block">
+                </div>
+                <div id="operationsMsg_center" style="display:none;">
+                </div>
+                <div id="operationsMsg_right" style="display:none;">
+                    <p>
+                        <span>销售人员</span>
+                        <span class="lastChildRight">联系方式</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 种子信息 -->
+        <!-- <div id="torrentContents">
+            <h4>种子信息</h4>
+            <ul>
+                <li class="item provenanceName">
+                    <span>名称</span> 
+                    <b></b>  
+                </li>
+                <li class="item provenanceVender">
+                    <span>厂家</span>
+                    <b></b>
+                </li>
+                <li class="item hgz clickHref">
+                    <span>合格证</span>
+                    <b>查看证书</b>
+                    <input type="hidden" value="">
+                </li>
+                <li class="item xs clickHref">
+                    <span>销售记录或证书</span>
+                    <b>查看证书</b>
+                    <input type="hidden" value="">
+                </li>
+                <li class="item zjy clickHref">
+                    <span>非转基因证明</span>
+                    <b>查看证书</b>
+                    <input type="hidden" value="">
+                </li>
+            </ul>
+        </div> -->
+
+        <!-- 营养功效以及食疗 -->
+        <!-- <div id="trophicEffect">
+            <h4>营养功效及食疗作用</h4>  
+            <div class="indexDescription_msg trophicEffectMsg"> 
+                <ul id="trophicEffectList">
+                    <li class="trophicEffect_title">
+                        <div class="trophicEffect_time">时间</div>
+                        <div class="trophicEffect_content">内容</div> 
+                    </li>
+                    <li class="content">
+                        <div class="trophicEffect_time">2016-09-20 00:00</div>
+                         <div class="trophicEffect_content">
+                                1.生津止渴，健胃消食。番茄中含有的苹果酸和柠檬酸可以促进胃液分泌，帮助消化，具有强化吸收的作用。如果出现因过多食用油腻所致消化不良，食用番茄就会起到一定的作用。
+                        </div> 
+                    </li>  
+                    <li class="content">
+                        <div class="trophicEffect_time">2016-09-20 00:00</div>
+                            <div class="trophicEffect_content">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit
+                           
+                        </div> 
+                    </li>    
+                    <li class="content">
+                        <div class="trophicEffect_time">2016-09-20 00:00</div>
+                            <div class="trophicEffect_content">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit
+                            . Perspiciatis optio repellat exercitationem ullam provident
+                        </div> 
+                    </li>      
+                </ul>    
+            </div>
+        </div> -->
+    </div>
+        <script src="./dist/js/jquery-1.9.1.min.js"></script>
+        <script src="./page/js/mui.min.js"></script>
+        <script src="./page/js/publicRem.js"></script>
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=P050awfa2ZlevlfAwjNO1SWu2xgxxS9c"></script>
+        <script src="./page/js/traceabilityArchives.js"></script>
+        <script src="./dist/js/bootstrap.min.js"></script>
+        <script src="./dist/js/widgets/star-rating.min.js"></script>
+</body>
+</html>

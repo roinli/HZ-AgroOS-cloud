@@ -1,0 +1,379 @@
+.hidden {
+    display: none;
+}
+
+.main {
+    margin: 0 auto;
+    background: #fff;
+}
+
+.mainbanxin {
+    width: 1250px;
+    margin: 0 auto;
+    background: #ccc;
+    overflow: hidden;
+}
+
+.func {
+    margin-top: 10px;
+}
+
+/*登录*/
+.login input, .cloudlogin input {
+    height: 25px;
+}
+
+.login, .cloudlogin {
+    font: 16px 微软雅黑 bolder;
+    border: 1px solid #fff;
+    background: #ccc;
+    margin-left: 20px;
+    margin-top: 10px;
+    padding-top: 10px;
+    padding-left: 10px;
+    margin-right: 10px;
+}
+
+.login ul li, .cloudlogin ul li {
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.login .loginTtile, .cloudlogin .cloudloginTtile {
+    margin-right: 30px;
+    font-weight: bolder;
+    width: 110px;
+}
+
+.login ul li span, .cloudlogin ul li span {
+    margin-right: 10px;
+}
+
+.login ul li select, .cloudlogin ul li select {
+    width: 100px;
+    height: 25px;
+}
+
+.loginBtn {
+    margin: 0px 0px 10px 140px;
+}
+
+.loginBtn input {
+    width: 100px;
+    height: 25px;
+    /*font-weight: bolder;*/
+}
+
+.DevLogin {
+    margin-bottom: 10px;
+}
+
+.DevLogin .DevLoginbtn input {
+    width: 100px;
+    height: 25px;
+}
+
+.DevLogin .DevLoginbtn select {
+    height: 25px;
+}
+
+.localDevlist {
+    margin: 10px 10px 10px 20px;
+    border: 1px solid #fff;
+}
+
+.localDevlistul {
+    margin: 10px 0px 0px 10px;
+}
+
+.localDevlist .ipcgirdTable {
+    margin-bottom: 10px;
+}
+
+.localDevlistul li {
+    font-weight: bolder;
+}
+
+.localDevlistul li input {
+    width: 100px;
+    height: 25px;
+}
+
+.localDevlistul li {
+    float: left;
+}
+
+.localDevlistul .getlocallistli {
+    margin-left: 45px;
+    margin-bottom: 10px;
+}
+
+#gbox_cloudgirdTable {
+    margin: 0 auto;
+}
+
+/*按钮*/
+.funcBtn {
+    margin-left: 20px;
+    font: 16px 微软雅黑 bolder;
+    border: 1px solid #fff;
+    background: #ccc;
+}
+
+.funcBtn div span {
+    display: inline-block;
+    width: 100px;
+    margin-left: 10px;
+}
+
+.funcBtnCommon {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    border-bottom: 1px dashed #fff;
+}
+
+.soundBtn .volumeinput {
+    margin-top: 5px;
+}
+
+.soundBtn .volumeInputBtn {
+    margin-top: 5px;
+}
+
+.soundBtn .volumeinput span {
+    width: 70px;
+}
+
+.soundBtn .volumeinput input {
+    text-indent: 5px;
+}
+
+.funcBtn div input {
+    width: 80px;
+    height: 25px;
+}
+
+.funcSnapBtn {
+    margin-bottom: 9px;
+}
+
+/*云台*/
+.Preset {
+    font: 16px bolder;
+    margin-left: 20px;
+    background-color: #ccc;
+    overflow: hidden;
+    padding-left: 10px;
+    padding-right: 10px;
+    border: 1px solid #fff;
+}
+
+.PresetTitle {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.presetControl {
+    width: 200px;
+    margin: 0 auto;
+}
+
+.presetControl li {
+    float: left;
+    width: 60px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: #ddd;
+    margin: 3px;
+}
+
+.presetControl li:hover {
+    background-color: #eee;
+    cursor: pointer;
+}
+
+.getPreset {
+    margin-top: 25px;
+}
+
+.getPreset input {
+    width: 60px;
+    height: 25px;
+    margin-left: 5px;
+}
+
+.getPreset .getpresettitle, .setPresetInput span {
+    display: inline-block;
+    width: 100px;
+}
+
+.getPreset select {
+    width: 130px;
+    height: 25px;
+}
+
+.setPreset {
+    margin-top: 25px;
+}
+
+.setPreset input {
+    width: 60px;
+    height: 25px;
+    margin-left: 5px;
+}
+
+.setPresetBtn {
+    width: 220px;
+    margin: 0 auto;
+    margin-top: 25px;
+    margin-bottom: 57px;
+}
+
+/*查询相关*/
+.Query {
+    background: #ccc;
+    overflow: hidden;
+    margin-left: 20px;
+    border: 1px solid #fff;
+}
+
+.queryTitle {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.queryTime, .queryBtn, .playback, .download, .progress {
+    margin-left: 10px;
+}
+
+.queryBtn {
+    margin-left: 83px;
+}
+
+.queryTime {
+    margin-right: 10px;
+}
+
+.queryTime input {
+    height: 25px;
+    text-indent: 5px;
+}
+
+.queryBtn, .playback, .download, .progress {
+    margin-top: 20px;
+    margin-right: 10px;
+}
+
+.progress {
+    margin-bottom: 8px;
+}
+
+.queryBtn input, .playback input, .download input, .progress input {
+    width: 100px;
+    height: 25px;
+}
+
+.playback span, .download span, .progress span {
+    display: inline-block;
+    width: 70px;
+}
+
+/*日志*/
+
+.Log {
+    margin-left: 20px;
+    border: 1px solid #fff;
+}
+
+.Log .logTitle {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.logBtnOpen, .logBtnClose {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.Log .logBtn input {
+    width: 100px;
+    height: 25px;
+}
+
+.logBtnClose {
+    margin-top: 10px;
+    margin-bottom: 175px;
+}
+
+/*控件*/
+.ocxStyle {
+    width: 1000px;
+    height: 1500px;
+    margin: 30px auto;
+}
+
+/*提示信息样式重置*/
+#q_Msgbox {
+    background: #ffffe1;
+    padding: 5px;
+    text-align: center;
+    font-size: 15px;
+    margin: 0 auto;
+}
+
+#errormsg {
+    margin-left: 550px;
+    margin-top: 80px;
+    position: fixed;
+    z-index: 101;
+}
+
+#gbox_girdTable {
+    margin: 10px auto;
+}
+
+#recordfileurl {
+    margin-top: 13px;
+    margin-left: -20px;
+}
+
+#errormsg .gtl_ico_succ {
+    display: inline-block;
+    width: 37px;
+    height: 33px;
+    background: url("../images/icon_40_40.png") -82px -5px;
+    vertical-align: middle;
+}
+
+#errormsg .gtl_ico_fail {
+    display: inline-block;
+    width: 37px;
+    height: 33px;
+    background: url("../images/icon_40_40.png") -40px -5px;
+    vertical-align: middle;
+}
+
+#errormsg .gtl_ico_hits {
+    display: inline-block;
+    width: 37px;
+    height: 33px;
+    background: url("../images/icon_40_40.png") -122px -5px;
+    vertical-align: middle;
+}
+
+.querytable {
+    margin-top: 10px;
+}
+

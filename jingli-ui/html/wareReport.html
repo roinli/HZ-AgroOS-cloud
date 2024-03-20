@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>仓库统计</title>
+    <script src="../dist/js/jquery-1.9.1.min.js"></script>
+    <link rel="stylesheet" href="../dist/css/animate.css" >
+    <link rel="stylesheet" href="../dist/css/normalize.css">
+    <link rel="stylesheet" href="../dist/css/bootstrap.css">
+    <script src="../dist/js/My97DatePicker_ie9/WdatePicker.js"></script>
+    <link rel="stylesheet" href="../dist/css/index_public.css">
+    <link rel="stylesheet" href="../dist/css/statistics.css">
+    <link rel="stylesheet" href="../dist/css/sweetalert.css">
+    <script src="../dist/js/js/index_head_left.js"></script>
+    <link rel="stylesheet" href="../dist/css/toastr.min.css" >
+	<script src="../dist/js/widgets/toastr.min.js"></script>
+	<script type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+    <style>
+    	.ighcharts-contextbutton{
+    		display:none;
+    	}
+    </style>
+<script>
+  var hChat;
+  $(document).ready(function(){
+      $("#div1").load('../include/left_title.html',function(){
+          menu();
+      })
+      $("#loadHeader").load("../include/header.html",function(){
+          header();
+      })
+      $("#personal").load("../include/modelpersonal.html",function(){
+          personalModel();
+      })
+
+      initData();
+  });
+  var type_ = 3;
+  var loginInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
+</script>
+</head>
+<style>
+</style>
+<body>
+ <div class="container-fluid">
+     <!-- header  -->
+    <div class="nav row " id="loadHeader">
+
+    </div>
+    <div class="row neirong" >
+        <!-- 侧边导航 -->
+        <div id="div1" class="sidebar col-xs-2">
+        </div>
+        <!-- 主题内容 -->
+        <div class="main col-xs-10 row animated fadeInRight" style="min-height:800px;background-color:#F4F7FE;">
+                <h2 id="title_company_name" class="col-xs-12" style="font-size:20px;text-align:center"></h2>
+                <div class="col-xs-12 row">
+                    <div class="col-xs-12" style="padding-left:40px;">
+                    	<label>已选择区域</label>
+                    	<select id="gf_num_list" class="form-control" style="height:35px;width:150px;">
+                        </select>
+                        <label style="margin-left:15px">已选择设备</label>
+                        <select id="device_id_list" class="form-control" style="height:35px;width:150px;">
+                        </select>
+
+                        <div style="width:350px;float:right;text-align:right;padding-right:0;">
+                        	<input style="height:35px" type="text" name="start_time" id="start_time" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true ,maxDate:'#F{$dp.$D(\'end_time\')||\'%y-%M-%d\'}'});" format="yyyy-MM-dd" value="" >
+                        		<b>至</b>
+	                        <input style="height:35px" type="text" name="end_time" id="end_time" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true ,minDate:'#F{$dp.$D(\'start_time\')}'});" format="yyyy-MM-dd" value="" >
+<!-- 	                        <button class="btn btn-primary" style="margin-top:-4px;" onclick="getData()">查询</button> -->
+	                        <a onclick="getData()" class="btn btn-primary" style="float:right;border-radius:0;border-top-right-radius: 3px;border-bottom-right-radius: 3px;;background:#1986DF;border-color:#1986DF">
+                        		<span class="glyphicon glyphicon-search" style="color:#fff;"></span>
+                        	</a>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 chaxun row" style="margin-top:30px;background-color:#FFFFFF">
+                        <div class="col-xs-8">
+                        	<b data-value="now" class="temperature graph  activeBg">实时图</b>
+                            <b data-value="avg" class="temperature average">平均值</b>
+                            <b data-value="max" class="temperature maxMum">最高值</b>
+                            <b data-value="min" class="temperature minMum" style="margin:-3px;">最低值</b>
+                        </div>
+                        <div class="col-xs-4" style="text-align:right">
+                        	<select id="search_chat_type" class="form-control"  style="height:35px;width:100px;margin-left:10px;position:absolute;right:115px;top:14px;color:#FE8110" onchange="getData()">
+                            	<option value="0">折线图</option>
+                            	<option value="1">柱状图</option>
+                            </select>
+                        	<button class="btn btn-primary" onclick="exportExcel()">导出Excel</button>
+                        </div>
+                    </div>
+                    <div id="container1" class="col-xs-12"  style="border:1px solid #ddd;border-top:none;margin:-15px 0 0 15px;background-color:#FFFFFF"></div>
+                </div>
+        </div>
+    </div>
+     <div class="row" id="divFooter"></div>
+ </div>
+  <!-- 公司信息 -->
+    <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    </div>
+<script src="../dist/js/js/comm.js"></script>
+<script src="../dist/js/bootstrap.min.js"></script>
+<script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+<!-- <script src="../dist/js/js/repormsForms.js"></script> -->
+<script src="../dist/js/js/wareReport.js"></script>
+<script src="../dist/js/widgets/sweetalert.min.js"></script>
+<script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+<script src="http://cdn.hcharts.cn/highcharts/modules/export-data.js"></script>
+</body>
+</html>

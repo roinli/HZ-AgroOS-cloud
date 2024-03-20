@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="employee">
+	
+	<!-- 员工相关start -->
+	<update id="addEmployee" parameterClass="map">
+		insert into t_employee (company_id,name,sex,icon,mobile,position,age,certificates,
+			certificates_valid,healthy_state,address,create_time)
+		values (#companyId#,#name#,#sex#,#icon#,#mobile#,#position#,#age#,#certificates#,
+			<isNotEmpty property="certificatesValid">
+				#certificatesValid#,
+			</isNotEmpty>
+			<isEmpty property="certificatesValid">
+				NULL,
+			</isEmpty>
+			#healthyState#,#address#,now())
+	</update>
+	
+	<update id="delEmployee" parameterClass="map">
+		delete from t_employee where id IN ($ids$)
+	</update>
+	
+	<update id="updtEmployee" parameterClass="map">
+		update t_employee set name = #name#,
+		sex = #sex#,icon = #icon#,mobile = #mobile#,position = #position#,
+		age = #age#,certificates = #certificates#,certificates_valid = #certificatesValid#,
+		healthy_state = #healthyState#,address = #address#
+		where id = #id#
+	</update>
+	
+	<select id="queryEmployee" resultClass="cn.lookout.base.bean.EmployeeBean" parameterClass="String">
+		select company_id as companyId,certificates_valid as certificatesValid,healthy_state as healthyState,e.*
+		from t_employee e
+		where e.id = #parameter#
+	</select>
+	
+	<select id="queryEmployees" resultClass="cn.lookout.base.bean.EmployeeBean" parameterClass="map">
+		select company_id as companyId,certificates_valid as certificatesValid,healthy_state as healthyState,
+			e.*
+		from t_employee e
+		where company_id=#companyId#
+		<isNotEmpty property="name">
+			 and name like concat('%',#name#,'%')
+		</isNotEmpty>
+		order by id desc
+		limit $startRec$,$pageSize$
+	</select>
+	
+	<select id="queryEmployeesCount" resultClass="Integer" parameterClass="map">
+		select count(1)
+		from t_employee e
+		where company_id=#companyId#
+		<isNotEmpty property="name">
+			 and name like concat('%',#name#,'%')
+		</isNotEmpty>
+	</select>
+	
+	<!-- 员工相关end -->
+	
+ </sqlMap>

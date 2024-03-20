@@ -1,0 +1,763 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="source">
+	
+	<!-- 溯源相关start -->
+	<select id="source_groundTree" resultClass="HashMap" parameterClass="Map">
+		select gf.*,u.name as companyName,u.type as userType 
+		from t_ground_fishpond gf
+		left join t_user u on u.id = gf.company_id
+		where gf.company_id = #companyId#
+		AND gf.`type`=#userType#
+		AND gf.is_del=0
+		order by gf.number desc
+	</select>
+	
+	<!-- 查询所有溯源产品 -->
+	<select id="source_products" resultClass="HashMap" parameterClass="Map">
+	
+		select tgs.*,count(tsb.id) as batchCount from (
+			select gs.id,gs.id as productId,gs.company_id as companyId,
+			<isEqual property="userType" compareValue="0">gs.ground_num</isEqual>
+			<isEqual property="userType" compareValue="1">gs.fishpond_num</isEqual>
+			<isEqual property="userType" compareValue="2">gs.datian_num</isEqual>
+					as groundNum,gs.product_name as productName,
+					gs.product_icon as productIcon,gs.product_detail as productDetail,
+					gs.product_type as productType,gs.employee_id as employeeId,
+				   date_format(plant_time,'%Y-%m-%d') as plantTime,
+					gs.remarks,gs.product_information as productInformation,gs.state,
+					date_format(gs.create_time,'%Y-%m-%d %H:%i:%s') as createTime
+			from 
+			<isEqual property="userType" compareValue="0">t_g_source gs</isEqual>
+			<isEqual property="userType" compareValue="1">t_f_source gs</isEqual>
+			<isEqual property="userType" compareValue="2">t_t_source gs</isEqual>
+			where gs.company_id = #companyId# and state != '2' 
+			<isNotEqual property="areaNum" compareValue="0">
+				<isEqual property="userType" compareValue="0">and gs.ground_num = #areaNum#</isEqual>
+				<isEqual property="userType" compareValue="1">and gs.fishpond_num = #areaNum#</isEqual>
+				<isEqual property="userType" compareValue="2">and gs.datian_num = #areaNum#</isEqual>
+			</isNotEqual>
+			<isNotEmpty property="startTime">
+				and gs.plant_time &gt;= #startTime#
+			</isNotEmpty>
+			<isNotEmpty property="endTime">
+				and gs.plant_time &lt;= #endTime#
+			</isNotEmpty>
+			<isNotEmpty property="productName">
+				and gs.product_name like concat('%',#productName#,'%')
+			</isNotEmpty>
+			<isEqual property="orderTime" compareValue="0">
+				ORDER BY gs.plant_time DESC
+			</isEqual>
+			<isEqual property="orderTime" compareValue="1">
+				ORDER BY gs.plant_time
+			</isEqual>
+			<isEmpty property="orderTime">
+				ORDER BY gs.id DESC
+			</isEmpty>
+			limit $startRec$,$pageSize$
+		)tgs
+		LEFT JOIN t_s_batch tsb on tsb.company_id=tgs.companyId and tsb.product_id=tgs.id and tsb.is_del=0
+		group by tgs.id
+		<isEqual property="orderTime" compareValue="0">
+			ORDER BY plantTime DESC
+		</isEqual>
+		<isEqual property="orderTime" compareValue="1">
+			ORDER BY plantTime
+		</isEqual>
+		<isEmpty property="orderTime">
+			ORDER BY id DESC
+		</isEmpty>
+	</select>
+	
+	<select id="source_products_count" resultClass="Integer" parameterClass="Map">
+		select count(1)
+		from 
+		<isEqual property="userType" compareValue="0">t_g_source gs</isEqual>
+		<isEqual property="userType" compareValue="1">t_f_source gs</isEqual>
+		<isEqual property="userType" compareValue="2">t_t_source gs</isEqual>
+		left join t_employee e on gs.employee_id = e.id
+		where gs.company_id = #companyId# and state != '2' 
+		<isNotEqual property="areaNum" compareValue="0">
+			<isEqual property="userType" compareValue="0">and gs.ground_num = #areaNum#</isEqual>
+			<isEqual property="userType" compareValue="1">and gs.fishpond_num = #areaNum#</isEqual>
+			<isEqual property="userType" compareValue="2">and gs.datian_num = #areaNum#</isEqual>
+		</isNotEqual>
+		<isNotEmpty property="startTime">
+			and gs.plant_time &gt;= #startTime#
+		</isNotEmpty>
+		<isNotEmpty property="endTime">
+			and gs.plant_time &lt;= #endTime#
+		</isNotEmpty>
+		<isNotEmpty property="productName">
+			and gs.product_name like concat('%',#productName#,'%')
+		</isNotEmpty>
+	</select>
+	
+	
+	<!-- 添加批次 -->
+	<update id="source_batch_add" parameterClass="Map">
+		insert into t_s_batch (product_id,company_id,user_type,listed_time,quota_desc,
+			testing_rec,machining_rec,distribute_rec,barcode,barcode_url,
+			qrcode_url,create_time,is_del)
+		values (#productId#,#companyId#,#userType#,#listedTime#,#quotaDesc#,
+			#testingRec#,#machiningRec#,#distributeRec#,#barcode#,#barcodeUrl#,
+			#qrcodeUrl#,now(),'0')
+	</update>
+	
+	<!-- 删除批次 -->
+	<update id="source_batch_delate" parameterClass="Map">
+		UPDATE t_s_batch SET is_del=1 where id in ($ids$)
+	</update>
+	
+	<!-- 修改批次 -->
+	<update id="source_batch_update" parameterClass="Map">
+		update t_s_batch set listed_time = #listedTime#,
+			quota_desc = #quotaDesc#,
+			testing_rec = #testingRec#,
+			machining_rec = #machiningRec#,
+			distribute_rec = #distributeRec#,
+			update_time = now()
+		where id = #batchId#
+	</update>
+	
+	<!-- 查询批次 -->
+	<select id="source_batch_query" resultClass="HashMap" parameterClass="Map">
+		select sb.id,
+			sb.company_id as companyId,
+			sb.product_id as productId,
+			DATE_FORMAT(sb.listed_time,'%Y-%m-%d') as listedTime,
+			sb.quota_desc as quotaDesc,
+			sb.testing_rec as testingRec,
+			sb.machining_rec as machiningRec,
+			sb.distribute_rec as distributeRec,
+			sb.barcode,
+			sb.barcode_url as barcodeUrl,
+			sb.qrcode_url as qrcodeUrl,
+			sb.is_review as isReview,
+			sb.is_shelve as isShelve
+		from t_s_batch sb
+		where sb.product_id = #productId#
+		and company_id=#companyId#
+		and user_type = #userType# 
+		 and is_del = '0' 
+		ORDER BY id DESC
+	</select>
+	
+	<!-- 增加产品，鱼塘 -->
+	<update id="source_product_add_f" parameterClass="Map">
+		insert into t_f_source (
+			company_id,
+			fishpond_num,
+			product_name,
+			product_icon,
+			product_detail,
+			product_type,
+			plant_time,
+			employee_id,
+			remarks,
+			product_information,
+			state,
+			batch_count,
+			create_time,
+			update_time
+			) 
+		values (
+			#companyId#,
+			#areaNum#,
+			#productName#,
+			#productIcon#,
+			#productDetail#,
+			#productType#,
+			#plantTime#,
+			#employeeId#,
+			#remarks#,
+			#productInformation#,
+			0,
+			0,
+			now(),
+			now()
+		) 
+	</update>
+	
+	<select id="get_product_state" parameterClass="Map" resultClass="java.lang.Integer" >
+		select count(id) from 
+		<isEqual property="userType" compareValue="0">t_g_source </isEqual>
+		<isEqual property="userType" compareValue="1">t_f_source </isEqual>
+		<isEqual property="userType" compareValue="2">t_t_source </isEqual>
+		where state='0' 
+		and company_id=#companyId#
+		<isEqual property="userType" compareValue="0">and ground_num = #areaNum# </isEqual>
+		<isEqual property="userType" compareValue="1">and fishpond_num = #areaNum# </isEqual>
+		<isEqual property="userType" compareValue="2">and datian_num = #areaNum# </isEqual>
+		
+	</select>
+	
+	
+	<!-- 增加产品 -->
+	<update id="source_product_add" parameterClass="Map">
+		insert into 
+		<isEqual property="userType" compareValue="0">t_g_source </isEqual>
+		<isEqual property="userType" compareValue="1">t_f_source </isEqual>
+		<isEqual property="userType" compareValue="2">t_t_source </isEqual>
+		(
+			company_id,
+			<isEqual property="userType" compareValue="0"> ground_num </isEqual>
+			<isEqual property="userType" compareValue="1"> fishpond_num </isEqual>
+			<isEqual property="userType" compareValue="2"> datian_num </isEqual>
+			,product_name,
+			product_icon,
+			product_detail,
+			product_type,
+			plant_time,
+			season,
+			employee_id,
+			remarks,
+			product_information,
+			state,
+			batch_count,
+			create_time,
+			update_time
+			) 
+		values (
+			#companyId#,
+			#areaNum#,
+			#productName#,
+			#productIcon#,
+			#productDetail#,
+			#productType#,
+			#plantTime#,
+			#season#,
+			#employeeId#,
+			#remarks#,
+			#productInformation#,
+			0,
+			0,
+			now(),
+			now()
+		) 
+	</update>
+	
+	<!-- 删除产品(删除档案)-->
+	<update id="source_product_delete" parameterClass="Map">
+		UPDATE 
+		<isEqual property="userType" compareValue="0">t_g_source </isEqual>
+		<isEqual property="userType" compareValue="1">t_f_source </isEqual>
+		<isEqual property="userType" compareValue="2">t_t_source </isEqual>
+		SET `state` = 2 where company_id = #companyId# and id in ($ids$)
+	</update>
+	
+	<!-- 删除产品之后，删除批次 -->
+	<update id="source_batch_delete_byProductId" parameterClass="Map">
+		UPDATE t_g_source SET state = 2 
+		delete from t_s_batch where company_id = #companyId# and product_id in ($ids$)
+	</update>
+	
+	<!-- 更新产品的batch_count字段-->
+	<update id="source_product_updt_batch" parameterClass="Map">
+		update 
+		<isEqual property="userType" compareValue="0"> t_g_source </isEqual>
+		<isEqual property="userType" compareValue="1"> t_f_source </isEqual>
+		<isEqual property="userType" compareValue="2"> t_t_source </isEqual>
+		set batch_count = batch_count + #count#
+		where id = #productId#
+	</update>
+	
+	<select id="getBatchById" parameterClass="map" resultClass="HashMap">
+		SELECT id,DATE_FORMAT(listed_time,'%Y-%m-%d') AS listedTime,quota_desc AS quotaDesc
+			,testing_rec AS testingRec,machining_rec AS machiningRec
+			,distribute_rec AS distributeRec,product_id AS productId
+		FROM t_s_batch
+		WHERE id=#id#
+	</select>
+	
+	<!-- 更新t_s_batch的is_shelve字段 -->
+	<update id="source_batch_updateIsShelve" parameterClass="Map">
+		update t_s_batch set is_shelve = #isShelve#
+		where id IN ($batchIds$)
+	</update>
+	
+	<!-- 更新t_g_source的state字段 -->
+	<update id="source_product_updtState" parameterClass="Map">
+		update 
+		<isEqual property="userType" compareValue="0"> t_g_source </isEqual>
+		<isEqual property="userType" compareValue="1"> t_f_source </isEqual>
+		<isEqual property="userType" compareValue="2"> t_t_source </isEqual>
+		set state = #state#
+		where id = #productId#
+	</update>
+	
+	
+	<!-- 根据id查询某个产品的信息，大棚 -->
+	<select id="source_product_query_g" resultClass="HashMap" parameterClass="Map">
+		select gs.id,
+			gs.id as productId,
+			gs.company_id as companyId,
+			gs.ground_num as groundNum,
+			gs.product_name as productName,
+			gs.product_icon as productIcon,
+			gs.product_detail as productDetail,
+			gs.product_type as productType,
+			gs.employee_id as employeeId,
+			gs.remarks,
+			gs.product_information as productInformation,
+			gs.state,
+			gs.batch_count as batchCount,
+			date_format(gs.create_time,'%Y-%m-%d')  as createTime,
+			date_format(gs.plant_time,'%Y-%m-%d')  as plantTime,
+			gs.season,
+			gs.growth_pic as growthPic,
+			gs.fertilization_rec as fertilizationRec,
+			gs.pesticide_rec as pesticideRec,
+			gs.farming_rec as farmingRec,
+			gs.auth_info as authInfo,
+			gs.seed_source as seedSource,
+			gs.env_data as envData,
+			gs.web_links as webLinks,
+			gs.shop_address as shopAddress,
+			gs.fertilizer,
+			gs.growing_cycles as growingCycles,
+			gs.drug,gs.saler,
+			gs.custom
+		from t_g_source gs
+		where gs.id = #productId#
+	</select>
+
+	<!-- 根据id查询某个产品的信息，鱼塘 -->
+	<select id="source_product_query_f" resultClass="HashMap" parameterClass="Map">
+		select gs.id,
+			gs.id as productId,
+			gs.company_id as companyId,
+			gs.fishpond_num as fishpondNum,
+			gs.product_name as productName,
+			gs.product_icon as productIcon,
+			gs.product_detail as productDetail,
+			gs.product_type as productType,
+			gs.employee_id as employeeId,
+			gs.remarks,
+			gs.product_information as productInformation,
+			gs.state,
+			gs.batch_count as batchCount,
+			date_format(gs.create_time,'%Y-%m-%d')  as createTime,
+			date_format(gs.plant_time,'%Y-%m-%d')  as plantTime,
+			gs.growth_pic as growthPic,
+			gs.fish_source as fishSource,
+			gs.auth_info as authInfo,
+			gs.grow_info as growInfo,
+			gs.feed_info as feedInfo,
+			gs.vaccine_info as vaccineInfo,
+			gs.drug_info as drugInfo,
+			gs.web_links as webLinks,
+			gs.shop_address as shopAddress,
+			env_data as envData,
+			gs.saler,
+			gs.custom
+		from t_f_source gs
+		where gs.id = #productId#
+	</select>
+	
+	<!-- 根据id查询某个产品的信息，大田 -->
+	<select id="source_product_query_t" resultClass="HashMap" parameterClass="Map">
+		select gs.id,
+			gs.id as productId,
+			gs.company_id as companyId,
+			gs.datian_num as datianNum,
+			gs.product_name as productName,
+			gs.product_icon as productIcon,
+			gs.product_detail as productDetail,
+			gs.product_type as productType,
+			gs.employee_id as employeeId,
+			gs.remarks,
+			gs.product_information as productInformation,
+			gs.state,
+			gs.batch_count as batchCount,
+			date_format(gs.create_time,'%Y-%m-%d')  as createTime,
+			date_format(gs.plant_time,'%Y-%m-%d')  as plantTime,
+			gs.growth_pic as growthPic,
+			gs.fertilization_rec AS fertilizationRec,
+			gs.pesticide_rec AS pesticideRec,
+			gs.web_links as webLinks,
+			gs.shop_address as shopAddress,
+			env_data as envData,
+			gs.saler,
+			gs.custom
+		from t_t_source gs
+		where gs.id = #productId#
+	</select>
+	
+	
+	<!-- 更新产品，大棚 -->
+	<update id="source_product_updt_g" parameterClass="Map">
+		update t_g_source set product_name = #productName#,
+			product_icon = #productIcon#,
+			product_detail = #productDetail#,
+			product_type = #productType#,
+			employee_id = #employeeId#,
+			remarks = #remarks#,
+			product_information = #productInformation#,
+			season = #batchCount#,
+			plant_time = #plantTime#,
+			growth_pic = #growthPic#,
+			fertilization_rec = #fertilizationRec#,
+			pesticide_rec = #pesticideRec#,
+			farming_rec = #farmingRec#,
+			auth_info = #authInfo#,
+			growing_cycles = #growingCycles#,
+			seed_source = #seedSource#,
+			web_links = #webLinks#,
+			shop_address = #shopAddress#,
+			fertilizer = #fertilizer#,
+			env_data = #envData#,
+			drug = #drug#,
+			saler= #saler#,
+			custom = #custom#,
+			update_time = now()
+		where id = #productId#
+	</update>
+	
+	<update id="source_product_updt_f" parameterClass="Map">
+		update t_f_source set product_name = #productName#,
+			product_icon = #productIcon#,
+			product_detail = #productDetail#,
+			product_type = #productType#,
+			employee_id = #employeeId#,
+			remarks = #remarks#,
+			product_information = #productInformation#,
+			plant_time = #plantTime#,
+			growth_pic = #growthPic#,
+			fish_source = #fishSource#,
+			auth_info = #authInfo#,
+			grow_info = #growInfo#,
+			feed_info = #feedInfo#,
+			vaccine_info = #vaccineInfo#,
+			drug_info = #drugInfo#,
+			web_links = #webLinks#,
+			shop_address = #shopAddress#,
+			env_data = #envData#,
+			saler= #saler#,
+			custom = #custom#,
+			update_time = now()
+		where id = #productId#
+	</update>
+	
+	<!-- 更新产品，大田 -->
+	<update id="source_product_updt_t" parameterClass="Map">
+		update t_t_source set product_name = #productName#,
+			product_icon = #productIcon#,
+			product_detail = #productDetail#,
+			product_type = #productType#,
+			employee_id = #employeeId#,
+			remarks = #remarks#,
+			product_information = #productInformation#,
+			season = #batchCount#,
+			plant_time = #plantTime#,
+			growth_pic = #growthPic#,
+			fertilization_rec = #fertilizationRec#,
+			pesticide_rec = #pesticideRec#,
+			web_links = #webLinks#,
+			shop_address = #shopAddress#,
+			env_data = #envData#,
+			saler= #saler#,
+			custom = #custom#,
+			update_time = now()
+		where id = #productId#
+	</update>
+	
+	<!-- 扫码统计，查询所有产品 -->
+	<select id="source_scan_query_pro" resultClass="HashMap" parameterClass="Map">
+		select 
+			gs.id as productId,
+			gs.product_name as productName
+		from 
+		<isEqual property="userType" compareValue="0">t_g_source gs</isEqual>
+		<isEqual property="userType" compareValue="1">t_f_source gs</isEqual>
+		<isEqual property="userType" compareValue="2">t_t_source gs</isEqual>
+		where gs.state != '2' 
+		and gs.company_id = #companyId# 
+		<isNotEqual property="productId" compareValue="0">
+			and gs.id = #productId#
+		</isNotEqual>
+		<isNotEmpty property="productName">
+			and gs.product_name like concat('%',#productName#,'%')
+		</isNotEmpty>
+		order by productId
+	</select>
+	
+	<!-- 扫码统计 -->
+	<select id="source_scanCount" resultClass="HashMap" parameterClass="Map">
+		select t.*,count(1) as scanMonth
+		from (
+			select ss.source_id as productId,
+				gs.product_name as productName,
+				date_format(ss.create_time,'%Y-%m') as createTime
+			from t_scan_statistics ss 
+			left join 
+			<isEqual property="userType" compareValue="0">t_g_source gs</isEqual>
+			<isEqual property="userType" compareValue="1">t_f_source gs</isEqual>
+			<isEqual property="userType" compareValue="2">t_t_source gs</isEqual>
+			 on ss.source_id = gs.id
+			where gs.state != '2' 
+			and ss.type = #userType#
+			<isNotEmpty property="startTime">
+				and date_format(ss.create_time,'%Y-%m') &gt;= #startTime#
+			</isNotEmpty>
+			<isNotEmpty property="endTime">
+				and date_format(ss.create_time,'%Y-%m') &lt;= #endTime#
+			</isNotEmpty>
+			<isNotEqual property="productId" compareValue="0">
+				and ss.source_id = #productId#
+			</isNotEqual>
+			<isNotEmpty property="productName">
+				and gs.product_name like concat('%',#productName#,'%')
+			</isNotEmpty>
+			order by ss.source_id
+			) t
+		where t.createTime = #month#
+		group by t.createTime,t.productId,t.productName
+	</select>
+	
+	
+	<!-- 扫码统计，区域 -->
+	<select id="source_scanArea_queryProducts" resultClass="HashMap" parameterClass="Map">
+		select gs.*
+		from 
+		<isEqual property="userType" compareValue="0">t_g_source gs </isEqual>
+		<isEqual property="userType" compareValue="1">t_f_source gs </isEqual>
+		<isEqual property="userType" compareValue="2">t_t_source gs </isEqual>
+		where gs.id in (
+			select distinct ss.source_id
+			from t_scan_statistics ss
+			where ss.company_id = #companyId#
+		)
+	</select>
+	
+	
+	<!-- 扫码统计，区域 -->
+	<select id="source_scanArea" resultClass="HashMap" parameterClass="Map">
+		select ss.area_id as name,
+			count(1) as value
+		from t_scan_statistics ss
+		where ss.company_id = #companyId#
+		and ss.source_id = #sourceId#
+		group by ss.area_id
+	</select>
+	
+	<!-- 溯源相关end -->
+	
+	<!-- 静态资源：h5相关start -->
+	<select id="STC_h5_queryTypeByBarcode" resultClass="java.lang.String" parameterClass="Map">
+		select user_type from t_s_batch where barcode = #barcode#
+	</select>
+	<!-- 查看档案 -->
+	<select id="STC_h5_showArchive_g" resultClass="HashMap" parameterClass="Map">
+		select gs.id as productId,
+		gs.product_name as productName,
+		gs.product_icon as productIcon,
+		gs.product_detail as productDetail,
+		gs.product_type as productType,
+		gs.product_information as productInformation,
+		
+		gs.growth_pic as growthPic,
+		gs.fertilization_rec as fertilizationRec,
+		gs.pesticide_rec as pesticideRec,
+		gs.farming_rec as farmingRec,
+		gs.auth_info as authInfo,
+		gs.growing_cycles as growingCycles,
+		gs.seed_source as seedSource,
+		gs.fertilizer,
+		gs.env_data as envData,
+		gs.drug,
+		gs.custom,
+		gs.web_links as webLinks,
+		gs.shop_address as shopAddress,
+		date_format(sb.listed_time,'%Y-%m-%d') as listedTime,
+		sb.quota_desc as quotaDesc,
+		sb.testing_rec as testingRec,
+		sb.machining_rec as machiningRec,
+		sb.distribute_rec as distributeRec,
+		u.id as companyId,
+		u.name as companyName,
+		u.address,
+		u.lng,
+		u.lat,
+		u.describe,
+		sb.user_type AS userType,
+		e.id as employeeId,
+		e.name as employeeName,
+		gs.saler,sb.id as batchId
+		FROM (
+			SELECT * FROM t_s_batch where barcode = #barcode#
+		)sb
+		left join t_g_source gs on sb.product_id = gs.id
+		left join t_employee e on gs.employee_id = e.id
+		left join t_user u on sb.company_id = u.id
+
+	</select>
+	
+	<!-- 查看档案 -->
+	<select id="STC_h5_showArchive_f" resultClass="HashMap" parameterClass="Map">
+		select gs.id as productId,
+			gs.product_name as productName,
+			gs.product_icon as productIcon,
+			gs.product_detail as productDetail,
+			gs.product_type as productType,
+			gs.product_information as productInformation,
+			
+			gs.fish_source as fishSource,
+			gs.growth_pic as growthPic,
+			gs.auth_info as authInfo,
+			gs.grow_info as growInfo,
+			gs.feed_info as feedInfo,
+			gs.vaccine_info as vaccineInfo,
+			gs.drug_info as drugInfo,
+			gs.env_data as envData,
+			gs.custom,
+			
+			gs.web_links as webLinks,
+			gs.shop_address as shopAddress,
+			date_format(sb.listed_time,'%Y-%m-%d') as listedTime,
+			sb.quota_desc as quotaDesc,
+			sb.testing_rec as testingRec,
+			sb.machining_rec as machiningRec,
+			sb.distribute_rec as distributeRec,
+			u.id as companyId,
+			u.name as companyName,
+			u.address,
+			u.lng,
+			u.lat,
+			u.describe,
+			sb.user_type as userType,
+			e.id as employeeId,
+			e.name as employeeName,
+			gs.saler,sb.id as batchId
+		FROM (
+			SELECT * FROM t_s_batch where barcode = #barcode#
+		)sb
+		left join t_f_source gs on sb.product_id = gs.id
+		left join t_employee e on gs.employee_id = e.id
+		left join t_user u on sb.company_id = u.id
+	</select>
+	
+	<select id="STC_h5_showArchive_t" resultClass="HashMap" parameterClass="Map">
+		select gs.id as productId,
+		gs.product_name as productName,
+		gs.product_icon as productIcon,
+		gs.product_detail as productDetail,
+		gs.product_type as productType,
+		gs.product_information as productInformation,
+		gs.growth_pic as growthPic,
+		gs.fertilization_rec as fertilizationRec,
+		gs.pesticide_rec as pesticideRec,
+		gs.env_data as envData,
+		gs.custom,
+		gs.web_links as webLinks,
+		gs.shop_address as shopAddress,
+		date_format(sb.listed_time,'%Y-%m-%d') as listedTime,
+		sb.quota_desc as quotaDesc,
+		sb.testing_rec as testingRec,
+		sb.machining_rec as machiningRec,
+		sb.distribute_rec as distributeRec,
+		u.id as companyId,
+		u.name as companyName,
+		u.address,
+		u.lng,
+		u.lat,
+		u.describe,
+		sb.user_type as userType,
+		e.id as employeeId,
+		e.name as employeeName,
+		gs.saler,sb.id as batchId
+		FROM (
+			SELECT * FROM t_s_batch where barcode = #barcode#
+		)sb
+		left join t_t_source gs on sb.product_id = gs.id
+		left join t_employee e on gs.employee_id = e.id
+		left join t_user u on sb.company_id = u.id
+
+	</select>
+	
+	<select id="STC_h5_queryEmployee" resultClass="HashMap" parameterClass="Map">
+		select e.*
+		from t_employee e
+		where e.id in($ids$)
+	</select>
+	
+	<!-- 更新地理位置 -->
+	<update id="STC_h5_updtArea" parameterClass="Map">
+		insert into t_scan_statistics (company_id,type,source_id,area_id,create_time)
+		values (#companyId#,#userType#,#sourceId#,#areaId#,now())
+	</update>
+	
+	<select id="STC_h5_queryTypeByBatchId" resultClass="HashMap" parameterClass="Map">
+		select sb.company_id,
+			sb.product_id,
+			sb.user_type AS `type`,
+			date_format(sb.listed_time,'%Y-%m-%d') as listedTime
+		from t_s_batch sb
+		where sb.id = #batchId#
+	</select>
+	
+	<select id="getPlantTime" resultClass="java.lang.String" parameterClass="Map">
+		SELECT date_format(plant_time,'%Y-%m-%d') as plant_time
+		FROM 
+		<isEqual property="type" compareValue="0"> t_g_source </isEqual>
+		<isEqual property="type" compareValue="1"> t_f_source </isEqual>
+		<isEqual property="type" compareValue="2"> t_t_source </isEqual>
+		WHERE id=#product_id#
+	</select>
+	
+	<!-- 大棚数据，按天，平均值 -->
+	<select id="STC_h5_env_g" resultClass="HashMap" parameterClass="Map">
+		select 
+		<isEqual property="searchType" compareValue="avg"> round(avg(gd.data),2) as data, </isEqual>
+		<isEqual property="searchType" compareValue="max"> round(max(gd.data),2) as data, </isEqual>
+		<isEqual property="searchType" compareValue="min"> round(min(gd.data),2) as data, </isEqual>
+		gd.year_date as yearDate
+		from t_g_data_collection gd
+		where gd.company_id = #companyId#
+			and gd.ground_num = (select gs.ground_num from t_g_source gs where gs.id = #sourceId#)
+			and gd.device_id = #deviceNum#
+			and gd.year_date &gt;= #startTime#
+			and gd.year_date &lt;= #endTime#
+		group by gd.year_date
+		order by gd.year_date asc
+	</select>
+	
+	
+	<!-- 鱼塘数据，按天，平均值 -->
+	<select id="STC_h5_env_f" resultClass="HashMap" parameterClass="Map">
+		select 
+		<isEqual property="searchType" compareValue="avg"> round(avg(gd.data),2) as data, </isEqual>
+		<isEqual property="searchType" compareValue="max"> round(max(gd.data),2) as data, </isEqual>
+		<isEqual property="searchType" compareValue="min"> round(min(gd.data),2) as data, </isEqual>
+		gd.year_date as yearDate
+		from t_f_data_collection gd
+		where gd.company_id = #companyId#
+			and gd.fishpond_num = (select gs.fishpond_num from t_f_source gs where gs.id = #sourceId#)
+			and gd.device_id = #deviceNum#
+			and gd.year_date &gt;= #startTime#
+			and gd.year_date &lt;= #endTime#
+		group by gd.year_date
+		order by gd.year_date asc
+	</select>
+	
+	
+	<!-- 大田数据，按天，平均值 -->
+	<select id="STC_h5_env_t" resultClass="HashMap" parameterClass="Map">
+		select 
+		<isEqual property="searchType" compareValue="avg"> round(avg(gd.data),2) as data, </isEqual>
+		<isEqual property="searchType" compareValue="max"> round(max(gd.data),2) as data, </isEqual>
+		<isEqual property="searchType" compareValue="min"> round(min(gd.data),2) as data, </isEqual>
+		gd.year_date as yearDate
+		from t_t_data_collection gd
+		where gd.company_id = #companyId#
+			and gd.datian_num = (select gs.fishpond_num from t_f_source gs where gs.id = #sourceId#)
+			and gd.device_id = #deviceNum#
+			and gd.year_date &gt;= #startTime#
+			and gd.year_date &lt;= #endTime#
+		group by gd.year_date
+		order by gd.year_date asc
+	</select>
+	<!-- 静态资源：h5相关end -->
+	
+ </sqlMap>

@@ -1,0 +1,477 @@
+.top{margin:20px 0 0 15px;border:1px solid #E5EBFD;width:97%;}
+.topLeft,.topRight{padding:15px}
+#traceabilityForm{width:97%;margin-left:15px;border:1px solid #ddd; border-top:none;}
+#traceabilityForm th{border-bottom:1px solid #E5EBFD;border-right:1px solid #E5EBFD;padding-left:20px;height:50px;font-weight:normal}
+#traceabilityForm td{padding:10px 0 10px 20px;}
+.more{position: relative}
+.M-box1{text-align:center;margin:50px 0; }
+.M-box1>a,.M-box1>span{color:#7E7E7E;border:1px solid #ddd;padding:1% 1.5%;margin-left:0.5%;border-radius:2px;}
+.M-box1>a.active,.M-box1>span.active{background:#0583DF;color:#fff;}
+#start_time,#end_time{
+    border:1px solid #ddd;
+    border-radius:3px;
+}
+input,select,textarea{
+    border:1px solid #ccc;
+    outline: none;
+    -webkit-boder-radius:3px;
+    -o-border-radius:3px;
+    -ms-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
+    padding-left:5px;
+}
+h5{font-weight:bold}
+.new{display: flex;justify-content:space-between;}
+#modelLeft{min-width:600px;}
+.control-label{text-align: left}
+.lastLabel{vertical-align: top;}
+#modelLeft input,#modelLeft select,#modelLeft textarea,#time_to_market,#index_description{border:1px solid #ddd; border-radius:3px;padding-left:5px;outline: none}
+#elaborate,#index_description{resize: none;}
+#addNewPro{width:180px;height: 180px;}
+.ctrl-file>.filehide{left: 50px;}
+/* .ctrl-file>a{left:50px;} */
+.prompt{color:red;height:30px;line-height:30px;}
+.index_description{vertical-align: top}
+/* .control-right{font-size:16px;padding:4px 7px;border:1px solid #1182DE;border-radius:50%;background:#1182DE;color:#fff;cursor: pointer } */
+.control-right{
+    font-size:20px;
+    display:inline-block;
+    width:20px;height:20px;
+    line-height:16px;border:1px solid #1182DE;
+    border-radius:50%;background:#1182DE;color:#fff;cursor: pointer;
+    text-align: center;
+}
+
+.flexBox{display: flex;justify-content: space-between;}
+#addBatch .control-label{height:30px;line-height:30px;}
+.add_box{border:1px solid #ddd;padding:10px 0 10px 20px;margin-bottom: 20px;}
+.check_the_details{display: inline-block;}
+.add_detection{vertical-align: top;}
+#detectionRecord label{color:#9DA1A3;font-weight: normal;}
+.testingIndex{color:#9B9DA1;}
+.check_the_details>tbody>tr>td>input{width:75%;}
+.check_the_details th{width:140px;}
+.check_the_details td{width:140px}
+.add_box input,.add_box select{border-radius:3px;border:1px solid #ddd;outline: none}
+.add_row{text-align: center;}
+.add_row>a>b{font-size:14px;
+    display: inline-block;height:15px;width:15px;
+    color:#fff;background:#1182DE;line-height:10px; 
+    text-align: center;
+    cursor: pointer;
+    border:1px solid #1182DE;
+    border-radius: 50%;
+}
+.clickUpload{position: relative;margin-top:5px;}
+.clickUpload a{position: absolute;top:-10px;width:80px;height:30px;line-height:30px;border:1px solid #97B9DE;border-radius:25px;text-align: center}
+.imgItem{width:60px;height:60px;display: inline-block;margin-left:10px;position: relative;}
+.imgItem>.deleteImg{
+    position: absolute;top:-7px;right:5px;width:15px;height:15px;
+    border: 1px solid transparent;
+    line-height:10px;
+    text-align: center;
+    background:#DA646D;
+    color:#fff;
+    border-radius: 50%;
+}
+.filehide{opacity: 0;position: absolute;z-index: 99999;top:-10px;}
+.add_processingRecords,.add_distributionRecord{display: flex;justify-content: space-between;margin-bottom:10px;}
+.add_processingRecords>input,.add_distributionRecord>input{border:1px solid #ddd;border-radius: 3px;padding-left:5px;outline: none}
+.process_content,.shipping_address{width:50%;}
+.process_time,.delivery_time{width:20%;margin-left:2%;}
+.process_personnel,.delivery_personnel{width:20%;margin-right:2%;}
+
+
+/* 维护档案 */
+#createFiles label{text-align: right;margin-right:2%;}
+textarea{resize: none;outline: none}
+
+.checkAll{display: flex;justify-content: space-between;padding: 0 25px;margin-top:10px;}
+.checkAll>p.grow{width:50%;padding:0;margin:0;}
+.checkAll>a{
+    width:20px;height:20px;font-size:22px;
+    line-height:16px;text-align: center;
+    background:#1182DE;
+    color: #fff;
+    border-radius:50%;
+    cursor: pointer;
+    margin-top:2px;
+}
+.add_grow_detail{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 25px;
+    margin-bottom: 10px;
+    border:1px solid #ddd;
+
+}
+.box_left{width:60%}
+.box_mid{width:35%;text-align: center}
+.box_right{width:5%;}
+.box_left>div{margin-bottom: 10px;}
+.box_left>div>label{vertical-align: top}
+.box_left input,.box_left textarea{width:70%;border:1px solid #ddd;border-radius:3px;padding-left:5px;}
+
+
+#add_growBox span.ctrl-file>.filehide,#add_growBox span.ctrl-file>a{
+    top:0;left:0;
+}
+.imgItems{width:150px;height:150px;margin:0 auto;}
+.imgItems>img{width:100%;height:100%;}
+.box_right{text-align: center;padding-top:100px;cursor: pointer;}
+.checkedBox{
+    background:url("../../img/table_input_03.jpg") no-repeat center left;
+    padding-left:20px;
+}
+.NoCheckedBox{
+    background:url("../../img/table_input01_03.jpg") no-repeat center left;
+    padding-left:20px;
+}
+/* .checkAll>a{display: none} */
+#add_fertilizationBox,#add_administrationBox,#add_farmingBox,#add_environmentalBox,#add_provenanceBox{padding-left:5%;border:1px solid #F2F1F7;}
+#add_fertilizationBox input{width:80px;border-radius:3px;border:1px solid #ddd;padding-left:5px}
+#add_fertilizationBox td,#add_fertilizationBox th{width:100px;height:40px;}
+#add_administrationBox input{width:100px;}
+#add_administrationBox td,#add_administrationBox th{width:120px;height:40px;}
+#add_farmingBox input{width:120px;}
+#add_farmingBox td,#add_farmingBox th{width:150px;height:40px;}
+#add_farmingBox .agricultural_content_parent{width:320px;}
+#add_farmingBox .agricultural_conten{width:290px;}
+
+#add_fertilizationBox .box_input>b{
+   display: inline-block;
+   width:30%;
+}
+#add_fertilizationBox .box_input_value>input,#add_fertilizationBox .box_input_value>select{width:20%;}
+#add_fertilizationBox .box_input_value>select{margin-left:10%;}
+#add_administrationBox .box_input>b{
+    display: inline-block;
+    width:23%;
+}
+#add_administrationBox .box_input_value>input,#add_administrationBox .box_input_value>select{
+    width: 20%;
+}
+#add_administrationBox .box_input_value>select{margin-left:3%;}
+#add_administrationBox #administration_time{margin-left:3%;}
+
+#add_credentialsBox .form-group label{width:60px;font-weight:normal;font-size:12px;vertical-align: middle;margin:0;}
+#add_credentialsBox .form-group{display: inline-block;width:45%;padding:0 3%;}
+.add_smBox{border:1px solid #ddd;padding:20px 0 ;margin-top:20px;}
+#add_credentialsBox .form_block{display: block;width:90%;}
+#add_credentialsBox .form_block>label{margin-bottom: 10px;}
+#add_environmentalBox thead>tr>th:first-child{width:  10%;}
+/* #add_environmentalBox thead>tr>th:last-child{width:60%;} */
+#add_environmentalBox input{vertical-align: middle;margin-top:-3px;}
+#add_environmentalBox label{margin-bottom:0;width:90%;text-align: left;}
+#add_environmentalBox a {display: inline-block;height:30px;width:32%;line-height:30px;}
+#createFiles label.purchase{margin-right: 0;}
+#createFiles label.purchase>span{color:#888892;font-weight:normal;}
+
+
+#purchase{position: relative;}
+#add_purchase{margin-right:40px;}
+#dropdown_list{
+    position: absolute;top:22px;right:0;border:1px solid #ddd;
+    width: 150px;text-align: center;background: #fff;
+    -webkit-border-radius:3px;
+    -ms-border-radius:3px;
+    -o-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
+    display: none;
+}
+#dropdown_list>li{height:30px;line-height:30px;cursor: pointer  ;}
+#dropdown_list>li:hover{background:#ddd;}
+.add_purchaseBox_left{float:left;margin-top:3px;}
+#add_purchaseBox_top,#add_purchaseBox_middle,#add_purchaseBox_bottom{width:90%;border-top:1px solid #ddd;margin:0 auto;padding:20px 0 10px 0;min-height:65px;}
+.add_purchaseBox_right{width:70%;margin-left:15%;}
+.add_purchaseBox_right input{width: 80%;margin-bottom:5px;height:25px;}
+a.delete_row{margin-left:5%;}
+#add_purchaseBox_bottom input{width:30%}
+
+
+/* 种子来源 */
+.source_inline{display: inline-block;width:45%;}
+#add_provenanceBox .source_left>label{width:120px;text-align: left;}
+#add_provenanceBox .source_right>label{width: 120px;text-align: right;}
+#add_provenanceBox .form_block{margin:25px 0;}
+.source_source{display: flex;justify-content: space-between}
+#source_source_right>.form_block{margin:0 0 25px 0}
+#source_source_left label{width:120px;text-align: left;}
+#add_provenanceBox{display: none;}
+.seed_source,.source_source{display: none;}
+
+
+
+
+/* 产品图片 */
+#product_pictures{position: relative}
+#product_pictures>label{text-align: right;margin-left:3%;font-size:14px;}
+#product_pictures .imgBox{display: inline-block;}
+#product_pictures .imgItem{width: 150px;height:150px;}
+#product_pictures .imgItem>img{width: 100%;height:100%;}
+
+
+#product_pictures .clickUpload a{top:0;left:43px;}
+#product_pictures .clickUpload .filehide{top:0;}
+#product_pictures>p{position: absolute;bottom:-62px;left:80px;}
+
+#modelRight .ctrl-file>a{left:50px;}
+
+
+
+/* 种植周期信息 */
+#add_informationBox,#add_surveillance_videoBox{padding-left:5%;}
+.planting_cycle{display: inline-block;width:14%;margin:10px 0 0 1%;}
+.planting_cycle>input{width:100%;}
+
+
+/* 视频 */
+.video_sel{display: inline-block;}
+.video_sel>.video_type{display: inline-block;width:250px;}
+
+.add_streamingVal{width:75%;}
+.video_address>input{width:87%;}
+#add_streaming{border:1px solid #ddd;padding:10px 25px;border-radius:25px;cursor: pointer;width:140px}
+
+#add_growBox label{width:70px;}
+
+
+/* 鱼苗 */
+#source_of_fish_seedlings{padding-left:5%;margin-bottom:35px;}
+#source_of_fish_seedlings label{width:80px;text-align: left}
+#source_of_fish_seedlings .add_detection{width:120px;text-align: left;margin-top:10px;}
+
+/* 饲养记录 */
+.box_value>div{display:inline-block;width:19%;}
+#add_fertilizationBox .box_value>div>p>input{width:80%;}
+#add_medicationRecordBox,#add_feedRecordBox,#add_growthRecordBox{padding-left:5%;}
+#add_medicationRecordBox .box_value>div>p>input,#add_feedRecordBox .box_value>div>p>input,#add_growthRecordBox .box_value>div>p>input{width:80%;}
+#add_feedRecordBox .box_value>div{width:16%;}
+#add_growthRecordBox .box_value>div{width:16%;}
+.add_box{position: relative}
+.delete_add_boxRow{position: absolute;top:20px;right:40px;font-size:16px}
+
+#traceabilityForm tbody tr:hover{cursor: pointer;background: #ddd}
+
+
+/* H5 */
+#header{height:80px;}
+#header .headerImg{float: left}
+#header .headerImg>img{width:60px;height:60px;}
+#header .headerMsg{float: left;margin:0 0 0 10px;}
+#header .headerMsg>p{font-size:18px;}
+#header .headerMsg>span{color:#888;}
+#theList{height:450px;overflow-y: auto;}
+#theList>.theListBox{
+    margin-bottom:20px;border:1px solid #E8E9E9;height:150px;
+}
+#theList>.theListBox:hover{
+    border:1px solid #BCBDBD;
+    cursor: pointer;
+}
+#theList>li.theListBox>.theListBox_left{
+    float: left;
+    line-height:150px;
+    margin-left:15px;
+}
+#theList>li.theListBox>.theListBox_right{
+    display: flex;justify-content: space-between;
+    margin-left:50px;
+    height: 150px;
+    padding-top:10px;
+    padding-right:20px;
+}
+#theList .theList_rightType{margin:15px 20px 0 0;}
+.theList_rightType>img{width:80px;height:80px;margin-top:15px;}
+.theList_rightType>span{vertical-align: bottom;margin-right:10px;}
+.rightMsg_time{font-size:20px; font-weight: bold}
+.theList_rightHide{padding-right:20px;}
+.theList_rightHide>.rightHide_option>a{padding: 5px 10px;border:1px solid #ddd;border-right:none;color:#AEA7A8;margin:0 -3px;}
+.theList_rightHide>.rightHide_option>a:hover{
+    border-color: #22BB77;
+    color: #22BB77;
+}
+.theList_rightHide>.rightHide_option>a.preview{
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+.theList_rightHide>.rightHide_option>a.scanStatistics{
+    border: 1px solid #ddd;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+ }
+
+.theList_rightHide>.xiugai{margin-top:80px;text-align: right}
+.correct,.addFiles>button{
+    width:100px;
+    background:#22BB77;
+    color:#fff;
+    border:1px solid #22BB77;
+    border-radius: 25px;
+    height:25px;
+}
+#footer>div.footerMsg{
+    display: flex;
+    justify-content: space-between;
+    padding:0 15px;
+}
+.addFiles>button{background:#fff;color:#22BB77}
+.addFiles>button:hover{color: #111;}
+.footer_option a{padding:5px 10px;color:#A6A7A8;border: 1px solid #ddd;margin:-2px;}
+.footer_option a.grounding{border-top-left-radius: 25px;border-bottom-left-radius:25px;border-right: none; }
+.footer_option a.undercarriage{border-top-right-radius: 25px;border-bottom-right-radius: 25px;}
+.footer_option a:hover{border-color:#22BB77;color:#22BB77;}
+.footer_option>button{width:80px;height: 25px;border-radius: 25px;border:1px solid #22BB77;background:#fff;margin-left:15px;}
+.footer_option>button:hover{border-color: #22BB77;color:#22BB77}
+#modal-body-head-left>img{
+        width:200px;height:200px; 
+}
+#viewTheFiles .modal-body-head{
+    display: flex;
+    justify-content: space-between;
+}
+#modal-body-head-left{width:20%;}
+#modal-body-head-center{width:40%;}
+#modal-body-head-right{width:40%;}
+.varietyName{display: flex;justify-content: space-between;height:30px;line-height:30px;}
+.smBoxDetail{display: flex;justify-content: space-between;margin-top:20px;}
+.smBoxDetail span:last-child{margin-right:15px;}
+.varietyName>span{font-size:18px;font-weight: bold}
+.varietyName>button{
+    margin-right:15px;
+    line-height: 0;
+    background:#0880E3;
+    border:1px solid #0880E3;
+    border-radius:3px;
+    color:#fff;
+}
+.companyDetail label{width:50px;}
+.companyDetail .companyName{font-weight:bold;color: #000;}
+.companyDetail span{margin-left:15px;color:#8C8C8C}
+.companyDetail .validate{margin-left:68px;}
+#allmap{height:150px;width:300px;border:1px solid #ddd;}
+#moadl-body-body div.form-group{margin-top:10px;border-top:1px dashed #ddd;padding-top:10px;}
+.productIntroduction p{
+    display: inline-block;
+    width:750px;
+}
+#moadl-body-body label{vertical-align: top}
+.relatedInformation>p{display: flex;justify-content: space-between}
+.relatedInformation>p>b{padding-right:20px;color:#AAABAF;font-weight:normal }
+.relatedInformation>p>b>span{font-weight:normal;color:#AAABAF}
+
+#traceabilityArchives{display: inline-block;width:750px;}
+#traceabilityArchives>li{float: left;width:22%;text-align: center;margin-top:15px}
+#traceabilityArchives>li:hover{cursor: pointer}
+#traceabilityArchives .Icon>img{width:60px;height:60px;}
+#traceabilityArchives .publicDiv{margin-top:10px;}
+.carousel-caption{
+    left:0;
+    text-align: left;
+    bottom: -20px;
+    width:100%;
+    padding-top:10px; 
+    background:rgba(0,0,0,0.7);
+}
+.carousel-caption .pictureTime{font-size:16px;}
+.carousel-caption p{color:#fff;padding-left:15px;margin-bottom: 5px;}
+#useTable td{width:18%;}
+#useTable tbody td{color:#8E8E8E}
+
+/* 扫码统计 */
+#areaSelectionOptions{display: flex;justify-content: space-between;}
+#areaSelectionOptions .areaSelectionOptionsRight{margin-right:50px;}
+#areaSelectionOptions .areaSelectionOptionsRight>span{padding:5px 10px;border:1px solid #ddd;cursor: pointer;color:#A6A7A8}
+#areaSelectionOptions .areaSelectionOptionsRight>.statisticalCurveReport{margin-right:-5px;border-top-left-radius: 25px;border-bottom-left-radius: 25px;border-right:none;}
+#areaSelectionOptions .areaSelectionOptionsRight>.scanningAreaDistributionMap{border-top-right-radius: 25px;border-bottom-right-radius: 25px;border-left:none;}
+#areaSelectionOptions .areaSelectionOptionsRight>span.rightPublic{color: #fff;background:#286090;}
+
+
+
+/* 观看环境数据 */
+#environmentalDataOptions span{padding:5px 10px;border:1px solid #1884DC;}
+/* #environmentalDataOptions span a{color:#2B2A2A} */
+/* #environmentalDataOptions span.wetAir>a{color:#fff} */
+/* #environmentalDataOptions span.wetAir{border-top-left-radius: 5px;border-bottom-left-radius: 5px;} */
+/* #environmentalDataOptions span.carbonDioxide{border-top-right-radius: 5px;border-bottom-right-radius: 5px;} */
+/* .environmentalPublic{background:#1884DC} */
+.envDataLeft{border-top-left-radius: 5px;border-bottom-left-radius: 5px;}
+.envDataRight{border-top-right-radius: 5px;border-bottom-right-radius: 5px;}
+.envDataChoose{background:#1884DC}
+.envDataChoose a{color:#fff;}
+
+/* 12.26 */
+#companyCheck{display: flex;justify-content: space-between;}
+#companyCheckBox{width:85%;}
+#companyCheckBox div.form-group{border:none;margin-top:5px;padding-top:5px;font-size:12px;}
+#companyCheckBox label{font-weight:normal;font-size:12px;}
+#agriculturalRecords,#processing,#dispatching{display: flex;justify-content:space-between}
+#agriculturalRecords>table,#processing>table,#dispatching>table{width:85%;}
+#agriculturalRecords>table th,#processing>table th,#dispatching>table th{font-size:12px;}
+
+/* 12.26 */
+#moadl-body-body table th,#moadl-body-body table td{height:30px;padding-left:30px;padding-top:15px}
+/* #moadl-body-body table td{border-top:1px dashed #ddd;} */
+#companyCheckBox div.checkDetail{
+    display:flex;justify-content: space-between;
+}
+#companyCheckBox div.checkDetail table{width:85%;border:1px solid #ddd}
+#companyCheckBox div.checkDetail table td,#companyCheckBox div.checkDetail table th{border:1px solid #ddd;padding-left:5px;height:30px;}
+#companyCheckBox div.checkDetail table td{color:#888;}
+
+.productIntroduction>table>tbody>tr:hover{background:#ddd;cursor: pointer}
+
+/* 12.26 自定义模块 */
+#customModule>div{
+    display: flex;
+    justify-content: space-between;
+}
+
+/*区域扫描*/
+.areaSelectionOptionsLeft{margin-top:-6px;}
+.areaSelectionOptionsLeft>input{height:35px;}
+.areaSelectionOptionsLeft>input.startTime,.areaSelectionOptionsLeft>input.endTime{
+	width:100px;
+}
+.areaSelectionOptionsLeft>input.searchProduct{margin-right:-8px;border-right:0;}
+.areaSelectionOptionsLeft>.btn{vertical-align:top;}
+
+/*认证图片*/
+#productCertification .modal-body{text-align:center;}
+#productTable td{width:250px;color:#8E8E8E}
+#productTable tr{cursor:pointer}
+
+#souceFormList .form-item{
+	display: flex;
+   justify-content: space-between;
+   }
+#souceFormList{padding:0 50px;}
+#souceFormList .form-item>label{color:#888888;font-weight:normal;}
+#souceFormList .form-item>p{width:75%;}
+#souceFormList .form-item>p>img{max-width:80%;}
+
+#souceFormList .form-item>p>img{width:200px;height:200px;}
+#viewTable #useTable thead{border:1px solid #E7EDFE;background:#F9FDFE;}
+#viewTable #useTable thead tr{height:40px;}
+#viewTable #useTable thead th{border-right:1px solid #E7EDFE;text-align:center;font-weight:normal}
+#viewTable #useTable tbody{border:1px solid #E7EDFE;border-top:none;}
+#viewTable #useTable tbody td{text-align:center;padding:10px 0;border-right:1px solid #E7EDFE;}
+
+#data_table{border:1px solid #E5EBFD;}
+#data_table>tr{border:1px solid #E5EBFD;}
+#h5_view_pic .glyphicon-chevron-left,#h5_view_pic .glyphicon-chevron-right{color:#fff;}
+.ladda-label{color:#fff;}
+
+.xinjian{display:inline-block;width:20px;height:20px;background:url('../../img/source/xinjian.jpg') no-repeat center center; vertical-align:middle;margin-top:-2px;}
+.saoma{display:inline-block;width:20px;height:20px;background:url('../../img/source/saoma.jpg') no-repeat center center; vertical-align:middle;margin-top:-2px;}
+
+#areaSelectionOptions>.areaSelectionOptionsRight>a{margin-right:20px;}
+.clickI{display:inline-block;width:20px;height:20px;vertical-align:middle;margin-top:-2px}
+.tjqxbbI{background:url('../../img/addIcon/saomatongji_tubiao_hover.png') no-repeat center center;}
+.smqyfbtI{background:url('../../img/addIcon/saomatongji_hover.png') no-repeat center center;}
+.tjqxbbI_hover{background:url('../../img/addIcon/saomatongji_tubiao.png') no-repeat center center;}
+.smqyfbtI_hover{background:url('../../img/addIcon/saomatongji.png') no-repeat center center;}
+.operation>li{margin:5px 0;}
+.operation>li>a{color:#FE8110;font-size:15px;}

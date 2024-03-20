@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>产品认证</title>
+    <link rel="stylesheet" href="css/mui.min.css">
+    <style>
+        .mui-title{color:#227744}
+        .DetailList>p{display: flex;justify-content: space-between;padding:0.5rem 2rem;}
+        .DetailList>p>b{font-weight:normal;color: #222}
+        .imgList{text-align: center;border-top:1px solid #ddd;border-bottom:1px solid #ddd;padding:0.5rem 0;}
+        .imgList>img{max-width:90%;}
+        #detectionDetail{width:90%;margin:1rem auto;}
+        #detectionDetail h4{font-weight:normal}
+        #detectionDetail table{width:100%;border: 1px solid #ddd;}
+        #detectionDetail thead{border-bottom: 1px solid #ddd}
+        #detectionDetail table tr{height:2.5rem;}
+        #detectionDetail table th{color:#8E8E9D;font-size:0.8rem;text-align: left;padding-left:5px}
+        #detectionDetail table td{color:#8E8E9D;font-size: 0.8rem;padding-left:5px;}
+    </style>
+</head>
+<body>
+    <header id="myNav" class="mui-bar mui-bar-nav">
+        <a class="mui-icon mui-icon-arrowleft mui-action-back" style="color:#333;font-size:15px;margin-top:5px;" id="back">返回</a>        
+        <h1 class="mui-title">产品认证</h1>       
+    </header>
+    <div class="mui-content">
+        <div class="DetailList">
+            <p>
+                <span>检测项目</span>
+                <b>农残检测</b>
+            </p>
+            <p>
+                <span>检测机构</span>
+                <b>1</b>
+            </p>
+            <p>
+                <span>检测时间</span>
+                <b>2017/01/02</b>
+            </p>
+            <p>
+                <span>检测员</span>
+                <b>2</b>
+            </p>
+            <div class="imgList">
+                <img src='' alt="">
+            </div>
+            <div id="detectionDetail">
+                <h4>检测明细</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>检测指标</th>
+                            <th>检测值</th>
+                            <th>检测标准</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>抑制率</td>
+                            <td>10</td>
+                            <td>&lt;50%</td>
+                        </tr>
+                        <tr>
+                            <td>敌敌畏</td>
+                            <td>10</td>
+                            <td>&lt;0.1mg/kg</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="../dist/js/jquery-1.9.1.min.js"></script>
+    <script src="js/mui.min.js"></script>
+    <script>
+        $(function(){
+            console.log(localStorage.getItem('detectionContent'))
+        })
+    </script>
+</body>
+</html>

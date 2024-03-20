@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="gridData">
+	
+	<!-- 表格数据查询/实时数据 -->
+	<select id="getGridDataNow" resultClass="cn.lookout.base.bean.GridDataBean" parameterClass="Map">
+		select round(`data`,2) as `data`,date_format(create_time ,'%Y-%m-%d %H:%i:%m') as `time`
+		from
+		<isEqual property="userType" compareValue="0"> t_g_data_collection </isEqual>
+		<isEqual property="userType" compareValue="1"> t_f_data_collection </isEqual>
+		<isEqual property="userType" compareValue="2"> t_t_data_collection </isEqual>
+		where company_id = #companyId#
+		<isEqual property="userType" compareValue="0"> and ground_num = #areaNum# </isEqual>
+		<isEqual property="userType" compareValue="1"> and fishpond_num = #areaNum# </isEqual>
+		<isEqual property="userType" compareValue="2"> and datian_num = #areaNum# </isEqual>
+			and device_id = #deviceNum#
+			and year_date &gt;= #startTime#
+			and year_date &lt;= #endTime#
+		ORDER BY create_time
+	</select>
+	<!-- （仓库）表格数据查询/实时数据 -->
+	<select id="getGridDataNowCk" resultClass="cn.lookout.base.bean.GridDataBean" parameterClass="Map">
+		select round(`data`,2) as `data`,date_format(create_time ,'%Y-%m-%d %H:%i:%m') as `time`
+		from w_inventory_data_collection
+		where company_id = #companyId#
+		and ground_num = #areaNum#
+		and device_id = #deviceNum#
+		and year_date &gt;= #startTime#
+		and year_date &lt;= #endTime#
+		ORDER BY create_time
+	</select>
+	
+	<!-- 表格数据查询/当日数据 -->
+	<select id="getGridDataToday" resultClass="HashMap" parameterClass="Map">
+		select 
+		<isEqual property="strategy" compareValue="avg">
+			round(avg(`data`),2) as `data`
+		</isEqual>
+		<isEqual property="strategy" compareValue="max">
+			round(max(`data`),2) as `data`
+		</isEqual>
+		<isEqual property="strategy" compareValue="min">
+			round(min(`data`),2) as `data`
+		</isEqual>
+		,year_date_hour as yearDateHour
+		from
+		<isEqual property="userType" compareValue="0"> t_g_data_collection </isEqual>
+		<isEqual property="userType" compareValue="1"> t_f_data_collection </isEqual>
+		<isEqual property="userType" compareValue="2"> t_t_data_collection </isEqual>
+		where company_id = #companyId#
+			<isEqual property="userType" compareValue="0"> and ground_num = #areaNum# </isEqual>
+			<isEqual property="userType" compareValue="1"> and fishpond_num = #areaNum# </isEqual>
+			<isEqual property="userType" compareValue="2"> and datian_num = #areaNum# </isEqual>
+			and device_id = #deviceNum#
+			and year_date = #startTime#
+		group by year_date_hour
+		order by year_date_hour asc
+	</select>
+	
+	<!-- （仓库）表格数据查询/当日数据 -->
+	<select id="getGridDataTodayCk" resultClass="HashMap" parameterClass="Map">
+		select 
+		<isEqual property="strategy" compareValue="avg">
+			 round(avg(data),2) as data 
+		</isEqual>
+		<isEqual property="strategy" compareValue="max">
+			 round(max(data),2) as data 
+		</isEqual>
+		<isEqual property="strategy" compareValue="min">
+			 round(min(data),2) as data 
+		</isEqual>
+		,year_date_hour as yearDateHour
+		from w_inventory_data_collection
+		where company_id = #companyId#
+		and ground_num = #areaNum#
+		and device_id = #deviceNum#
+		and year_date = #startTime#
+		group by year_date_hour
+		order by year_date_hour asc
+	</select>
+	
+	<!-- 表格数据查询/指定日期数据 -->
+	<select id="getGridDataDay" resultClass="HashMap" parameterClass="Map">
+		select
+		<isEqual property="strategy" compareValue="avg">
+			round(avg(`data`),2) as `data`
+		</isEqual>
+		<isEqual property="strategy" compareValue="max">
+			round(max(`data`),2) as `data`
+		</isEqual>
+		<isEqual property="strategy" compareValue="min">
+			round(min(`data`),2) as `data`
+		</isEqual>
+		,year_date as yearDate 
+		FROM 
+		<isEqual property="userType" compareValue="0"> t_g_data_collection </isEqual>
+		<isEqual property="userType" compareValue="1"> t_f_data_collection </isEqual>
+		<isEqual property="userType" compareValue="2"> t_t_data_collection </isEqual>
+		where company_id = #companyId#
+			<isEqual property="userType" compareValue="0"> and ground_num = #areaNum# </isEqual>
+			<isEqual property="userType" compareValue="1"> and fishpond_num = #areaNum# </isEqual>
+			<isEqual property="userType" compareValue="2"> and datian_num = #areaNum# </isEqual>
+			and device_id = #deviceNum#
+			and year_date &gt;= #startTime#
+			and year_date &lt;= #endTime#
+		group by year_date
+		order by year_date asc
+	</select>
+	
+	<!-- （仓库）表格数据查询/指定日期数据 -->
+	<select id="getGridDataDayCk" resultClass="HashMap" parameterClass="Map">
+		select
+		<isEqual property="strategy" compareValue="avg">
+			round(avg(data),2) as data
+		</isEqual>
+		<isEqual property="strategy" compareValue="max">
+			round(max(data),2) as data
+		</isEqual>
+		<isEqual property="strategy" compareValue="min">
+			round(min(data),2) as data
+		</isEqual>
+		,year_date as yearDate
+		from w_inventory_data_collection
+		where company_id = #companyId#
+		and ground_num = #areaNum#
+		and ground_num = #areaNum#
+		and device_id = #deviceNum#
+		and year_date &gt;= #startTime#
+		and year_date &lt;= #endTime#
+		group by year_date
+		order by year_date asc
+	</select>
+	
+ </sqlMap>

@@ -1,0 +1,15 @@
+spring:
+  mail:
+    default-encoding: utf-8
+    host: smtp.163.com
+    username: li2021@163.com #示例: username: li2021@163.com
+    password: JYCHUHO        #示例: password: 授权码
+    port: 25
+
+
+
+
+
+
+
+

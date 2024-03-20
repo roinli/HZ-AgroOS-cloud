@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>用药记录</title>
+    <link rel="stylesheet" href="../page/css/mui.min.css">
+    <style>
+        .mui-title{color:#227744}
+        .mui-content>table{border-top: 1px solid #ddd;border-bottom: 1px solid #ddd;color:#222;margin: 0 auto;width:100%;table-layout:fixed}
+        .mui-content>table>thead>tr{height:2rem;}
+        table td,table th{font-size :1rem;font-weight: normal;}
+        #marTable td{text-align: center;color:#8E8E8E;height:2.5rem;line-height:2.5rem;font-size:0.8rem;word-wrap:break-word;padding:0 0.3rem;border-top:1px solid #ddd}
+    </style>
+</head>
+<body>
+    <header id="myNav" class="mui-bar mui-bar-nav">
+        <a class="mui-icon mui-icon-arrowleft mui-action-back" style="color:#333;font-size:15px;margin-top:5px;" id="back">返回</a>
+        <h1 class="mui-title">用药记录</h1>       
+    </header>
+    <div class="mui-content">
+            <table>
+                <thead>
+                     <tr>
+                        <th style="width:23%">使用时间</th>
+                        <th style="width:25%">名称</t>
+                        <th style="width:15%">使用量</th>
+                        <th style="width:27%">病因</th>
+                        <th style="width:15%">操作人</th>
+                    </tr>
+                </thead>
+                <tbody id="marTable">
+                
+                </tbody>
+            </table>
+        </div>
+    <script src="../dist/js/jquery-1.9.1.min.js"></script>
+    <script src="../page/js/mui.min.js"></script>
+    <script>
+        $(function(){
+            var marContent= JSON.parse(localStorage.getItem('marContent'));
+            console.log(marContent);
+            var html="";
+            for(var i=0;i<marContent.length;i++){
+                html+='<tr><td>'+marContent[i].time+'</td><td>'+marContent[i].name+'</td><td>'+marContent[i].useCnt+'</td><td>'+marContent[i].reason+'</td><td>'+marContent[i].dealname+'</td></tr>'
+            }
+            $("#marTable").html(html)
+        })
+    </script>
+</body>
+</html>

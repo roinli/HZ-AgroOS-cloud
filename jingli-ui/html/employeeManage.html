@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>员工管理</title>
+    <script src="../dist/js/jquery-1.9.1.min.js"></script>
+    <link rel="stylesheet" href="../dist/css/animate.css" >
+    <link rel="stylesheet" href="../dist/css/normalize.css">
+    <link rel="stylesheet" href="../dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../dist/css/index_public.css">
+    <link rel="stylesheet" href="../dist/css/webuploader.css">
+    <link rel="stylesheet" href="../dist/css/index_table.css">
+    <link rel="stylesheet" href="../dist/css/iCheck/custom.css">
+    <link rel="stylesheet" href="../dist/css/ladda/ladda-themeless.min.css">
+    <script src="../dist/js/js/index_head_left.js"></script>
+    <script src="../dist/js/js/comm.js"></script>
+    <script src="../dist/js/iCheck/icheck.min.js"></script>
+    <script src="../dist/js/My97DatePicker_ie9/WdatePicker.js"></script>
+    <link rel="stylesheet" href="../dist/css/toastr.min.css" >
+    <link rel="stylesheet" href="../dist/css/font-awesome.min.css">
+	<script src="../dist/js/widgets/toastr.min.js"></script>
+
+    <!-- alert11.17 -->
+    <link rel="stylesheet" href="../dist/css/sweetalert.css">
+    <script src="../dist/js/widgets/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+</head>
+<style>
+	.control-label{
+		width:18%
+	}
+	.toast-title{
+		color:#FFFFFF;
+	}
+	.toast-message{
+		color:#FFFFFF;
+	}
+	.form_div {
+		  position: relative;
+		  width: 200px;
+		  top:-1px;
+		}
+		.d1 {background: #ffffff;;width:200px;float:left;height:35px}
+		.d1 input {
+		  width: 100%;
+		  height: 42px;
+		  padding-left: 10px;
+		  border: 1px solid #1785DC;
+		  border-radius: 5px;
+		  outline: none;
+		  background: #ffffff;
+		  color: #000000;
+		  height:35px
+		}
+		.d1 button {
+		  position: absolute;
+		  top: 0;
+		  right: 0px;
+		  width: 42px;
+		  height: 42px;
+		  border: none;
+		  background: #1785DC;
+		  border-radius: 0 5px 5px 0;
+		  cursor: pointer;
+		  height:35px
+		}
+		.d1 button:before {
+		  content: "\f002";
+		  font-family: FontAwesome;
+		  font-size: 16px;
+		  color: #FFFFFF;
+		  height:35px
+		}
+		.ladda-label{color:#fff;}
+		.shanchu{display:inline-block;width:20px;height:20px;background:url('../img/addIcon/del.png') no-repeat center center; vertical-align:top;margin-top:1px;}
+</style>
+<script>
+
+// 	$.ajaxSetup ({
+// 		cache: false //close AJAX cache
+// 	});
+
+	var pageSize = 20;
+	var pic_url = "http://ozdwirxvt.bkt.clouddn.com/"
+
+    $(document).ready(function(){
+       $("#div1").load('../include/left_title.html',function(){
+           menu();
+       })
+       $("#loadHeader").load("../include/header.html",function(){
+           header();
+       })
+       $("#personal").load("../include/modelpersonal.html",function(){
+           personalModel();
+       })
+       getEmplyoeeList(1);
+       $('#addpersonal').on('hidden.bs.modal', function () {
+           $("#addpersonal .modal-body>div>input").val('');
+    	})
+	});
+
+
+
+</script>
+<script src="../dist/js/js/employeeManage.js"></script>
+<body>
+<div id="test_img_div" style="position:fixed;top:50%;left:50%;z-index:999;width:500px;margin:-150px 0 0 -250px;text-align:center">
+     <img id="test_img" style="max-width:100%">
+ </div>
+ <div class="container-fluid">
+     <!-- header  -->
+    <div class="nav row " id="loadHeader">
+    </div>
+    <div class="row neirong" >
+        <!-- 侧边导航 -->
+         <div id="div1" class="sidebar col-xs-2">
+
+        </div>
+        <!-- 主题内容 -->
+
+        <div class="main col-xs-10 row animated fadeInRight" style="min-height:800px;background-color:#F4F7FE;padding:20px">
+
+            <div style="width:100%;min-height:800px;background-color:#FFFFFF;">
+            	<div style="float:left;margin:25px;">
+<!-- 						<a id="addExpert" onclick="addEmplyoee()" > -->
+<!-- 							<i class="fa fa-user-plus" style="color:#808790;font-size:16px"></i> -->
+<!-- 	                   		<span style="margin-left:2px;font-size:16px">新增</span> -->
+<!-- 	                   	</a> -->
+	                   	<a id="addExpert" onclick="addEmplyoee()" >
+							<i class="xinzeng" style="color:#808790;font-size:16px"></i>
+	                   		<span style="margin-left:2px;font-size:16px;color:#6A819A">新增</span>
+	                   	</a>
+	                   	<span style="margin-left:15px;margin-right:15px">|</span>
+<!-- 	                   	<a id="delExpert" onclick="deleteEmployee()"> -->
+<!-- 	                   		<i class="fa fa-trash-o" style="color:#808790;font-size:16px"></i> -->
+<!-- 	                   		<span style="margin-left:2px;font-size:16px">删除</span> -->
+<!-- 	                   	</a> -->
+	                   	<a id="delExpert" onclick="deleteEmployee()">
+	                   		<i class="shanchu" style="color:#808790;font-size:16px"></i>
+	                   		<span style="margin-left:2px;font-size:16px;color:#6A819A">删除</span>
+	                   	</a>
+				</div>
+				<div class="search d1" style="float:right;margin:20px">
+				  <div class="form_div">
+					  <input id="serarch_name" type="text" placeholder="关键字查询">
+					  <button onclick="getEmplyoeeList(1)"></button>
+				  </div>
+				</div>
+             <table class="col-xs-12" id="clerka" >
+                <thead>
+                    <tr style="background-color:#F9FDFF">
+                       <th>
+                           <div class="i-checks">
+                       		<input id="selectAll" class="icheckbox" type="checkbox" value="0">
+                       	</div>
+                       </th>
+                       <th>头像</th>
+                       <th>姓名</th>
+                       <th>职位</th>
+                       <th>年龄</th>
+                       <th>资格证</th>
+                       <th>有效期</th>
+                       <th>户籍地</th>
+                       <th>身体状况</th>
+                       <th>联系方式</th>
+                    </tr>
+                </thead>
+                <tbody id="data_table">
+                    <tr id="demo_tr" style="display:none">
+                        <td width="50px">
+                        	<input class="#icheck_class#" type="checkbox" value="#employeeId#">
+                        </td>
+                        <td>
+                        	 <img onmouseenter="showBigPic(this,event)" onmouseleave="hideBigPic()" src="#employeeIcon#" style="width:50px;height:50px;display:#icon_display#">
+                        </td>
+                        <td>
+                            <span>#employeeName#</span>
+                        </td>
+                        <td>#employeePosition#</td>
+                        <td>#employeeAge#</td>
+                        <td>
+                        	<img onmouseenter="showBigPic(this,event)" onmouseleave="hideBigPic()" src="#employeeCertificates#" style="width:50px;height:50px;display:#zgz_display#">
+                        </td>
+                        <td>#certificatesDate#</td>
+                        <td>#employeeAddress#</td>
+                        <td>
+                            <b>#employeeState#</b>
+                        </td>
+                        <td>#mobile#</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="col-xs-12  page row" style="text-align:right" >
+                    <div class="M-box1 col-xs-12" style="text-align:right;"></div>
+
+             </div>
+           </div>
+        </div>
+        </div>
+        <div class="row" id="divFooter"></div>
+        </div>
+  <!-- 个人信息 -->
+    <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    </div>
+    <!-- 新增 员工11.17-->
+    <div class="modal fade" id="addpersonal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span  aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label" >头像</label>
+                            <button type="button" class="btn btn-primary" id="choose_employee_icon" onclick="choosePic(this)">上传头像</button>
+		                    <img id="imgviewEmployeeIcon" style="width:100px;height:100px;display:none" onclick="choosePic(this)" />
+		                    <input id="file_employee_icon" style="display:none" type="file" onchange="filechange(this)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">姓名</label>
+                            <input type="text" class="form-control" id="user_name" value="">
+
+                        </div>
+                        <div class="form-group">
+                                <label for="message-text" class="control-label">性别</label>
+								<select  id="user_sex" class="form-control" style="width:40%;height:35px">
+		                        	<option value="1">男</option>
+		                        	<option value="0">女</option>
+		                        </select>
+                        </div>
+                       <div class="form-group">
+                              <label for="message-text" class="control-label">年龄</label>
+                               <input type="text" min="18" max="99" maxlength='2' class="form-control" id="user_age" value="">
+                        </div>
+                        <div class="form-group">
+                                <label for="message-text" class="control-label">电话</label>
+                                <input type="text" maxlength="11" class="form-control" id="user_tel" value="">
+                        </div>
+                        <div class="form-group">
+                                <label for="message-text" class="control-label">职位</label>
+                                <input type="text" class="form-control"  id="user_position" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label" >资格证</label>
+                            <button type="button" class="btn btn-primary" id="choose_certificates" onclick="choosePic(this)">上传资格证</button>
+		                    <img id="imgview_certificates" style="width:100px;height:100px;display:none" onclick="choosePic(this)" />
+		                    <input id="file_certificates" style="display:none" type="file" onchange="filechange(this,'2')" />
+                        </div>
+                        <div class="form-group">
+                        	<label for="message-text" class="control-label" >资格证有效期</label>
+                        	<input type="text" class="form-control" id="certificatesValid" value=""
+                        		onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });" format="yyyy-MM-dd" value=""
+                        	>
+                        </div>
+                        <div class="form-group">
+                                <label for="message-text" class="control-label">地址</label>
+                                <input type="text" class="form-control" id="user_address" value="">
+                        </div>
+
+                        <div class="form-group">
+                                <label for="message-text" class="control-label">身体状况</label>
+                                <select  id="user_state" class="form-control" style="width:40%;height:35px">
+		                        	<option value="1">优</option>
+		                        	<option value="2">良</option>
+		                        	<option value="3">差</option>
+		                        </select>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary ladda-button btn-ladda-demo" id="addStaff" onclick="saveEmplyoee()" data-style="zoom-out">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="../dist/js/bootstrap.min.js"></script>
+<script src="../dist/js/widgets/webuploader.min.js"></script>
+<script src="../dist/js/widgets/jquery.pagination.js"></script>
+<script src="../dist/js/ladda/spin.min.js"></script>
+<script src="../dist/js/ladda/ladda.min.js"></script>
+<script src="../dist/js/ladda/ladda.jquery.min.js"></script>
+</body>
+</html>

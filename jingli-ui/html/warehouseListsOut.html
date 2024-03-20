@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>仓库列表-产品信息</title>
+    <link rel="stylesheet" href="../dist/css/toastr.min.css" >
+    <link rel="stylesheet" href="../dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../dist/css/index_public.css">
+    <link rel="stylesheet" href="../dist/css/warehouseListsOut.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <!-- header  -->
+    <div class="nav row " id="loadHeader"></div>
+    <div class="row neirong" >
+      <!-- 侧边导航 -->
+      <div id="div1" class="sidebar col-xs-2"></div>
+      <!-- 主题内容 -->
+      <div class="main col-xs-10 row animated fadeInRight" style="min-height:800px;background-color:#F4F7FE;padding:15px 0;">
+        <div id="companyInfoDiv" class="col-xs-12">
+          <div class="wareList-wrapper">
+            <div class="wareList-head">
+              库存列表
+            </div>
+            <ul class="wareList-nav">
+              <li class="wareList-nav-items">
+                <span class="wareList-nav-items-t1">筛选查询</span>
+                <div class="wareList-nav-items-hide">
+                  <i class="wareList-nav-items-hide-icon glyphicon glyphicon-chevron-down"></i>
+                  <span class="wareList-nav-items-t2">收起筛选</span>
+                </div>
+                <span class="wareList-nav-items-t3">查询结果</span>
+              </li>
+              <li class="wareList-nav-items-cons">
+                <div class="wareList-nav-items-con">
+                  <span>仓库:</span>
+                  <select class="wareList-nav-items-con-ck">
+                    <option value=0>1号仓库</option>
+                    <option value=1>1号仓库</option>
+                  </select>
+                </div>
+                <div class="wareList-nav-items-con">
+                  <span>输入搜索:</span>
+                  <select class="wareList-nav-items-con-ss">
+                    <option value=0>产品名称</option>
+                    <option value=1>产品名称</option>
+                  </select>
+                </div>
+              </li>
+            </ul>
+            <div class="wareList-content">
+              <div class="wareList-content-head">
+                <span class="wareList-content-head-name">数据列表</span>
+                <div class="wareList-content-head-num">
+                  <div class="wareList-content-head-show">
+                    <span>显示条数</span>
+                    <i class="wareList-content-head-icon glyphicon glyphicon-chevron-down"></i>
+                  </div>
+                  <select class="wareList-content-show-num" value="20">
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+                </div>
+              </div>
+              <div class="wareList-content-nav">
+                <span class="wareList-content-nav-index"></span>
+                <span>编号</span>
+                <span>仓库名称</span>
+                <span>仓库总量</span>
+                <span>可用数量</span>
+                <span>仓库位置</span>
+                <span>操作</span>
+              </div>
+              <div class="wareList-content-con">
+                <span class="wareList-content-con-index">
+                  <input type="checkbox" name="" value="">
+                </span>
+                <span>100001</span>
+                <span>1号仓库</span>
+                <span>49</span>
+                <span>983</span>
+                <span>山西省吕梁市中阳县</span>
+                <span>
+                  <i>查看</i>
+                  <i>归档</i>
+                </span>
+              </div>
+            </div>
+            <div class="wareList-foot-wra">
+              <div class="wareList-foot-dao">
+                <div class="wareList-foot-dao-all">
+                  <input type="checkbox" name="name" value="">
+                  <span>全选</span>
+                </div>
+                <div class="wareList-foot-dao-export">
+                  <span>批量导出</span>
+                  <i class="wareList-foot-dao-export-icon glyphicon glyphicon-chevron-down"></i>
+                </div>
+                <div class="wareList-foot-dao-sure">确定</div>
+              </div>
+              <div class="wareList-foot">
+                <!-- 底部 分页 -->
+                <div class="wareList-foot-page">
+                  <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                      <li>
+                        <a href="#" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                        </a>
+                      </li>
+                      <li class="active"><a href="#">1</a></li>
+                      <li><a href="#">2</a></li>
+                      <li><a href="#">3</a></li>
+                      <li><a href="#">4</a></li>
+                      <li><a href="#">5</a></li>
+                      <li>
+                        <a href="#" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+                <div class="wareList-foot-jump">
+                  跳至
+                  <input type="text" name="" value="20">
+                  页
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 产品信息 -->
+          <div class="wareListInfo-wra">
+            <div class="wareListInfo">
+              <div class="wareListInfo-head">
+                <span>产品信息</span>
+                <div class="wareListInfo-head-close-wra">
+                  <i class="wareListInfo-head-close glyphicon glyphicon-remove"></i>
+                </div>
+              </div>
+              <ul class="wareListInfo-content">
+                <li class="wareListInfo-content-items">
+                  <div class="wareListInfo-content-item">
+                    <i>*</i>
+                    出库量
+                  </div>
+                  <div class="wareListInfo-content-val-wra">
+                    <input class="wareListInfo-content-val" type="text" placeholder="请输入">
+                  </div>
+                </li>
+                <li class="wareListInfo-content-items">
+                  <div class="wareListInfo-content-item">
+                    <i>*</i>
+                    出库合格率
+                  </div>
+                  <div class="wareListInfo-content-val-wra">
+                    <input class="wareListInfo-content-val" type="text" placeholder="请输入">
+                  </div>
+                </li>
+                <li class="wareListInfo-content-items">
+                  <div class="wareListInfo-content-item">
+                    <i>*</i>
+                    出库时间
+                  </div>
+                  <div class="wareListInfo-content-val-wra">
+                    <input class="wareListInfo-content-val" type="text" placeholder="请输入">
+                  </div>
+                </li>
+                <li class="wareListInfo-content-items">
+                  <div class="wareListInfo-content-item">
+                    <i>*</i>
+                    操作员
+                  </div>
+                  <div class="wareListInfo-content-val-wra">
+                    <select class="wareListInfo-content-val">
+                      <option value="1">操作员1</opyion>
+                      <option value="2">操作员2</opyion>
+                    </select>
+                  </div>
+                </li>
+              </ul>
+
+              <div class="wareListInfo-mange">
+                <div class="wareListInfo-mange-cancel wareListInfo-mange-op">
+                  <i class="glyphicon glyphicon-floppy-remove"></i>
+                  <span>取消</span>
+                </div>
+                <div class="wareListInfo-mange-confirm wareListInfo-mange-op">
+                  <i class="glyphicon glyphicon-floppy-saved"></i>
+                  <span>确定</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 11.17 -->
+        <!-- <div class="M-box1 col-xs-12" style="text-align:right;">
+          456
+        </div> -->
+      </div>
+    </div>
+    <div class="row" id="divFooter"></div>
+  </div>
+  <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"></div>
+
+  <script type="text/javascript" type="text/javascript" src="../dist/js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+
+  <script type="text/javascript" type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+  <script type="text/javascript" src="../dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/webuploader.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/jquery.pagination.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/sweetalert.min.js"></script>
+
+  <script type="text/javascript" src="../dist/js/js/comm.js"></script>
+  <script type="text/javascript" src="../dist/js/js/index_head_left.js"></script>
+  <script type="text/javascript">
+      $(document).ready(function(){
+        $("#div1").load('../include/left_title.html',function(){
+          menu();
+        })
+        $("#loadHeader").load("../include/header.html",function(){
+          header();
+        })
+        $("#personal").load("../include/modelpersonal.html",function(){
+          personalModel();
+        })
+      });
+    </script>
+</body>
+</html>

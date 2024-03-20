@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>预警管理</title>
+    <script src="../dist/js/jquery-1.9.1.min.js"></script>
+    <link rel="stylesheet" href="../dist/css/animate.css" >
+    <link rel="stylesheet" href="../dist/css/normalize.css">
+    <link rel="stylesheet" href="../dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../dist/css/index_public.css">
+    <link rel="stylesheet" href="../dist/css/webuploader.css">
+    <script src="../dist/js/js/index_head_left.js"></script>
+    <script src="../dist/js/My97DatePicker_ie9/WdatePicker.js"></script>
+    <link rel="stylesheet" href="../dist/css/toastr.min.css" >
+    <link rel="stylesheet" href="../dist/css/font-awesome.min.css">
+    <script src="../dist/js/widgets/toastr.min.js"></script>
+    <script type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+
+    <!-- alert11.17 -->
+    <link rel="stylesheet" href="../dist/css/sweetalert.css">
+    <script src="../dist/js/widgets/sweetalert.min.js"></script>
+</head>
+    <script>
+        $.ajaxSetup ({
+            cache: false //close AJAX cache
+        });
+
+        var pageSize = 10;
+
+         $(document).ready(function(){
+            $("#div1").load('../include/left_title.html',function(){
+                menu();
+            })
+            $("#loadHeader").load("../include/header.html",function(){
+                header();
+            })
+            $("#personal").load("../include/modelpersonal.html",function(){
+                personalModel();
+            })
+
+            var mydate = new Date();
+            var y = mydate.getFullYear();
+            var m = mydate.getMonth()+1;
+            if(parseInt(m)<10){
+                m='0'+m;
+            }
+            var d = mydate.getDate();
+            if(parseInt(d)<10){
+                d='0'+d;
+            }
+            $("#start_time").val(y+"-"+m+"-"+d);
+            $("#end_time").val(y+"-"+m+"-"+d);
+
+            getWarningInfo(1);
+
+        });
+
+
+         function getWarningInfo(page){
+           var loginInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
+             var startTime = $("#start_time").val();
+             var endTime = $("#end_time").val();
+             var content = $("#search_content").val();
+             var startRec = (page-1)*pageSize;
+            $.ajax({
+                type:"POST",
+        // l:"actionServlet",
+                url: URLAPI + "actionServlet",
+                data:{
+          "actionName":"earlyWaringService",
+          "method":"queryListCount",
+          "startTime":startTime,
+          "endTime":endTime,
+          // "startTime":startTime + " 00:00:00",
+          // "endTime":endTime + " 00:00:00",
+          "content":content,
+          "companyId": loginInfo.id,
+          "userType": loginInfo.type,
+          "token": getCookie("token")
+        },
+                dataType:"JSON",
+                success:function(data){
+                    if(data.statusCode == 100){
+                        toastr.error('请联系管理员','未拥有权限');
+                        return;
+                    }
+                    var allSize = data.result;
+                    if(allSize > pageSize){
+                        $('.M-box1').css('display','');
+                        $('.M-box1').pagination({
+                            totalData:allSize,
+                            showData:pageSize,
+                            coping:false,
+                            current:page,
+                            prevContent:'上一页',  //上一页内容
+                            nextContent:'下一页',  //下一页内容
+                            jumpBtn:"确定",
+                            callback: firstcallbackAjax
+                        });
+                        $('.remind').css({'background':'transparent','color':'transparent'})
+                    }
+                    else if(allSize=='0'){
+                        $('.M-box1').css('display','none');
+                        if(sessionStorage.getItem('warningCount')!='0'){
+                            $('.remind').css({'background':'#FE8110','color':'#fff'})
+                        }
+                        else{
+                            $('.remind').css({'background':'transparent','color':'transparent'})
+                        }
+                    }
+                    else{
+                        $('.M-box1').css('display','none');
+                        $('.remind').css({'background':'transparent','color':'transparent'})
+                    }
+                }
+            });
+            $.ajax({
+                type:"POST",
+                // url:"actionServlet",
+                url:URLAPI + "actionServlet",
+                data:{
+          "actionName":"earlyWaringService",
+          "method":"queryList",
+          "startRec":startRec,
+          "isRead":"1",
+          "pageSize":pageSize,
+          "startTime":startTime,
+          "endTime":endTime,
+          // "startTime":startTime + " 00:00:00",
+          // "endTime":endTime + " 00:00:00",
+          "content":content,
+          "companyId": loginInfo.id,
+          "userType": loginInfo.type,
+          "token": getCookie("token")
+        },
+                dataType:"JSON",
+                success:function(data){
+                    if(data.statusCode == 100){
+                        toastr.error('请联系管理员','未拥有权限');
+                        return;
+                    }
+                    var htmlStr = $("#demo_tr").html();
+                    $("#data_table").empty();
+                    $("#data_table").append("<tr id='demo_tr' style='display:none'>" + htmlStr+ "</tr>");
+                    for(var i=0;i<data.result.length;i++){
+                        var newStr = "<tr>" + htmlStr+"</tr>";
+                    //  var warningType = data.result[i].type;
+                    //  var warningSource = "";
+                    //  if(warningType=='3'){
+                    //      warningType='农业';
+                    //      if(data.result[i].groundFishpondNum=='0'){
+                    //          warningSource="气象站-"+ data.result[i].deviceName;
+                    //      }else {
+                    //          warningSource=data.result[i].groundFishpondNum+"号大棚-" + data.result[i].deviceName;
+                    //      }
+            //
+                    //  }else if(warningType=='4'){
+                    //      warningType='渔业';
+                    //      if(data.result[i].groundFishpondNum=='0'){
+                    //          warningSource="气象站-" + data.result[i].deviceName;
+                    //      }else{
+                    //          warningSource=data.result[i].groundFishpondNum+"号鱼塘-" + data.result[i].deviceName;
+                    //      }
+                    //  }
+                        newStr = newStr.replace("#warningType#",data.result[i].deviceName);
+                        newStr = newStr.replace("#warningSource#",data.result[i].displayName);
+                        newStr = newStr.replace("#warningTime#",data.result[i].createTime);
+                        newStr = newStr.replace("#warningInfo#",data.result[i].waringInfo);
+                        $("#data_table").append(newStr);
+                        if(i%2 == 1){
+                            $("#data_table").children("tr:last-child").css("background","#F7F8FA")
+                        }
+                    }
+                }
+            });
+        }
+
+        function firstcallbackAjax(api){
+             var current=api.getCurrent();
+             getWarningInfo(current);
+        }
+
+        function chooseDateType(type){
+            $("#start_time").attr("disabled",'true');
+            $("#start_time").css("background",'#F8F8F8');
+            $("#end_time").attr("disabled",'true');
+            $("#end_time").css("background",'#F8F8F8');
+            $(".img_date_choose").attr("src","../img/circle_w.png");
+            var dateTime=new Date();
+            if(type == '1'){
+                $("#today").attr("src","../img/circle_b.png");
+            }
+            if(type == '2'){
+                $("#sevenday").attr("src","../img/circle_b.png");
+                dateTime.setTime(dateTime.setDate(dateTime.getDate()-7));
+            }
+            if(type == '3'){
+                $("#thirtyday").attr("src","../img/circle_b.png");
+                dateTime.setTime(dateTime.setDate(dateTime.getDate()-30));
+            }
+            if(type == '4'){
+                $("#days").attr("src","../img/circle_b.png");
+                $("#start_time").removeAttr("disabled");
+                $("#start_time").css("background",'#FFFFFF');
+                $("#end_time").removeAttr("disabled");
+                $("#end_time").css("background",'#FFFFFF');
+            }
+            var y = dateTime.getFullYear();
+            var m = dateTime.getMonth()+1;
+            if(parseInt(m)<10){
+                m='0'+m;
+            }
+            var d = dateTime.getDate();
+            if(parseInt(d)<10){
+                d='0'+d;
+            }
+            $("#start_time").val(y+"-"+m+"-"+d);
+            if(type != '4'){
+                getWarningInfo(1);
+            }
+        }
+    </script>
+    <style>
+        #alarm{margin-top:20px;}
+        #alarm th,#alarm tr,#alarm td{border:1px solid #ECEFF5;height:50px;line-height:50px;text-align: center}
+        .smallBg{color:#fff;border-radius:2px;padding:3px 4px;background:#9DC7DB;font-weight:normal}
+        .M-box1{margin:50px 0;}
+        .M-box1>a,.M-box1>span{color:#7E7E7E;border:1px solid #ddd;padding:1% 1.5%;margin-left:0.5%;border-radius:2px;}
+        .M-box1>a.active,.M-box1>span.active{background:#0583DF;color:#fff;}
+        #alarmSelectTime{margin-top:30px;height:50px;line-height:50px;}
+        #alarmSelectTime .moren>i{top:16px;}
+        #alarmSelectTime .public>i{top:16px;}
+        #alarmSelectTime b.public>i{top:0px;}
+        #alarmSelectTime b.moren>i{top:0px;}
+        .public,.moren{margin-left:18px;}
+         #start_time,#end_time{width:35%;border-radius: 3px;border:1px solid #ddd;line-height:7px;}
+        .glyphicon{left:-6px;top:10px;}
+        .input-group{margin-left:20px;}
+        .form_div {
+          position: relative;
+          width: 150px;
+        }
+        .d1 {background: #ffffff;;width:150px;float:left;height:35px}
+        .d1 input {
+          width: 100%;
+          height: 42px;
+          padding-left: 10px;
+          border: 1px solid #F8F8F8;
+          border-radius: 5px;
+          outline: none;
+          background: #ffffff;
+          color: #000000;
+          height:35px
+        }
+        .d1 button {
+          position: absolute;
+          top: 0;
+          right: 0px;
+          width: 42px;
+          height: 42px;
+          border: none;
+          background: #F8F8F8;
+          border-radius: 0 5px 5px 0;
+          cursor: pointer;
+          height:35px
+        }
+        .d1 button:before {
+          content: "\f002";
+          font-family: FontAwesome;
+          font-size: 16px;
+          color: #B0B0B0;
+          height:35px
+        }
+    </style>
+<body>
+ <div class="container-fluid">
+     <!-- header  -->
+    <div class="nav row " id="loadHeader">
+    </div>
+    <div class="row neirong">
+        <!-- 侧边导航 -->
+         <div id="div1" class="sidebar col-xs-2">
+
+        </div>
+
+        <!-- 主题内容 -->
+        <div class="main col-xs-10 row animated fadeInRight" style="min-height:800px;background-color:#F4F7FE;padding:20px">
+            <div style="width:100%;min-height:800px;background-color:#FFFFFF;border: 1px solid #ECEFF5;">
+                <div class="row" class="col-xs-12" style="margin-right:5px;margin-top:20px;">
+                    <div>
+                        <table style="float:left;margin-left:50px">
+                            <tr>
+                                <td width="14" onclick="chooseDateType(1)" style="cursor:pointer">
+                                    <img id="today" class="img_date_choose" src="../img/circle_b.png" alt="">
+                                </td>
+                                <td  onclick="chooseDateType(1)" style="cursor:pointer" width="5"></td>
+                                <td  onclick="chooseDateType(1)" style="cursor:pointer" >今天</td>
+                                <td width="20"></td>
+                                <td width="14" onclick="chooseDateType(2)" style="cursor:pointer">
+                                    <img id="sevenday" class="img_date_choose" src="../img/circle_w.png" alt="">
+                                </td>
+                                <td width="5" onclick="chooseDateType(2)" style="cursor:pointer"></td>
+                                <td onclick="chooseDateType(2)" style="cursor:pointer">近7日</td>
+                                <td width="20"></td>
+                                <td width="14" onclick="chooseDateType(3)" style="cursor:pointer">
+                                    <img id="thirtyday" class="img_date_choose" src="../img/circle_w.png" alt="">
+                                </td>
+                                <td width="5" onclick="chooseDateType(3)" style="cursor:pointer"></td>
+                                <td onclick="chooseDateType(3)" style="cursor:pointer">近30日</td>
+                                <td width="20"></td>
+                                <td width="14" onclick="chooseDateType(4)" style="cursor:pointer">
+                                    <img id="days" class="img_date_choose" src="../img/circle_w.png" alt="">
+                                </td>
+                                <td width="5" onclick="chooseDateType(4)" style="cursor:pointer"></td>
+                                <td onclick="chooseDateType(4)" style="cursor:pointer">自定义</td>
+                            </tr>
+                        </table>
+                        <table style="float:right">
+                            <tr>
+                                <td>
+                                    <img src="../img/date.jpg" alt="">
+                                </td>
+                                <td width="10"></td>
+                                <td width="120">
+                                    <input style="background:#F8F8F8;width:120px;height:35px" type="text" name="start_time" id="start_time" class="form-control" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true ,maxDate:'#F{$dp.$D(\'end_time\')||\'%y-%M-%d\'}'});" format="yyyy-MM-dd" value="" >
+                                </td>
+                                <td width="2"></td>
+                                <td width="5"><b>至</b></td>
+                                <td width="2"></td>
+                                <td width="120">
+                                    <input style="background:#F8F8F8;width:120px;height:35px" type="text" name="end_time" id="end_time" class="form-control" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true ,minDate:'#F{$dp.$D(\'start_time\')}'});" format="yyyy-MM-dd" value="" >
+                                </td>
+                                <td width="10"></td>
+                                <td>
+                                    <div class="search d1">
+                                      <div class="form_div">
+                                          <input id="search_content" type="text" placeholder="关键字查询">
+                                          <button onclick="getWarningInfo(1)"></button>
+                                      </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+<!--                    <div class="col-xs-6 col-md-offset-6 dateTime" style="text-align:right;" > -->
+
+<!--                    </div> -->
+                </div>
+
+                <table class="col-xs-12" id="alarm" >
+                <thead>
+                    <tr style="background-color:#F9FDFF">
+                       <th>类型</th>
+                       <th>时间</th>
+                       <th>来源</th>
+                       <th>详情</th>
+                    </tr>
+                </thead>
+                <tbody id="data_table">
+                    <tr id="demo_tr" style="display:none">
+                        <td>
+                            <span>#warningType#</span>
+                        </td>
+                        <td>#warningTime#</td>
+                        <td>
+                            <label>#warningSource#</label>
+                        </td>
+                        <td>#warningInfo#</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="col-xs-12  page row" style="text-align:right" >
+                    <div class="M-box1 col-xs-12" style="text-align:right;"></div>
+             </div>
+
+
+            </div>
+
+        </div>
+        </div>
+         <div class="row" id="divFooter"></div>
+        </div>
+  <!-- 个人信息 -->
+    <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    </div>
+<script src="../dist/js/js/comm.js"></script>
+<script src="../dist/js/bootstrap.min.js"></script>
+<script src="../dist/js/widgets/jquery.pagination.js"></script>
+</body>
+</html>

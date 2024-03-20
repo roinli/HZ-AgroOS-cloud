@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<!-- 属性文件读入 -->
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath*:db.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 数据源定义,使用Apache DBCP 连接池 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		
+		<!-- 池启动时创建的连接数量 -->
+        <property name="initialSize" value="5"/>
+        <!-- 同一时间可以从池分配的最多连接数量。设置为0时表示无限制。 -->
+        <property name="maxActive" value="30"/>
+        <!-- 池里不会被释放的最多空闲连接数量。设置为0时表示无限制。 -->
+        <property name="maxIdle" value="20"/>
+        <!-- 在不新建连接的条件下，池中保持空闲的最少连接数。 -->
+        <property name="minIdle" value="3"/>
+        <!-- 设置自动回收超时连接 -->  
+<!--         <property name="removeAbandoned" value="true" /> -->
+        <!-- 自动回收超时时间(以秒数为单位) -->  
+<!--         <property name="removeAbandonedTimeout" value="200"/> -->
+        <!-- 设置在自动回收超时连接的时候打印连接的超时错误  --> 
+<!--         <property name="logAbandoned" value="true"/> -->
+        <!-- 等待超时以毫秒为单位，在抛出异常之前，池等待连接被回收的最长时间（当没有可用连接时）。设置为-1表示无限等待。  -->  
+        <property name="maxWait" value="100"/>   
+        <property name="testOnBorrow" value="true" />
+        <property name="validationQuery" value="SELECT 1" />
+              
+
+	</bean>
+	
+	<!--此处为数据库信息配置区，包括数据源，SessionFactory，和大数据处理器等 -->
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler" lazy-init="true">
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="baseTransactionProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean" abstract="true">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="save*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="insert*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="update*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="add*">PROPAGATION_REQUIRED,-Exception</prop>
+				<prop key="edit*">PROPAGATION_REQUIRED,-Exception</prop>
+			</props>
+		</property>
+	</bean>
+	
+
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:ibatis/mysql/web/sql-map-config.xml" />
+<!-- 		<property name="configLocation" value="classpath:config/ibatis/oracle/sql-map-config.xml"/> -->
+		<property name="dataSource" ref="dataSource" />
+		<property name="lobHandler" ref="lobHandler" />
+	</bean>
+  	
+  	<bean id="baseDao" class="cn.lookout.base.dao.ibatis.BaseDaoImpl">
+  		<property name="sqlMapClient" ref="sqlMapClient" />
+  	</bean>
+  	
+	<bean id="webService"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.WebServiceImpl">
+	      <property name="baseDao" ref="baseDao" />
+	      </bean>
+	    </property>
+  	</bean>
+  	
+  	<bean id="loginService"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.LoginServiceImpl">
+	       <property name="baseDao" ref="baseDao" />
+	      </bean>
+	    </property>
+  	</bean>
+  	
+  	<!-- userService存在重名 -->
+  	<bean id="queryUserService"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.UserServiceImpl">
+	       <property name="baseDao" ref="baseDao" />
+	      </bean>
+	    </property>
+  	</bean>
+  	
+	<bean id="employeeService"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.EmployeeServiceImpl">
+	       <property name="baseDao" ref="baseDao" />
+	      </bean>
+	    </property>
+  	</bean>
+  	
+  	<bean id="deviceService"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.DeviceServiceImpl">
+	       <property name="baseDao" ref="baseDao" />
+	      </bean>
+	    </property>
+  	</bean>
+  	
+  	<bean id="permissionService"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.PermissionServiceImpl">
+	       <property name="baseDao" ref="baseDao" />
+	       <property name="deviceService" ref="deviceService" />
+	      </bean>
+	    </property>
+  	</bean>
+  	
+  	<!-- 专家 -->
+  	<bean id="expertService"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.ExpertServiceImpl">
+	       <property name="baseDao" ref="baseDao" />
+	      </bean>
+	    </property>
+  	</bean>
+  	
+  	<!-- 预警信息 -->
+  	<bean id="earlyWaringService"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.EarlyWaringServiceImpl">
+	       <property name="baseDao" ref="baseDao" />
+	      </bean>
+	    </property>
+  	</bean>
+  	
+  	<!-- 一些表格数据和报表相关 -->
+  	<bean id="gridService"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.GridServiceImpl">
+	       <property name="baseDao" ref="baseDao" />
+	      </bean>
+	    </property>
+  	</bean>
+  	
+  	<!-- 反馈 -->
+  	<bean id="feedBackService"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.FeedBackServiceImpl">
+	       <property name="baseDao" ref="baseDao" />
+	      </bean>
+	    </property>
+  	</bean>
+  	
+  	<!-- 溯源 -->
+  	<bean id="sourceService"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.SourceServiceImpl">
+	       <property name="baseDao" ref="baseDao" />
+	      </bean>
+	    </property>
+  	</bean>
+
+	<!-- h5相关 -->
+  	<bean id="STCH5Service"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.STCH5ServiceImpl">
+	       <property name="baseDao" ref="baseDao" />
+	      </bean>
+	    </property>
+  	</bean>
+  	
+  	<!-- 设备上传推送相关 -->
+  	<bean id="nettyDeviceService"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.NettyDeviceServiceImpl">
+	       <property name="baseDao" ref="baseDao" />
+	      </bean>
+	    </property>
+  	</bean>
+  	<!-- 设备上传推送相关 -->
+  	<bean id="warehouseService"  parent="baseTransactionProxy">
+  		<property name="target">
+	      <bean class="cn.lookout.base.service.impl.WarehouseServiceImpl">
+	       <property name="baseDao" ref="baseDao" />
+	      </bean>
+	    </property>
+  	</bean>
+  	
+  	
+  	
+<!-- 	<bean id="myJob" class="cn.lookout.common.QuartzTest" />  -->
+
+<!--     job的配置开始 -->
+<!-- 	<bean id="myJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"> -->
+<!-- 		<property name="targetObject"> -->
+<!-- 			<ref bean="myJob" /> -->
+<!-- 		</property> -->
+<!-- 		<property name="targetMethod"> -->
+<!-- 			<value>work</value> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+<!--     job的配置结束 -->
+
+<!--     <bean id="crontestJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean"> -->
+<!--         <property name="jobDetail"> -->
+<!--             <ref bean="myJobDetail" /> -->
+<!--         </property> -->
+<!--         <property name="cronExpression"> -->
+<!--             <value>*/5 * * * * ?</value> -->
+<!--         </property> -->
+<!--     </bean> -->
+<!--     调度的配置结束 -->
+
+<!--     启动触发器的配置开始 -->
+<!-- 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  -->
+<!-- 		<property name="triggers"> -->
+<!-- 			<list> -->
+<!-- 				<ref bean="crontestJobTrigger" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
+  	
+</beans>

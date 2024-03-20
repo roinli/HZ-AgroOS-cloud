@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>种子来源信息</title>
+    <link rel="stylesheet" href="css/mui.min.css">
+    <style>
+        ul,li{margin:0;padding:0;list-style: none;}
+        li{margin:0.5rem}
+        .provenanceName, 
+        .provenanceVender,
+        .buyDate,
+        .outDate
+        	{
+        		display: flex;justify-content: space-between;padding:20px
+        	}
+        span{color:#888;font-size: 0.8rem;}
+        b{color:#888;font-weight: normal;font-size: 0.8rem;}
+        .item>div{text-align: center;}
+        .item>div>img{width:98%;}
+    </style>
+</head>
+<body>
+    <header id="myNav" class="mui-bar mui-bar-nav">
+        <a class="mui-icon mui-icon-arrowleft mui-action-back" style="color:#333;font-size:15px;margin-top:5px;" id="back">返回</a>
+        <h1 class="mui-title">种子来源信息</h1>       
+    </header>
+    <div class="mui-content">
+        <!-- 种子来源信息  -->
+        <div id="torrentContents">
+                <ul>
+                    <li class="item provenanceName">
+                        <span>名称</span> 
+                        <b></b>  
+                    </li>
+                    <li class="item provenanceVender">
+                        <span>厂家</span>
+                        <b></b>
+                    </li>
+                    <li class="item buyDate">
+                        <span>采购日期</span>
+                        <b></b>
+                    </li>
+                    <li class="item outDate">
+                        <span>出厂日期</span>
+                        <b></b>
+                    </li>
+                    <li class="item  clickHref" style="padding:20px">
+                        <span>合格证</span>
+                        <!-- <b>查看证书</b> -->
+                        <div class="hgz">
+                            <img src="" alt="">
+                        </div>
+                    </li>
+                    <li class="item  clickHref" style="padding:20px">
+                        <span>销售记录或证书</span>
+                        <!-- <b>查看证书</b> -->
+                        <div class="xs">
+                            <img src="" alt="">
+                        </div>
+                    </li>
+                    <li class="item clickHref" style="padding:20px">
+                        <span>非转基因证明</span>
+                        <!-- <b>查看证书</b> -->
+                        <div class="zjy">
+                            <img src="" alt="">
+                        </div>
+                    </li>
+                </ul>
+            </div>
+    </div>
+    <script src="../dist/js/jquery-1.9.1.min.js"></script>
+    <script src="js/mui.min.js"></script>
+    <script>
+      $(function(){
+//     	  var imgUrl = "http://ozdwirxvt.bkt.clouddn.com/";
+    	  var imgUrl="http://img.nxptdn.com/";
+          var provenanceContent=JSON.parse(localStorage.getItem('provenanceContent'));
+          $(".provenanceName>b").html(provenanceContent.name);
+          $(".provenanceVender>b").html(provenanceContent.cj);
+          $(".buyDate>b").html(provenanceContent.buyDate);
+          $(".outDate>b").html(provenanceContent.outDate);
+          
+          if(provenanceContent.hgz != ""){
+        	  $(".hgz").html('<img src='+imgUrl+provenanceContent.hgz+'>')
+          }
+          if(provenanceContent.sale != ""){
+        	  $(".xs").html('<img src='+imgUrl+provenanceContent.sale+'>')
+          }
+          if(provenanceContent.zjy != ""){
+        	  $('.zjy').html('<img src='+imgUrl+provenanceContent.zjy+'>')
+          }
+         
+      })
+    </script>
+</body>
+</html>

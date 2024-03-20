@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="warehouse">
+
+	<select id="getWareHouseManage" resultClass="cn.lookout.base.bean.WarehouseGroundFishpond" parameterClass="map">
+		select g.id,g.number,g.type,
+		g.company_id,g.display_name,
+		g.camera_pass_num,g.is_del,g.warehouse_name,
+		g.warehouse_num,g.warehouse_location,
+		g.create_time
+ 		from t_ground_fishpond g ,t_user u
+ 		 where g.company_id = u.id and g.type = #type#  
+ 		
+ 		<isNotEmpty property="mobile">
+		AND u.mobile =#mobile#
+		</isNotEmpty>
+ 		
+ 		<isNotEmpty property="companyId">
+		AND g.company_id =#companyId#
+		</isNotEmpty>
+		
+		<!-- 仓库ID -->
+		<isNotEmpty property="warehouseId">
+		AND g.id  =#warehouseId#
+		</isNotEmpty>
+ 		
+ 		<isNotEmpty property="displayName">
+		AND g.display_name  LIKE '%$displayName$%'
+		</isNotEmpty>
+		
+		
+		LIMIT $page$,$pageSize$
+	</select>
+	<select id="getWareHouseManageCount" resultClass="string" parameterClass="map">
+		select g.id,g.number,g.type,
+		g.company_id,g.display_name,
+		g.camera_pass_num,g.is_del,g.warehouse_name,
+		g.warehouse_num,g.warehouse_location,
+		g.create_time
+ 		from t_ground_fishpond g ,t_user u
+ 		 where g.company_id = u.id and g.type = #type#  
+ 		
+ 		<isNotEmpty property="mobile">
+		AND u.mobile =#mobile#
+		</isNotEmpty>
+ 		
+ 		<isNotEmpty property="companyId">
+		AND g.company_id =#companyId#
+		</isNotEmpty>
+		
+		<!-- 仓库ID -->
+		<isNotEmpty property="warehouseId">
+		AND g.id  =#warehouseId#
+		</isNotEmpty>
+ 		
+ 		<isNotEmpty property="displayName">
+		AND g.display_name  LIKE '%$displayName$%'
+		</isNotEmpty>
+	</select>
+	
+	<update id="delCkInfo" parameterClass="map">
+		DELETE FROM t_ground_fishpond WHERE number=#num# AND company_id=#companyId#
+		and type=#userType#
+	</update>
+	
+	
+	<update id="delCkDeviceRelation" parameterClass="map">
+		DELETE FROM t_device_relation 
+		WHERE company_id=#companyId#
+		AND ground_fishpond_num=#num#
+		AND device_type = #userType#
+	</update>	
+	
+	<update id="updateWareHouse" parameterClass="map">
+		UPDATE t_ground_fishpond SET 
+		camera_pass_num = #camera_pass_num#
+		,display_name = #displayName#
+		, warehouse_num = #warehouse_num#
+		, warehouse_location	=#warehouse_location#
+		WHERE id = #wareHouseID#
+	</update>	
+	
+	
+	<!-- 更新库存 根据产品ID -->
+	<update id="updateStockByProId" parameterClass="map">
+		UPDATE w_inventory SET 
+		stock = #stock#
+		WHERE id = #inventoryId#
+	</update>
+	
+	
+	
+	<select id="queryWareHouseById" resultClass="cn.lookout.base.bean.WarehouseGroundFishpond" parameterClass="map">
+		select id,number,type,
+		company_id,display_name,
+		camera_pass_num,is_del,warehouse_name,
+		warehouse_num,warehouse_location,
+		create_time
+ 		from t_ground_fishpond where company_id =#companyId#  AND type = #userType#
+ 		AND number=#num#
+	</select>
+	
+	
+	
+	<select id="queryWareHouseByCompanyId" resultClass="cn.lookout.base.bean.WarehouseGroundFishpond" parameterClass="map">
+		select id,number,type,
+		company_id,display_name,
+		camera_pass_num,is_del,warehouse_name,
+		warehouse_num,warehouse_location,
+		create_time
+ 		from t_ground_fishpond where company_id =#companyId#  AND type = #userType# and is_del=0
+ 		<isNotEmpty property="warehouseId">
+		 	AND id=#warehouseId#
+		</isNotEmpty>
+		<isNotEmpty property="warehouseName">
+		 	AND display_name LIKE CONCAT('%',#warehouseName#,'%')
+		</isNotEmpty>
+		ORDER BY id
+	</select>
+	
+	
+	
+	<select id="getInventoryManage" resultClass="cn.lookout.base.bean.Inventory" parameterClass="map">
+		select cc.* from (
+				SELECT 
+				  it.id,
+				  it.warehouse_id,
+				  it.name,
+				  it.type,
+				  it.size,
+				  it.qualified,
+				  it.create_time,
+				  gf.display_name displayName,
+				  u.`name` operator ,
+				  gf.company_id ,
+				  wit.name AS typeName
+				FROM
+				  w_inventory it 
+				  LEFT JOIN t_ground_fishpond gf 
+				    ON it.warehouse_id = gf.id 
+				    AND gf.`type` = 3 
+				    AND it.company_id = gf.company_id 
+				  LEFT JOIN t_user u 
+				    ON it.`operator` = u.`id`
+				  LEFT JOIN w_inventory_type wit 
+				  	ON it.`type`=wit.id 
+				) cc
+			where 1 = 1 
+	 		<isNotEmpty property="warehouseId">
+				AND cc.warehouse_id = #warehouseId#
+			</isNotEmpty>
+			<isNotEmpty property="displayName">
+				AND cc.name LIKE CONCAT('%',#displayName#,'%')
+			</isNotEmpty>
+ 			AND cc.company_id = #companyId#
+ 			ORDER BY id DESC
+		LIMIT $page$,$pageSize$
+	</select>
+	
+	<select id="getInventoryManageCount" resultClass="string" parameterClass="map">
+		  select count(*) from (
+				SELECT 
+				  it.id,
+				  it.warehouse_id,
+				  it.name,
+				  it.type,
+				  it.size,
+				  it.qualified,
+				  it.create_time,
+				  gf.display_name displayName,
+				  u.`name` operator ,
+				  gf.company_id 
+				FROM
+				  w_inventory it 
+				  LEFT JOIN t_ground_fishpond gf 
+				    ON it.warehouse_id = gf.id 
+				    AND gf.`type` = 3 
+				    AND it.company_id = gf.company_id 
+				  LEFT JOIN t_user u 
+				    ON it.`operator` = u.`id` 
+				) cc
+			where 1 = 1 
+	 		<isNotEmpty property="warehouseId">
+					AND cc.warehouse_id = #warehouseId#
+			</isNotEmpty>
+ 			AND cc.company_id = #companyId#
+	</select>
+	
+	<select id="getInventoryBywarehouseId" resultClass="cn.lookout.base.bean.Inventory" parameterClass="string">
+		select id,warehouse_id,name,type,size,qualified,operator,create_time
+ 		from w_inventory where warehouse_id = #warehouseId#  
+	</select>
+	
+	
+	
+	<!-- 获取仓库种类 -->
+	<select id="getInventoryType" resultClass="cn.lookout.base.bean.inventory.InventoryType" parameterClass="string">
+		select `id`,`warehouse_id`,`name`,`type`,`operator`,`create_time`
+ 		from w_inventory_type <!-- where warehouse_id = #warehouseId#   -->
+	</select>
+	
+	
+	
+	<insert id="insertWarehousing" parameterClass="map">
+		INSERT INTO w_inventory(warehouse_id,name,type,size,qualified,operator,create_time,io_type,inventory_id,io_time,company_id)
+		VALUES(#warehouseId#,#name#,#type#,#size#,#qualified#,#operator#,NOW(),#io_type#,#inventoryId#,#io_time#,#companyId#)
+	</insert>
+	
+	
+	<!-- 是否有入库信息 -->
+	<select id="getInventoryById" resultClass="cn.lookout.base.bean.Inventory" parameterClass="map">
+		select id,warehouse_id,name,type,size,qualified,operator,create_time
+ 		from w_inventory where id = #inventoryId#  
+	</select>
+	
+	<select id="getInventoryListById" resultClass="cn.lookout.base.bean.Inventory" parameterClass="map">
+		select id,warehouse_id,name,type,size,qualified,operator,create_time
+ 		from w_inventory where inventory_id = #inventoryId#  
+	</select>
+	
+	
+	
+	<select id="insertWarehousesList" resultClass="cn.lookout.base.bean.Inventory" parameterClass="map">
+		SELECT wi.*,wit.name AS typeName,tgf.display_name AS displayName
+		FROM(
+			select id,warehouse_id,name,type,size,qualified,operator,create_time
+	 		from w_inventory where 1=1
+	 		
+	 		<isNotEmpty property="warehouseId">
+	 		
+			AND warehouse_id = #warehouseId#
+			</isNotEmpty>
+	 		
+	 		<isNotEmpty property="companyId">
+			AND warehouse_id in (
+			
+			select id  from t_ground_fishpond where company_id=#companyId#
+			)
+			</isNotEmpty>
+	 		and io_type = #ioType#
+	 		
+	 		<isNotEmpty property="name">
+			AND name like CONCAT('%',#name#,'%')
+			</isNotEmpty>
+	 		<isNotEmpty property="type">
+			AND type = #type#
+			</isNotEmpty>
+		)wi
+		LEFT JOIN w_inventory_type wit ON wi.`type` = wit.id
+		LEFT JOIN t_ground_fishpond tgf ON wi.warehouse_id=tgf.id
+		order by id desc
+		LIMIT $page$,$pageSize$
+	</select>
+	
+	<select id="insertWarehousesCount" resultClass="java.lang.Integer" parameterClass="map">
+		select COUNT(id)
+ 		from w_inventory where 1=1
+ 		<isNotEmpty property="warehouseId">
+			AND warehouse_id = #warehouseId#
+		</isNotEmpty>
+ 		<isNotEmpty property="companyId">
+			AND warehouse_id in (
+				select id  from t_ground_fishpond where company_id=#companyId#
+			)
+		</isNotEmpty>
+ 			and io_type = #ioType#
+ 		<isNotEmpty property="name">
+			AND name like CONCAT('%',#name#,'%')
+		</isNotEmpty>
+ 		<isNotEmpty property="type">
+			AND type = #type#
+		</isNotEmpty>
+	</select>
+	
+	
+ </sqlMap>

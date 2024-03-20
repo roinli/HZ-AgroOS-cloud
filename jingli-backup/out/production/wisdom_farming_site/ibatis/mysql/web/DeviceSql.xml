@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="device">
+
+	<select id="getControlDeviceLeftSetting" resultClass="cn.lookout.base.bean.DeviceSettingInfo" parameterClass="map">
+		SELECT id,compay_id AS compayId,gf_num AS gfNum,device_num AS deviceNum,
+			control_type AS controlType,DATE_FORMAT(start_time,'%H:%i') AS startTime
+			,DATE_FORMAT(end_time,'%H:%i') AS endTime,loop_type AS loopType,loop_cnt AS loopCnt
+			,use_state AS useState,loop_week AS loopWeek,open_device AS openDevice,
+			close_device AS closeDevice,open_type AS openType,close_type AS closeType,
+			open_val AS openVal,close_val AS closeVal
+			,duration_time as durationTime,interval_time as intervalTime
+		FROM t_control_device_setting
+		WHERE compay_id=#companyId# AND gf_num=#gfNum# 
+			AND device_num=#deviceNum# AND device_switch_num=#switchNum#
+		ORDER BY controlType,startTime
+	</select>
+	
+	<select id="getControlDeviceSettingInfo" resultClass="cn.lookout.base.bean.DeviceSettingInfo" parameterClass="map">
+		SELECT id,compay_id AS compayId,gf_num AS gfNum,device_num AS deviceNum,device_switch_num AS switchNum
+			,control_type AS controlType,open_device AS openDevice,close_device AS closeDevice
+			,DATE_FORMAT(start_time,'%H:%i') AS startTime,DATE_FORMAT(end_time,'%H:%i') AS endTime
+			,open_type AS openType,close_type AS closeType,open_val AS openVal,close_val AS closeVal
+			,loop_type AS loopType,loop_cnt AS loopCnt,duration_time AS durationTime,interval_time AS intervalTime
+			,use_state AS useState,loop_week AS loopWeek
+		FROM t_control_device_setting
+		WHERE id=#id#
+	</select>
+	
+	<insert id="saveControlDeviceSetting" parameterClass="map">
+		INSERT INTO t_control_device_setting(compay_id,gf_num,device_num,device_switch_num,control_type
+			,open_device,close_device,open_type,close_type,open_val,close_val
+			,start_time,end_time,loop_type,loop_cnt,duration_time,interval_time
+			,use_state,loop_week,create_time)
+		VALUES(#companyId#,#gfNum#,#deviceNum#,#switchNum#,#controlType#,
+			<isEqual property="controlType" compareValue="0">
+				NULL,NULL,NULL,NULL,NULL,NULL,#startTime#,#endTime#,NULL,NULL,NULL,NULL
+			</isEqual>
+			<isEqual property="controlType" compareValue="1">
+				NULL,NULL,NULL,NULL,NULL,NULL,#startTime#,
+				<isEqual property="loopType" compareValue="0">
+					#endTime#,#loopType#,NULL
+				</isEqual>
+				<isEqual property="loopType" compareValue="1">
+					NULL,#loopType#,#loopCnt#
+				</isEqual>
+				,#durationTime#,#intervalTime#
+			</isEqual>
+			<isEqual property="controlType" compareValue="2">
+				#openDevice#,#closeDevice#,#openType#,#closeType#,#openVal#,#closeVal#
+				,#startTime#,#endTime#,NULL,NULL,NULL,NULL
+			</isEqual>
+			,#useState#,#loopWeek#,NOW())
+	</insert>
+	
+	<update id="updateControlDeviceDsSetting" parameterClass="map">
+		UPDATE t_control_device_setting SET 
+			start_time=#startTime#,end_time=#endTime#,use_state=#useState#,loop_week=#loopWeek#
+		WHERE id=#id#
+	</update>
+	
+	<update id="updateControlDeviceLoopSetting" parameterClass="map">
+		UPDATE t_control_device_setting SET 
+			start_time=#startTime#,loop_type=#loopType#,
+		<isEqual property="loopType" compareValue="0">
+			end_time=#endTime#,loop_cnt=NULL
+		</isEqual>
+		<isEqual property="loopType" compareValue="1">
+			end_time=NULL,loop_cnt=#loopCnt#
+		</isEqual>
+			,duration_time=#durationTime#,interval_time=#intervalTime#
+			,use_state=#useState#,loop_week=#loopWeek#
+		WHERE id=#id#
+	</update>
+	
+	<update id="updateControlDeviceZnSetting" parameterClass="map">
+		UPDATE t_control_device_setting SET 
+			start_time=#startTime#,end_time=#endTime#,use_state=#useState#,loop_week=#loopWeek#
+			,open_device=#openDevice#,close_device=#closeDevice#,open_type=#openType#
+			,close_type=#closeType#,open_val=#openVal#,close_val=#closeVal#
+		WHERE id=#id#
+	</update>
+	
+	<delete id="deleteControlDeviceSetting" parameterClass="map">
+		DELETE FROM t_control_device_setting WHERE id=#id#
+	</delete>
+	
+	<select id="getCjDeviceLeftSetting" parameterClass="map" resultClass="cn.lookout.base.bean.DeviceWarningSetting">
+		SELECT id,DATE_FORMAT(start_time,'%H:%i') AS startTime
+			,DATE_FORMAT(end_time,'%H:%i') AS endTime,use_state AS useState
+			,left_range AS leftRange,right_range AS rightRange
+			FROM t_device_setting
+			WHERE company_id=#companyId#
+			AND gf_num=#gfNum# AND device_num=#deviceNum#
+			ORDER BY startTime
+	</select>
+	<select id="getCjDeviceSettingInfo" parameterClass="map" resultClass="cn.lookout.base.bean.DeviceWarningSetting">
+		SELECT id,DATE_FORMAT(start_time,'%H:%i') AS startTime
+			,DATE_FORMAT(end_time,'%H:%i') AS endTime,use_state AS useState
+			,left_range AS leftRange,right_range AS rightRange
+		FROM t_device_setting
+		WHERE id=#id#
+	</select>
+	
+	<select id="checkCjDeviceSetting" parameterClass="map" resultClass="java.lang.Integer">
+		SELECT COUNT(id) FROM t_device_setting
+		WHERE company_id=#companyId# AND gf_num=#gfNum# AND device_num=#deviceNum#
+		AND( TIME_TO_SEC(#startTime#) BETWEEN TIME_TO_SEC(start_time) AND TIME_TO_SEC(end_time)
+		OR TIME_TO_SEC(#endTime#) BETWEEN TIME_TO_SEC(start_time) AND TIME_TO_SEC(end_time)
+		OR (TIME_TO_SEC(#startTime#) BETWEEN TIME_TO_SEC(start_time) AND TIME_TO_SEC(end_time)
+				AND 
+			TIME_TO_SEC(#endTime#) BETWEEN TIME_TO_SEC(start_time) AND TIME_TO_SEC(end_time))
+			
+		OR TIME_TO_SEC(start_time) BETWEEN TIME_TO_SEC(#startTime#) AND TIME_TO_SEC(#endTime#)
+		OR TIME_TO_SEC(end_time) BETWEEN TIME_TO_SEC(#startTime#) AND TIME_TO_SEC(#endTime#)
+		)
+		<isNotEmpty property="id">
+		AND id != #id#
+		</isNotEmpty>
+	</select>
+	
+	<insert id="saveCjDeviceSetting" parameterClass="map">
+		INSERT INTO t_device_setting(company_id,gf_num,device_num,start_time
+			,end_time,left_range,right_range,use_state,create_time,update_time)
+		VALUES(#companyId#,#gfNum#,#deviceNum#,#startTime#,#endTime#,$leftRange$
+			,$rightRange$,#useState#,NOW(),NOW())
+	</insert>
+	
+	<update id="updateCjDeviceSetting" parameterClass="map">
+		UPDATE t_device_setting SET start_time=#startTime#,end_time=#endTime#
+			,left_range=$leftRange$,right_range=$rightRange$,use_state=#useState#
+			,update_time=NOW()
+		WHERE id=#id#
+	</update>
+	
+	<delete id="deleteCjDeviceSetting" parameterClass="map">
+		DELETE FROM t_device_setting WHERE id=#id#
+	</delete>
+	
+	<update id="updateCameraSetting" parameterClass="map">
+		UPDATE t_user SET camera_url=#ip#,camera_port=#port#,phone_port=#pport#
+			,camera_uname=#name#,camera_pwd=#pwd#
+		WHERE id=#companyId#
+	</update>
+	
+	<update id="updateControlDeviceUse" parameterClass="map">
+		UPDATE t_control_device_setting SET use_state=#useState# WHERE id=#id# 
+	</update>	
+	
+	<select id="getOneDeviceTimeSchedule" parameterClass="map" resultClass="cn.lookout.base.bean.DeviceTimeSchedule">
+		SELECT compay_id AS companyId,gf_num AS gfNum,device_num AS deviceNum
+			,loop_type AS loopType ,DATE_FORMAT(start_time,'%H:%i') AS startTime,loop_cnt as loopCnt
+			,end_time AS endTime,duration_time AS durationTime,interval_time AS intervalTime
+			,control_type as controlType
+		FROM t_control_device_setting WHERE control_type = 1
+		AND loop_week LIKE CONCAT('%',#week#,'%')
+		AND use_state=1 
+		AND compay_id=#companyId# 
+		AND gf_num=#gfNum# AND device_num=#deviceId# AND device_switch_num=#switchNum#
+		
+		UNION ALL
+		
+		SELECT compay_id AS companyId,gf_num AS gfNum,device_num AS deviceNum
+			,loop_type AS loopType ,DATE_FORMAT(start_time,'%H:%i') AS startTime,loop_cnt as loopCnt
+			,end_time AS endTime,duration_time AS durationTime,interval_time AS intervalTime
+			,control_type as controlType
+		FROM t_control_device_setting WHERE control_type = 0
+		AND loop_week LIKE CONCAT('%',#week#,'%')
+		AND use_state=1
+		AND compay_id=#companyId# 
+		AND gf_num=#gfNum# AND device_num=#deviceId# AND device_switch_num=#switchNum#
+	</select>
+	
+	<select id="getCameraInfo" parameterClass="map" resultClass="cn.lookout.base.bean.CameraInfo">
+		SELECT tu.url,tu.webPort,tu.phonePort
+			,tu.loginName,tu.loginPwd,tgf.passNum
+		FROM(
+			SELECT camera_pass_num AS passNum
+			FROM t_ground_fishpond
+			WHERE company_id=#companyId# AND number=#gfNum# AND `type`=#userType#
+		)tgf
+		INNER JOIN (
+			SELECT camera_url AS url,camera_port AS webPort,phone_port AS phonePort
+				,camera_uname AS loginName,camera_pwd AS loginPwd
+			FROM t_user
+			WHERE id=#companyId#
+		)tu
+	</select>
+	
+	<select id="getControlDeviceSwitchInfo" parameterClass="map" resultClass="java.lang.Integer">
+		SELECT device_switch_num 
+		FROM t_device_relation
+			WHERE company_id=#companyId#
+			AND ground_fishpond_num=#gfNum#
+			AND device_id=#deviceId#
+			AND device_type= #userType#
+	</select>
+	
+	<select id="getDeviceInfoByGfNumWeb" parameterClass="map" resultClass="cn.lookout.base.bean.DevicesInfoWebBean">
+		SELECT id,`type`,device_type AS deviceType,name,img,can_modify AS canModify
+		FROM t_device WHERE park_device=0
+		AND `type` = #userType#
+		ORDER BY device_type DESC,id
+	</select>
+	
+	<select id="getCanModifyDevice" resultClass="cn.lookout.base.bean.DeviceInfo">
+		SELECT id,name AS deviceName FROM t_device WHERE can_modify=1
+	</select>
+	
+	<select id="getDeviceModifyVal" parameterClass="map" resultClass="cn.lookout.base.bean.DeviceModifyVal">
+		SELECT id,is_modify AS state
+			,modify_val AS val
+		FROM t_device_relation
+		WHERE divice_flag=#deviceFlag#
+	</select>
+	
+	<update id="updateDeviceModifyVal" parameterClass="map" >
+		UPDATE t_device_relation SET is_modify=#state#,modify_val=#val#
+		WHERE id=#id#
+	</update>
+	
+	<select id="getDeviceCanUpdateByType" parameterClass="map" resultClass="java.lang.Integer">
+		SELECT IF(COUNT(id)>0,'1','0') 
+		FROM t_device
+		WHERE can_modify=1 
+		AND `type`=#userType#
+	</select>
+	
+ </sqlMap>

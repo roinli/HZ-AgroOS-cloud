@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>专家交流</title>
+    <script src="../dist/js/jquery-1.9.1.min.js"></script>
+    <link rel="stylesheet" href="../dist/css/animate.css" >
+    <link rel="stylesheet" href="../dist/css/normalize.css">
+    <link rel="stylesheet" href="../dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../dist/css/index_public.css">
+    <link rel="stylesheet" href="../dist/css/webuploader.css">
+    <link rel="stylesheet" href="../dist/css/index_table.css">
+    <link rel="stylesheet" href="../dist/css/iCheck/custom.css">
+    <link rel="stylesheet" href="../dist/css/ladda/ladda-themeless.min.css">
+    <script src="../dist/js/js/index_head_left.js"></script>
+    <script src="../dist/js/iCheck/icheck.min.js"></script>
+    <script src="../dist/js/My97DatePicker_ie9/WdatePicker.js"></script>
+    <link rel="stylesheet" href="../dist/css/toastr.min.css" >
+    <link rel="stylesheet" href="../dist/css/font-awesome.min.css">
+	<script src="../dist/js/widgets/toastr.min.js"></script>
+
+    <!-- alert11.17 -->
+    <link rel="stylesheet" href="../dist/css/sweetalert.css">
+    <script src="../dist/js/widgets/sweetalert.min.js"></script>
+    <script type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+</head>
+<style>
+	.form_div {
+		  position: relative;
+		  width: 200px;
+		}
+		.d1 {background: #ffffff;;width:200px;float:left;height:35px}
+		.d1 input {
+		  width: 100%;
+		  height: 42px;
+		  padding-left: 10px;
+		  border: 1px solid #1785DC;
+		  border-radius: 5px;
+		  outline: none;
+		  background: #ffffff;
+		  color: #000000;
+		  height:35px
+		}
+		.d1 button {
+		  position: absolute;
+		  top: 0;
+		  right: 0px;
+		  width: 42px;
+		  height: 42px;
+		  border: none;
+		  background: #1785DC;
+		  border-radius: 0 5px 5px 0;
+		  cursor: pointer;
+		  height:35px
+		}
+		.d1 button:before {
+		  content: "\f002";
+		  font-family: FontAwesome;
+		  font-size: 16px;
+		  color: #FFFFFF;
+		  height:35px
+		}
+		.ladda-label{color:#fff;}
+</style>
+<script>
+
+// 	$.ajaxSetup ({
+// 		cache: false //close AJAX cache
+// 	});
+
+	var pageSize = 10;
+	var pic_url = "http://ozdwirxvt.bkt.clouddn.com/"
+
+    $(document).ready(function(){
+       $("#div1").load('../include/left_title.html',function(){
+           menu();
+       })
+       $("#loadHeader").load("../include/header.html",function(){
+           header();
+       })
+       $("#personal").load("../include/modelpersonal.html",function(){
+           personalModel();
+       })
+       getUserType();
+       getExpertList(1);
+       $('#addExpertModal').on('hidden.bs.modal', function () {
+           $("#addExpertModal .modal-body>div>input").val('');
+    	})
+
+	});
+</script>
+<script src="../dist/js/js/employeeManage.js"></script>
+<body>
+<div id="test_img_div" style="position:fixed;top:50%;left:50%;z-index:9999;width:500px;margin:-150px 0 0 -250px;text-align:center;">
+    	<img id="test_img" style="max-width:100%">
+  </div>
+ <div class="container-fluid">
+     <!-- header  -->
+    <div class="nav row " id="loadHeader">
+    </div>
+    <div class="row neirong" >
+        <!-- 侧边导航 -->
+         <div id="div1" class="sidebar col-xs-2">
+
+        </div>
+        <!-- 主题内容 -->
+        <div class="main col-xs-10 row animated fadeInRight" style="min-height:800px;background-color:#F4F7FE;padding:20px">
+<!--         	<h4 class="col-xs-12">专家交流</h4> -->
+				<div style="width:100%;min-height:800px;background-color:#FFFFFF;border: 1px solid #ECEFF5;">
+
+					<div id="expert_div" style="float:left;margin:25px;display:none">
+						<a id="addExpert" onclick="addExpert()" >
+							<i class="fa fa-inbox" style="color:#808790;font-size:16px"></i>
+	                   		<span style="margin-left:2px;font-size:16px">新增</span>
+	                   	</a>
+	                   	<span style="margin-left:15px;margin-right:15px">|</span>
+	                   	<a id="delExpert" onclick="deleteExpert()">
+	                   		<i class="fa fa-trash-o" style="color:#808790;font-size:16px"></i>
+	                   		<span style="margin-left:2px;font-size:16px">删除</span>
+	                   	</a>
+	                   	<input id="expert_user_type" type="hidden">
+					</div>
+					<div class="search d1" style="float:right;margin:20px">
+					  <div class="form_div">
+						  <input id="serarch_name" type="text" placeholder="关键字查询">
+						  <button onclick="getExpertList(1)"></button>
+					  </div>
+					</div>
+
+					<table class="col-xs-12" id="clerka">
+                <thead>
+                    <tr style="background-color:#F9FDFF">
+                       <th class="checkDisplay" style="display:none">
+                        <div class="i-checks">
+                       		<input id="selectAll" class="icheckbox" type="checkbox" value="0">
+                       	</div>
+                       </th>
+                       <th>头像</th>
+                       <th>姓名</th>
+                       <th>性别</th>
+                       <th>类型</th>
+                       <th>行业</th>
+                       <th>专长</th>
+                       <th>手机号</th>
+                       <th>微信</th>
+                       <th>QQ</th>
+                    </tr>
+                </thead>
+                <tbody id="data_table">
+                    <tr id="demo_tr" style="display:none">
+                        <td class="checkDisplay" width="50px" style="display:none">
+                        	<input class="#icheck_class#" type="checkbox" value="#expertId#">
+                        </td>
+                        <td>
+                        	 <img onmouseenter="showBigPic(this,event)" onmouseleave="hideBigPic()" src="#expertIcon#" style="width:50px;height:50px">
+                        </td>
+                        <td>
+                            <span>#expertName#</span>
+                        </td>
+                        <td>#expertSex#</td>
+                        <td>#expertType#</td>
+                        <td>#expertIndustry#</td>
+                        <td>#expertMajor#</td>
+                        <td>#expertPhone#</td>
+                        <td>#expertWx#</td>
+                        <td>#expertQq#</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="col-xs-12  page row" style="text-align:right" >
+                    <div class="M-box1 col-xs-12" style="text-align:right;"></div>
+
+             </div>
+
+				</div>
+
+
+<!--                 <div class="col-xs-12 row option"> -->
+
+
+<!--                         <a onclick="getExpertList(1)" class="btn btn-primary" style="float:right">搜索</a> -->
+<!--                         <input id="serarch_name" type="text" class="form-control" style="float:right;margin-right:20px;width:300px;height:35px" placeholder="请输入专家姓名"> -->
+<!--                 </div> -->
+
+        </div>
+        </div>
+         <div class="row" id="divFooter"></div>
+        </div>
+  <!-- 个人信息 -->
+    <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    </div>
+    <!-- 新增 专家11.17-->
+    <div class="modal fade" id="addExpertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span  aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="recipient-name" class="control-label" >头像</label>
+                        <button type="button" class="btn btn-primary" id="choose_expert_icon" onclick="choosePic(this)">上传头像</button>
+                  		<img id="imgviewExpertIcon" style="width:100px;height:100px;display:none" onclick="choosePic(this)" />
+                  		<input id="file_expert_icon" style="display:none" type="file" onchange="filechange(this)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">姓名</label>
+                        <input type="text" class="form-control" id="expert_name" value="">
+                    </div>
+                    <div class="form-group">
+                    	<label for="message-text" class="control-label">性别</label>
+						<select id="expert_sex" class="form-control" style="width:40%;height:35px">
+		                	<option value="1">男</option>
+		                    <option value="0">女</option>
+		                </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">类型</label>
+						<select id="expert_type" class="form-control" style="width:40%;height:35px">
+                      		<option value="0">农业</option>
+                      		<option value="1">渔业</option>
+                      	</select>
+                    </div>
+
+                    <div class="form-group">
+                    	<label for="message-text" class="control-label">行业</label>
+                        <input type="text" class="form-control" id="expert_industry" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="control-label">专长</label>
+                        <input type="text" class="form-control" id="expert_major" value="">
+                    </div>
+                    <div class="form-group">
+                    	<label for="message-text" class="control-label">手机号</label>
+                    	<input type="text" class="form-control" id="expert_mobile" value="" maxlength="11">
+                    </div>
+                    <div class="form-group">
+                    	<label for="message-text" class="control-label">微信号</label>
+                    	<input type="text" class="form-control" id="expert_wx" value="">
+                    </div>
+                    <div class="form-group">
+                    	<label for="message-text" class="control-label">QQ号</label>
+                    	<input type="text" class="form-control" id="expert_qq" value="">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary ladda-button btn-ladda-demo4" data-style="zoom-out" onclick="saveExpert()" >确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="../dist/js/js/comm.js"></script>
+<script src="../dist/js/bootstrap.min.js"></script>
+<script src="../dist/js/widgets/webuploader.min.js"></script>
+<script src="../dist/js/widgets/jquery.pagination.js"></script>
+<script src="../dist/js/ladda/spin.min.js"></script>
+<script src="../dist/js/ladda/ladda.min.js"></script>
+<script src="../dist/js/ladda/ladda.jquery.min.js"></script>
+</body>
+</html>

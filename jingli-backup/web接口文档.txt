@@ -1,0 +1,1480 @@
+﻿url:http://47.98.131.132:8181/
+
+1. 发送短信验证码  获取验证码
+调用地址 /loginServlet
+POST方式调用
+
+请求参数
+method =  sendValidCode
+phone	//手机号
+
+返回信息
+statusCode   //   状态码
+message	//错误说明
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "发送成功",
+  "result": "938350"//先从这里拿验证码   正式环境此字段为空   
+}
+
+2.账号密码登录（注意：这个接口返回的type字段发生改动）
+调用地址 /loginServlet
+POST方式调用
+请求参数
+method =  userLogin
+phone		//手机号
+verifCode	//验证码
+loginType	//登录方式（0web 1app）
+
+返回信息
+statusCode   //   状态码
+message	//错误说明
+result 账号信息
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "登录成功",
+  "result": {
+    "id": "13",
+    "mobile": "17615159901",
+    "name": "水产养殖云管理平台体验1",
+    "type": "0,1", //0农业 1渔业 2大田(逗号分隔)
+    "icon": "20171130113050063_54871312.jpeg",//头像
+    "describe": "",//简介
+    "contacts": "1",//联系方式
+    "address": "辽宁省大连市XXX区XXX路XX号",
+    "cameraUrl": "",//摄像头地址
+    "cameraUname": "",//摄像头用户名
+    "cameraPwd": "",//摄像头密码
+    "cameraPort": "",//端口（WEB用的）
+    "phonePort": "",//端口（APP用的）
+    "lng": "121.716228",//经纬度
+    "lat": "38.890422"//经纬度
+  }
+}
+
+3.获取token（web在选择入口权限时,发送此接口）
+调用地址 /loginServlet
+POST方式调用
+
+请求参数
+method =  getToken
+companyId	//公司id
+userType	//账号类型（这个类型就是上个接口中type逗号分隔的字段，0农1渔2大田）
+
+返回信息
+statusCode   //   状态码
+message	//错误说明
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "获取成功",
+  "token": "FQl9+ruleQABpTZnDF/cMpiEJ84n4cSoDJ2C/vLwIZg="
+}
+
+
+4.修改公司信息(注意：type字段-公司类型变动，逗号分隔方式)
+调用地址	/actionServlet
+POST方式调用
+请求参数
+actionName = queryUserService
+method =  updateUserInfo
+name		//公司名
+contacts	//联系方式
+address		//地址
+describe	//简介
+icon		//图片base64
+companyId	//公司id
+
+返回信息
+statusCode 
+message
+result	//公司修改后的信息
+
+返回格式
+{
+	"token": "Vk15Mk+wrgUWLiejoXh8Lr+dKY3hBs80r7KAjSpOjgA="
+    "message": "修改成功",
+    "result": {
+        "address": "XXX",
+        "cameraPort": "90",
+        "cameraPwd": "pt123456",
+        "cameraUname": "admin",
+        "cameraUrl": "111.113.15.70",
+        "contacts": "18525525075",
+        "describe": "aaaaa",
+        "icon": "20180205134833532_79911236.jpeg",
+        "id": "13",
+        "lat": "38.482139",
+        "lng": "106.235576",
+        "mobile": "17615159901",
+        "name": "水产养殖云管理平台体验1",
+        "phonePort": "14605",
+        "pushState": "1",
+        "state": "1",
+        "type": "0,1"
+    },
+    "statusCode": 1
+}
+
+
+5.获取用户菜单列表（注意：此接口比之前需多发userType字段）
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = webService
+method =  getMenuByUser
+userType	公司类型	
+返回格式
+{
+  "statusCode": 1,
+  "message": "获取成功",
+  "result": [
+    {
+      "id": 17,
+      "menuName": "链接",
+      "menuUrl": "",
+      "menuFlag": "H",
+      "img": "link.png",
+      "childList": [
+        {
+          "id": 18,
+          "menuName": "百度",
+          "menuUrl": "http://www.baidu.com",
+          "menuFlag": "HA",
+          "parent": "H",
+          "visible": 0
+        },
+        {
+          "id": 19,
+          "menuName": "hao123",
+          "menuUrl": "https://www.hao123.com/",
+          "menuFlag": "HB",
+          "parent": "H",
+          "visible": 0
+        }
+      ]
+    }
+  ],
+  "token": "jwpBpyHBBi+mVuksB5blbRIKL7ongtxzFswigXDsgF4="
+}
+
+
+6.首页-获取公司个数（管理员使用，因为普通账号只会显示自己公司）
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = webService
+method =  getIndexCompanyCnt
+companyId	公司id
+userType	公司类型	
+
+返回信息
+statusCode
+message
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "success",
+  "result": 8,
+  "token": "XkcxSWqDSYGJsnpNdaMbHxvHRcIOVDmJqA4gyy3Exn4="
+}
+
+
+7.获取首页公司信息+园区信息(管理员显示列表，因为可以看到多个公司,如果登录类型不是管理员，取列表中的第一条记录即可)
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = webService
+method =  getIndexCompanyInfo
+companyId	公司id
+userType	公司类型	
+page		页码（默认传0）
+pageSize	一页几条
+
+返回信息
+statusCode
+message
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "success",
+  "result": [
+    {
+      "crop": "苹果|香蕉",(作物)
+      "deviceCnt": 4,(设备数量)
+      "id": 1,
+      "maxCnt": 10,(下属组织)
+      "name": "甘肃农业科技发开有限公司",
+      "offlineCnt": 1,(设备断线数量)
+      "parkDeviceInfo": {
+        "airPressure": "0",(大气压)
+        "altitude": "0",(海拔)
+        "evaporation": "0",(蒸发量)
+        "humidity": "0",(湿度)
+        "lightRadiation": "0",(光合辐射)
+        "rain": "0",(降雨量)
+        "temperature": "0",(温度)
+        "windDirection": "0",(风向)
+        "windSpeed": "0"(风速)
+      },
+      "runingCnt": 3,(运行设备数)
+      "type": 3,(3农业  4渔业)
+      "waringCnt": 0(预警设备数)
+    }
+  ]
+}
+
+8.从首页公司点击来-获取大棚/鱼塘/大田列表信息(注意：列表中新增displayName字段（显示大棚大田时用这个名称）)
+调用地址 	/actionServlet
+POST方式调用
+请求参数
+actionName = webService
+method =  getGroundFishpondListById
+companyId//公司id（要查询的是哪个公司 注意：如果是管理员的情况，不要传登录者的id，要发点击进来的id，userType同理）
+userType//0农业1渔业（上一个接口会返回这个公司是什么类型）
+
+返回格式
+{
+  "message": "success",
+  "result": [
+    {
+      "companyId": 1,
+      "crop": "苹果|香蕉",//作物
+      "cropCnt": 2,//作物数量
+      "deviceCnt": 4,//设备数
+      "id": 1,//组织id
+      "light": "4901.0",//年度光照
+      "lightPre": "0.0",//去年年度光照
+      "number": "1",//编号
+      "displayName": "1#农业大棚",	//自定义名称（显示的名字）
+      "offlineCnt": 1,//断线数
+      "runingCnt": 3,//运行设备数
+      "temperature": "195.0",//年积温度
+      "temperaturePre": "0.0",//去年年积温度
+      "type": 0,	//0农业1渔业2大田
+      "warningCnt": 0,	//预警数
+      "displayName": "1号鱼塘"
+    },
+    {
+      "companyId": 1,
+      "cropCnt": 0,
+      "deviceCnt": 0,
+      "id": 2,
+      "light": "999.0",
+      "lightPre": "0.0",
+      "number": "2",
+      "offlineCnt": 0,
+      "runingCnt": 0,
+      "temperature": "0.0",
+      "temperaturePre": "0.0",
+      "type": 0,
+      "warningCnt": 0,
+      "displayName": "2号鱼塘"
+    }
+  ],
+  "statusCode": 1
+}
+
+9. 重命名组织号显示名称（注意：2.0新接口）
+调用地址 /actionServlet
+POST方式调用
+actionName = webService
+method = updateDisplayName
+id			//组织号id（上一接口列表中的id，要修改的id）
+displayName //修改的名称
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "修改成功",
+  "token": "I2UQlhBIhnsO2YILOutB2VmB2iwX9ont0PaUrxAzgto="
+}
+
+10. 获取所有的大棚、鱼塘、大田
+	（用途：在需要展示所有大棚、鱼塘、大田等列表时调用，一般用于做下拉菜单中的选择，例：报表查询中的区域、溯源区域等）
+调用地址 /actionServlet
+POST方式调用
+actionName = webService
+method = getGroundFishpondList
+companyId	//查询的用户id(注意：若登录者是管理员，不要使用管理员自己的id，要发需要查询的用户Id)
+userType //查询的用户类型（注意：同上）
+
+返回格式
+{
+  "statusCode": 1,
+  "result": [
+    {
+      "id": 224259,
+      "number": "1",
+      "type": 0,
+      "displayName": "1号大棚"
+    },
+    {
+      "id": 224260,
+      "number": "2",
+      "type": 0,
+      "displayName": "2号大棚"
+    }
+  ],
+  "token": "Eh52JZ0cI7AwTUS36yfagTRaWIwq6bqelCK9dMTBzWY="
+}
+
+11. 报表页下拉列表设备数据（仅展示需统计的）
+	（用途：报表查询中的下拉选择的设备列表）
+调用地址 /actionServlet
+POST方式调用
+actionName = webService
+method = getDeviceListTj
+userType //查询的用户类型（注意：若登录者是管理员，不要使用管理员类型，要发需要查询的用户类型）
+
+返回格式
+{
+  "statusCode": 1,
+  "result": [
+    {
+      "id": 1,
+      "deviceName": "空气温度"
+    },
+    {
+      "id": 2,
+      "deviceName": "空气湿度"
+    },
+    {
+      "id": 3,
+      "deviceName": "CO2浓度"
+    }
+  ],
+  "token": "Grhw7NuEiuC0mwSEHdcGLqXEmBbRd2cvoV8YMoUd4Nw="
+}
+
+
+
+12. 员工列表--获取个数
+调用地址 /actionServlet
+POST方式调用
+actionName = employeeService
+method = queryListCount
+companyId	//公司Id
+name //搜索姓名 默认空
+
+返回格式
+{
+  "message": "获取成功",
+  "result": 13,
+  "statusCode": 1,
+  "token": "pUY0yg+ObEz0WSgu55kY1hmsBdbGQGLZYuNlTwqkJh4="
+}
+
+13. 员工列表--获取列表
+调用地址 /actionServlet
+POST方式调用
+actionName = employeeService
+method = queryList
+name //搜索姓名 默认空
+startRec //第几页 从0开始
+pageSize //每页几条
+companyId	//公司Id
+
+返回格式
+{
+  "result": [
+    {
+      "address": "点点滴滴",
+      "age": "20",
+      "certificates": "20171126154411265_87688475.jpeg",(资格证)
+      "certificatesValid": "2017-11-08",(资格证有效期)
+      "companyId": "1",
+      "healthyState": "1",//(健康状况123优良差)
+      "icon": "20171126154410588_32243445.png",(头像)
+      "id": "25",
+      "mobile": "1",
+      "name": "啦啦啦",
+      "position": "1",(职位)
+      "sex": "1"//0女1男
+    },
+    {
+      "address": "11111",
+      "age": "10",
+      "certificates": "20171125143951106_74353371.jpeg",
+      "certificatesValid": "2000-11-22",
+      "companyId": "1",
+      "healthyState": "3",
+      "icon": "20171125143946684_77300516.jpeg",
+      "id": "12",
+      "mobile": "1",
+      "name": "uu",
+      "position": "1",
+      "sex": "0"
+    }
+  ],
+  "statusCode": 1
+}
+
+14.员工-删除
+调用地址 /actionServlet
+POST方式调用
+actionName = employeeService
+method = delete
+ids	//员工id（删除多个,分隔）
+
+返回格式
+{
+  "statusCode": 1
+}
+
+ 
+
+
+15.专家--获取个数
+调用地址 /actionServlet
+POST方式调用
+actionName = expertService
+method = queryListCount
+userType	//公司类型
+name //搜索姓名 默认空
+
+返回格式
+{
+  "result": 13,
+  "statusCode": 1
+}
+
+16. 专家--获取列表
+调用地址 http://127.0.0.1:8080/wisdom_farming_site/actionServlet
+POST方式调用
+actionName = expertService
+method = queryList
+name //搜索姓名 默认空
+userType	//公司类型
+startRec //第几页 从0开始
+pageSize //每页几条
+
+返回格式
+{
+  "result": [
+    {
+      "icon": "20171127151324321_75725890.jpeg",//所有图片前缀(测试环境：http://ozdwirxvt.bkt.clouddn.com/)
+      "id": "6",
+      "industry": "种植业",(行业)
+      "major": "水果相关",(专长)
+      "mobile": "15456251561561",
+      "name": "发多少",
+      "qq": "",
+      "sex": "1",1男  0女
+      "type": "0", 0农业专家  1渔业专家
+      "wechat": ""
+    },
+    {
+      "icon": "20171127150745142_45446730.jpeg",
+      "id": "4",
+      "industry": "种植业",
+      "major": "杂交水稻",
+      "mobile": "17615159906",
+      "name": "专家1",
+      "qq": "654231",
+      "sex": "1",
+      "type": "0",
+      "wechat": "123456"
+    }
+  ],
+  "statusCode": 1
+}
+
+
+17.获取设备列表数据
+调用地址 	/actionServlet
+POST方式调用
+actionName = deviceService
+method = getDeviceInfoByGfNum
+gfNum	//几号大棚/鱼塘
+companyId	公司id
+userType	公司类型
+
+返回格式
+{
+    "message": "获取成功",
+    "result": {
+        "device1": "30,2",//格式说明   key( device设备id ) value(数值,状态0正常1预警2断线)
+        "device2": "1,2",
+        "device3": "1,2"
+    },
+    "statusCode": 1
+}
+
+18.获取采集器设备（就是上边的传感器）-设置-预警左侧列表（这个应该没变化）
+调用地址	/actionServlet
+POST方式调用
+actionName = deviceService
+method = getCjDeviceLeftSetting
+gfNum		//大棚鱼塘编号
+deviceNum	//设备编号
+companyId	//公司id
+userType	//公司类型
+
+返回格式
+{
+  "result": [
+    {
+      "companyId": 0,
+      "deviceId": 0,
+      "endTime": "11:00",//结束时间
+      "gfNum": 0,
+      "id": 1,
+      "leftRange": "0.0",//左临界值 （就是<多少）
+      "rightRange": "5.0",//右临界值（就是大于多少）
+      "startTime": "10:00",//开启时间
+      "useState": 1//开启状态
+    },
+    {
+      "companyId": 0,
+      "deviceId": 0,
+      "endTime": "01:30",
+      "gfNum": 0,
+      "id": 10,
+      "leftRange": "10.0",
+      "rightRange": "32.0",
+      "startTime": "00:30",
+      "useState": 0
+    }
+  ],
+  "statusCode": 1
+}
+
+
+19.获取采集器设备（就是上边的传感器）-设置-预警页面的详细信息
+调用地址  /actionServlet
+POST方式调用
+actionName = deviceService
+method = getCjDeviceSettingInfo
+id		//设备设置列表id
+
+返回格式
+{
+  "result": {
+    "companyId": 0,
+    "deviceId": 0,
+    "endTime": "01:30",
+    "gfNum": 0,
+    "id": 10,
+    "leftRange": "10.0",
+    "rightRange": "32.0",
+    "startTime": "00:30",
+    "useState": 0
+  },
+  "token": "fsW7irEIPtbaDTjWAfENiGVZtcmEoHX5xttUU3VQGxY=",
+  "statusCode": 1
+}
+
+20.新增采集器设备-设置-预警页面(应该与之前的一样)
+调用地址  /actionServlet
+POST方式调用
+actionName = deviceService
+method = saveCjDeviceSetting
+companyId	//公司id
+gfNum		//大棚鱼塘编号
+deviceNum	//设备编号
+leftRange	//左临界值
+rightRange	//右临界值
+startTime	//开启时间
+endTime		//结束时间
+useState	//是否开启
+
+返回格式
+{
+  "statusCode": 1
+}
+
+
+21.采集器设备-设置-修改(应该与之前的一样)
+调用地址  /actionServlet
+POST方式调用
+actionName = deviceService
+method = updateCjDeviceSetting
+companyId	//公司id
+gfNum		//大棚、鱼塘、大田编号
+deviceNum	//设备编号
+id			//主键id
+leftRange	//左临界值
+rightRange	//右临界值
+startTime	//开启时间
+endTime		//结束时间
+useState	//是否开启
+
+返回格式
+{
+  "statusCode": 1
+}
+
+22.采集器设备-设置-删除
+调用地址  /actionServlet
+POST方式调用
+actionName = deviceService
+method = deleteCjDeviceSetting
+id			//主键id
+
+返回格式
+{
+  "statusCode": 1
+}
+
+23.获取某控制器所有开关状态(v2.0新接口)
+调用地址 /actionServlet
+POST方式调用
+actionName = deviceService
+method = getControlDeviceSwitchList
+companyId	//公司id
+gfNum	//大棚、鱼塘、大田编号
+deviceId	//控制器设备id
+userType	//用户类型
+
+返回格式
+{
+  "statusCode": 1,
+  "message": "获取成功",
+  "result": [
+    {
+      "state": "0",	//状态（0关闭，1开启，2断线停止）
+      "num": "1"	//开关1
+    },
+    {
+      "state": "0",
+      "num": "2"	//开关2
+    },
+    {
+      "state": "1",
+      "num": "3"
+    }
+  ],
+  "token": "wbH3d2JcS5jjoF0Tz/KKkfJERfxXw5UqnDztgzn6FNk="
+}
+
+
+24.获取控制器-设置-左侧列表
+(注意，新增了switchNum，因为一个控制器有可能对应多个开关，有几个开关参考上一个接口)
+调用地址 /actionServlet
+POST方式调用
+actionName = deviceService
+method = getControlDeviceLeftSetting
+companyId	//公司id
+gfNum		//大棚鱼塘编号
+deviceNum	//设备编号
+switchNum	//开关编号(71-1后边的1)
+
+返回格式
+{
+  "result": [
+    {
+      "compayId": 0,
+      "controlType": "1",	//控制类型 0定时 1循环 2智能
+      "deviceNum": 61,
+      "gfNum": 1,
+      "id": 3,
+      "loopCnt": "5",//循环次数
+      "loopType": "1",//循环结束类型 0时间 1次数
+      "startTime": "14:00",
+      "useState": 1
+    },
+    {
+      "compayId": 0,
+      "controlType": "2",
+      "deviceNum": 61,
+      "endTime": "14:00",//循环结束时间
+      "gfNum": 1,
+      "id": 2,
+      "loopType": "0",
+      "startTime": "12:00",
+      "useState": 1
+    }
+  ],
+  "statusCode": 1
+}
+
+25.控制器-设置-左侧列表-单条详细信息（注意：这次多返回了switchNum开关字段，看你是否需要）
+调用地址  /actionServlet
+POST方式调用
+actionName = deviceService
+method = getControlDeviceSettingInfo
+id	//主键id
+
+返回格式
+{
+	//这里边字段很多，有不清楚的随时问我
+  "result": {
+    "closeDevice": "11",	//关闭设备编号
+    "compayId": 0,			
+    "controlType": "1",		//控制类型 0定时 1循环 2智能
+    "deviceNum": 61,	
+    "durationTime": "20",	//持续时间
+    "gfNum": 1,
+    "id": 3,
+    "intervalTime": "30",	//每次间隔
+    "loopCnt": "5",			//循环次数
+    "loopType": "1",
+    "loopWeek": "12457",	//循环周期
+    "openDevice": "10",		//开启设备编号
+    "startTime": "14:00",	//开始时间
+    "useState": 1			//是否启用
+    "switchNum": "2"	//第几个开关
+  },
+  "statusCode": 1
+}
+
+26.控制器设置-保存（注意，需要发送switchNum开关字段，因为一个控制器有多个开关）
+调用地址  /actionServlet
+POST方式调用
+actionName = deviceService
+method = saveControlDeviceSetting
+companyId		//公司id
+gfNum			//大棚鱼塘编号
+deviceNum		//设备编号
+controlType		//控制类型 0定时 1循环 2智能
+startTime		//开启时间
+endTime			//结束时间
+loopType		//循环结束类型 0时间 1次数
+loopCnt			//循环次数
+durationTime	//持续时间
+intervalTime	//间隔时间
+openDevice		//智能控制打开设备编号
+closeDevice		//智能控制关闭设备编号
+openType		//打开设备条件 0大于 1小于
+closeType 		//关闭设备条件 0大于 1小于
+openVal			//打开设备条件数值
+openVal 		//关闭设备条件数值
+useState		//是否开启
+loopWeek		//周期1-7
+switchNum		//开关编号（71-1后边的1）
+返回格式
+{
+  "statusCode": 1
+}
+
+27.控制器设置-修改（注意，需要发送switchNum开关字段，因为一个控制器有多个开关）
+调用地址  actionServlet
+POST方式调用
+actionName = deviceService
+method = updateControlDeviceSetting
+id				//主键id
+controlType		//控制类型 0定时 1循环 2智能（修改时类型不可改，服务器需要这个查询）
+startTime		//开启时间
+endTime			//结束时间
+loopType		//循环结束类型 0时间 1次数
+loopCnt			//循环次数
+durationTime	//持续时间
+intervalTime	//间隔时间
+openDevice		//智能控制打开设备编号
+closeDevice		//智能控制关闭设备编号
+openType		//打开设备条件 0大于 1小于
+closeType 		//关闭设备条件 0大于 1小于
+openVal			//打开设备条件数值
+openVal 		//关闭设备条件数值
+useState		//是否开启
+loopWeek		//周期1-7
+switchNum		//开关编号（71-1后边的1）
+
+返回格式
+{
+  "statusCode": 1
+}
+
+28.控制器设置-删除（基本没变）
+调用地址 actionServlet
+POST方式调用
+actionName = deviceService
+method = deleteControlDeviceSetting
+id			//主键id
+
+返回格式
+{
+  "statusCode": 1
+}
+
+29.控制器-修改控制器开关按钮（注意，需要发送switchNum开关字段，因为一个控制器有多个开关）
+调用地址  /actionServlet
+POST方式调用
+actionName = deviceService
+method = updateControlDeviceState
+companyId		//公司id
+gfNum			/大棚鱼塘编号
+deviceId		//设备编号
+state			//状态0关 1开
+switchNum		//开关编号（71-1后边的1）
+
+返回格式
+{
+  "statusCode": 1
+}
+
+30.获取当前大棚、鱼池的摄像头信息（v2.0新接口，调用时机自行选择）
+调用地址  /actionServlet
+POST方式调用
+actionName = deviceService
+method = getCameraInfo
+companyId		//公司id
+gfNum			/大棚鱼塘编号
+userType		//公司类型
+
+返回格式
+{
+	"statusCode": 1,
+	"result": {
+		"url": "192.168.1.1",	//摄像头地址
+		"loginName": "admin",	//账号
+		"loginPwd": "pwd",	//密码
+		"webPort": "1000",	//web播放端口
+		"phonePort": "2000",//APP播放端口
+		"passNum": "10"	//通道号
+	}
+}
+
+31.获取报表、统计数据 
+调用地址  actionServlet
+POST方式调用
+actionName = gridService
+method = dateByDeviceNum
+areaNum		//大棚/鱼塘编号
+strategy	//策略  平均(avg) 最低(min) 最高(max)
+deviceNum	//设备编号
+startTime	//开始时间(YYY-MM-DD)
+endTime		//结束时间(YYY-MM-DD)
+companyId	//公司id
+userType	//公司类型
+
+返回格式
+{
+  "result": {
+    "y": [
+      10,
+      5,
+      0,
+      11.06
+    ],
+    "x": [
+      "12.01",
+      "12.02",
+      "12.03",
+      "12.04"
+    ]
+  },
+  "statusCode": 1
+}
+
+
+
+32.预警信息总数
+调用地址/actionServlet
+POST方式调用
+
+请求参数
+actionName=earlyWaringService
+method=queryListCount
+companyId = 1 // 公司id
+startTime = 2017-10-10 00:00:00 // 时间段，开始时间
+endTime = 2017-10-10 00:00:00 // 时间段，结束时间
+
+返回信息
+{ 
+	"result":{ 总记录数},
+	"statusCode":1
+}
+
+33.预警信息查询，分页
+调用地址 /actionServlet
+POST方式调用
+
+请求参数
+actionName=earlyWaringService
+method=queryList
+currPage = 1 // 当前页码
+pageSize = 10 // 每页显示记录数
+companyId	 // 公司id
+startTime = 2017-10-10 00:00:00 // 时间段，开始时间
+endTime = 2017-10-10 00:00:00 // 时间段，结束时间
+
+返回信息
+{ 
+	"result":{ 预警信息对象列表},
+	"statusCode":1
+}
+
+
+34.（V2.0新）设备管理-获取设备信息和数据web用 
+调用地址 /actionServlet
+POST方式调用
+
+请求参数
+actionName=deviceService
+method=getDeviceInfoByGfNumWeb
+companyId	 // 公司id
+userType       公司类型
+gfNum           大棚、鱼塘编号
+返回信息
+{
+	"statusCode": 1,
+	"message": "获取成功",
+	"result": [{
+			"id": "1",
+			"deviceType": "0",
+			"state": "2",
+			"name": "空气温度",
+			"unit": "℃"
+			"canModify":"0"
+		},
+		{
+			"id": "2",
+			"deviceType": "0",
+			"state": "2",
+			"name": "空气湿度",
+			"unit": "%"
+			"canModify":"1"
+		}
+	],
+	"token": "Arl+EyOeC7hOK2FDcysV2gvasGPy/NoRh+8L0ms7QDE="
+}
+
+35.（V2.0新）设备管理-投食机推送
+调用地址 /actionServlet
+POST方式调用
+
+请求参数
+actionName=deviceService
+method=pushFeedMachine
+companyId	 // 公司id
+userType       公司类型
+gfNum           大棚、鱼塘编号
+switchNum		开关编号
+workTime		工作时长
+stopTime		停止时长
+返回信息
+{
+    "statusCode": 1,
+    "message": "推送成功",
+    "token": "W2noRI/3gkZDaNP8fp9TiDXtW/FOzPlhRxSMoD466X8="
+}
+
+
+36.（V2.0新）设备管理-获取可修改的设备列表（解决传感器数值不准）
+调用地址 /actionServlet
+POST方式调用
+
+请求参数
+actionName=deviceService
+method=getCanModifyDevice
+token
+
+返回信息
+{
+    "statusCode": 1,
+    "message": "获取成功",
+    "result": [
+        {
+            "id": 34,
+            "deviceName": "氨氮含量"
+        },
+        {
+            "id": 37,
+            "deviceName": "亚硝酸盐含量"
+        }
+    ],
+    "token": "GCZOb8fAiJp8UmwBQDzB3QPXwsDGZtLRaWnDyUsq+JQ="
+}
+
+37.（V2.0新）设备管理-获取设备修改的状态、数值（解决传感器数值不准）
+调用地址 /actionServlet
+POST方式调用
+
+请求参数
+actionName=deviceService
+method=getDeviceModifyVal
+companyId	公司id
+gfNum	大棚/鱼塘/大田编号
+deviceId	设备Id
+token
+
+返回信息
+{
+    "statusCode": 1,
+    "message": "获取成功",
+    "result": {
+        "state": "0",	//是否修改过（0否1是）
+        "val": "",		//修改的数值
+        "id": "59193"	//这条记录的id
+    },
+    "token": "pQTu5Kmyk0V7+PWMT7aDlm1fzc6cKwG3+8+GBUDwT+E="
+}
+
+38.（V2.0新）修改设备接收改为手动修改，固定数值（解决传感器数值不准）
+调用地址 /actionServlet
+POST方式调用
+
+请求参数
+actionName=deviceService
+method=updateDeviceModifyVal
+id	上一接口中返回的记录id
+state	修改后的状态
+val		修改后的值
+
+
+返回信息
+{
+    "statusCode": 1,
+    "message": "修改成功",
+    "token": "SwwJjSDre6NJSnv51VbqRj6qXW/HCxyQXYNRMevIFvs="
+}
+----------------------------------------------------------------------------------
+
+4. 新增员工
+调用地址 /actionServlet
+请求参数
+actionName=employeeService
+method=add
+companyId = 1 // 企业id
+name = 李某人 // 姓名
+sex = 1 // 性别 0女 1男
+mobile = 1381231234 // 手机号
+position = 员工 // 职位
+age = 18 // 年龄
+healthyState = 10 // 健康状态
+address = 安徽省亳州市 // 户籍地	
+icon = 图片 // 头像
+certificates = 图片 // 资格证
+certificatesValid = 2017-11-11 // 资格证有效期
+
+返回信息
+{ 
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+6. 修改员工信息
+调用地址 /actionServlet?
+POST方式调用
+
+请求参数
+actionName=employeeService
+method=update
+id = 1 // 员工id
+companyId = 1 // 企业id
+name = 李某人 // 姓名
+sex = 1 // 性别 0女 1男
+mobile = 1381231234 // 手机号
+position = 员工 // 职位
+age = 18 // 年龄
+healthyState = 10 // 健康状态
+address = 安徽省亳州市 // 户籍地	
+icon = 图片 // 头像
+certificates = 图片 // 资格证
+certificatesValid = 2017-11-11 // 资格证有效期
+
+返回信息
+{ 
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+7. 查询员工信息，单条记录
+调用地址 /actionServlet
+POST方式调用
+
+请求参数
+actionName=employeeService
+method=query
+id = 123 // 用户id
+
+返回信息
+{ 
+	"result":{ 员工对象 },
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+8. 查询员工信息，分页
+调用地址 /actionServlet
+POST方式调用
+
+请求参数
+actionName=employeeService
+method=queryList
+name = 李xx // 查询条件：用户姓名
+currPage = 1 // 当前页码
+pageSize = 10 // 每页显示记录数
+
+返回信息
+{ 
+	"result":{ 员工对象列表 },
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+9. 查询员工信息总记录数
+调用地址 /actionServlet
+POST方式调用
+
+请求参数
+actionName=employeeService
+method=queryListCount
+name = 李xx // 查询条件：用户姓名
+
+返回信息
+{ 
+	"result":{ 总记录数},
+	"statusCode":1
+}
+配合上一个接口使用，注意要跟上个接口参数保持一致
+----------------------------------------------------------------------------------
+
+1.溯源-查询所有产品总数
+调用地址 /actionServlet
+POST方式调用
+请求参数
+actionName=sourceService
+method=queryProductsCount
+areaNum = 0 // 大棚/鱼塘编号 (查询所有的传0)
+companyId	//公司id
+userType	//用户类型
+返回信息
+{ 
+	"result":100,
+	"statusCode":1
+}
+
+2.溯源-查询所有产品，分页
+调用地址 /actionServlet
+POST方式调用
+
+请求参数
+actionName=sourceService
+method=queryProducts
+startRec = 1 // 页码数（0开始）
+pageSize = 10 // 每页显示记录数
+areaNum = 0 // 大棚/鱼塘编号 (查询所有的传0)
+companyId	//公司id
+userType	//用户类型
+#以下参数可空
+productName = 西瓜 // 搜索关键字
+orderTime = 0 种植时间顺序(0最新的    1最早的   默认不传返回id最大排序)
+
+返回信息
+{
+  "result": [
+    {
+      "productIcon": "20171219172358766_13290825.jpeg",//产品图
+      "employeeId": 13,//负责人id
+      "createTime": "2017-12-19 17:23:58",
+      "plantTime": "2017-12-22",//种植时间
+      "state": 0,//0：种植  1：归档
+      "productInformation": "水稻（学名：Oryza sativa）是草本稻属的一种，也是稻属中作为粮食的最主要最悠久的一种，又称为亚洲型栽培稻，简单来说也可以说是稻。为一年生，禾本科植物，单子叶，性喜温湿，成熟时约有1米高，叶子细长，约有50到100厘米长，宽约2到2.5厘米。稻米的花非常小，开花时，主要花枝会呈现拱形，在枝头往下30到50毫米间都会开小花，大部分自花授粉并结种子，称为稻穗。一般稻粒的大小在5到12毫米长，2到3毫米厚度。",
+      "productId": 7,
+      "productType": "嘉育948",//品种
+      "employeeName": "员工1",
+      "id": 7,
+      "productDetail": "水稻",//作物
+      "season": "2",//几季
+      "groundNum": 1,//几号大棚、鱼塘种的
+      "companyId": 14,
+      "batchCount": 2,//已添加批次
+      "productName": "水稻"//产品名
+    },
+    {
+      "productIcon": "20171219102516528_21849540.jpeg",
+      "employeeId": 13,
+      "createTime": "2017-12-15 12:14:59",
+      "plantTime": "2017-11-30",
+      "state": 0,
+      "productInformation": "植株中等，株形稍直立，单株叶片数35～42片，叶片较细长，叶槽较深，叶缘多刺；分蘖力中等，吸芽1～2个，抽生较早；托芽2～5个，无蘖芽，顶芽较细小，单顶。平均单果重1.15千克；果实圆筒形，小果数104个，果眼较饱满，较大且平，锥状突起不及“菲律宾”明显，成熟果皮深黄色，果肉黄色，质地爽脆，纤维少，可溶性固形物含量15.2%。",
+      "productId": 6,
+      "productType": "卡因类菠萝",
+      "employeeName": "员工1",
+      "id": 6,
+      "productDetail": "菠萝",
+      "season": "2",
+      "groundNum": 4,
+      "companyId": 14,
+      "batchCount": 3,
+      "productName": "金香菠萝"
+    }
+  ],
+  "statusCode": 1
+}
+
+15. 溯源-增加产品
+调用地址 /actionServlet
+POST方式调用
+
+请求参数
+actionName=sourceService
+method = addProduct
+companyId	//公司id
+userType	//用户类型
+areaNum = 1 // 大棚/鱼塘编号
+productName = 西瓜 // 产品名称
+plantTime = 2017-10-10 // 种植时间 **注意：plantTime,season为新加字段，当鱼塘的时候，此字段就是养鱼时间
+season = 1 // 种植批次 ** 当为鱼塘时，次字段可不传
+productDetail = 红富士 // 种植作物
+productType = 极品 // 品种
+employeeId = 1 // 负责人
+remarks = 备注 
+productInformation = 产品简介
+productIcon = 图片base64	
+
+返回信息
+{ 
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+16. 删除产品(删除档案)
+调用地址 /actionServlet
+GET/POST方式调用
+
+请求参数
+actionName=sourceService
+method=deleteProduct
+ids = 1 // 要删除的id，没看错，这字段就叫ids
+
+返回信息
+{ 
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+17. 
+----------------------------------------------------------------------------------
+
+22. 查询批次
+调用地址 /actionServlet
+POST方式调用
+
+请求参数
+productId = 1 // 产品id
+actionName=sourceService
+method=queryBatch
+返回信息
+{
+  "result": [
+    {
+      "id": 24,
+      "isReview": "0",
+      "isShelve": "1",//1上架  0下架
+      "barcodeUrl": "2017122110163266.png",
+      "qrcodeUrl": "2017122110163266.png",
+      "barcode": "2017122110163266",//溯源码
+      "testingRec": "[{\"icon\":\"20171221101626913_96500911.jpeg\",\"detail\":[{\"quota\":\"1\",\"value\":\"0.01\"}],\"tester\":\"17\",\"time\":\"2017-12-01\",\"testername\":\"张宇\",\"organ\":\"中国农残检测机构\"}]",
+      "machiningRec": "[]",
+      "listedTime": 1513785600000,
+      "companyId": 14,
+      "quotaDesc": "fkjfdkslfjdklsgjrwgr",
+      "distributeRec": "[{\"time\":\"2017-12-20\",\"destination\":\"北京市西城区\",\"distributor\":\"15\",\"distributorname\":\"刘剑桥\"},{\"time\":\"2017-12-22\",\"destination\":\"北京市朝阳区\",\"distributor\":\"0\",\"distributorname\":\"请选择配送员工\"}]",
+      "productId": 6
+    },
+    {
+      "id": 15,
+      "isReview": "0",
+      "isShelve": "1",
+      "testingRec": "[{\"icon\":\"20171215141913612_20383403.jpeg\",\"detail\":[{\"quota\":\"1\",\"value\":\"1\"},{\"quota\":\"2\",\"value\":\"2\"}],\"tester\":\"13\",\"time\":\"2017-12-01\",\"organ\":\"1232131\"},{\"icon\":\"20171215141914016_78872724.jpeg\",\"detail\":[{\"quota\":\"2\",\"value\":\"0.1\"},{\"quota\":\"5\",\"value\":\"0.2\"}],\"tester\":\"1\",\"time\":\"2017-12-02\",\"organ\":\"fefew\"}]",
+      "machiningRec": "[{\"time\":\"2017-12-13\",\"content\":\"11111\",\"operator\":\"1\"}]",
+      "listedTime": 1512144000000,
+      "companyId": 14,
+      "quotaDesc": "12321321321日各位高人",
+      "distributeRec": "[{\"time\":\"2017-12-27\",\"destination\":\"222222\",\"distributor\":\"13\"},{\"time\":\"2017-12-20\",\"destination\":\"2222\",\"distributor\":\"1\"}]",
+      "productId": 6
+    },
+    {
+      "id": 14,
+      "isReview": "0",
+      "isShelve": "1",
+      "testingRec": "[{\"icon\":\"20171215141913612_20383403.jpeg\",\"detail\":[{\"quota\":\"1\",\"value\":\"1\"},{\"quota\":\"2\",\"value\":\"2\"}],\"tester\":\"13\",\"time\":\"2017-12-01\",\"organ\":\"1232131\"},{\"icon\":\"20171215141914016_78872724.jpeg\",\"detail\":[{\"quota\":\"2\",\"value\":\"0.1\"},{\"quota\":\"5\",\"value\":\"0.2\"}],\"tester\":\"1\",\"time\":\"2017-12-02\",\"organ\":\"fefew\"}]",
+      "machiningRec": "[{\"time\":\"2017-12-13\",\"content\":\"11111\",\"operator\":\"1\"}]",
+      "listedTime": 1512057600000,
+      "companyId": 14,
+      "quotaDesc": "12321321321日各位高人",
+      "distributeRec": "[{\"time\":\"2017-12-27\",\"destination\":\"222222\",\"distributor\":\"13\"},{\"time\":\"2017-12-20\",\"destination\":\"2222\",\"distributor\":\"13\"}]",
+      "productId": 6
+    }
+  ],
+  "statusCode": 1
+}
+
+
+
+
+
+=======
+请求参数
+batchId = 1 // 批次id
+
+返回信息
+{ 
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+25. 下架
+调用地址 http://127.0.0.1:8080/wisdom_farming_site/actionServlet?actionName=sourceService&method=offShelf
+GET/POST方式调用
+
+请求参数
+batchId = 1 // 批次id
+
+返回信息
+{ 
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+26. 查询产品信息
+调用地址 http://127.0.0.1:8080/wisdom_farming_site/actionServlet?actionName=sourceService&method=queryProduct
+GET/POST方式调用
+
+请求参数
+productId = 1 // 产品id
+
+返回信息
+{ 
+	"result":{ 产品对象 },
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+27. 维护档案（更新产品信息）
+调用地址 http://127.0.0.1:8080/wisdom_farming_site/actionServlet?actionName=sourceService&method=updateArchive
+GET/POST方式调用
+
+请求参数
+productId = 6 // 产品id
+productName = 6 // 产品名称
+productIcon = 6 // 产品图片
+productDetail = 6 // 种养产品
+productType = 6 // 品种
+employeeId = 6 // 负责人
+remarks = 6 // 备注
+productInformation = 6 // 产品简介
+batchCount = 6 // 批次
+plantTime = 2017-12-18 // 种养时间
+growthPic = [{}] // 生长期图片
+fertilizationRec = [{}] // 施肥记录
+pesticideRec = [{}] // 用药记录
+farmingRec = [{}] // 农事记录
+authInfo = [{}] // 认证信息
+growingCycles = [{}] // 种植周期
+seedSource = [{}] // 种子来源
+webLinks = [{}] // 网店地址
+shopAddress = [{}] // 实体店地址
+fertilizer = [{}] // 土壤壤情
+envData = [{}] // 环境数据
+
+返回信息
+{ 
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+28. 扫码统计
+调用地址 http://127.0.0.1:8080/wisdom_farming_site/actionServlet?actionName=sourceService&method=scanCount
+GET/POST方式调用
+
+请求参数
+
+#以下参数可空
+productId = 6 // 产品id
+productName = 6 // 产品名称 
+startTime = 2017-11-11 // 开始时间
+endTime = 2017-12-12 // 结束时间
+
+返回信息
+{ 
+	"result":{
+		"x":["2017-11","2017-12","2018-01"],
+		"y":[{"data":[0,0,1],"name":"水稻"},{"data":[0,1,0],"name":"红提"},{"data":[1,2,0],"name":"香蕉"}]
+	},
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+29. 扫码查看档案
+调用地址 http://127.0.0.1:8080/wisdom_farming_site/staticServlet?actionName=sourceService&method=scanArea
+GET/POST方式调用
+
+请求参数
+
+返回信息
+{ 
+	"result":{
+		[{"data":[{"name":"1","value":10}],"name":"金香菠萝"},{"data":[{"name":"1","value":2}],"name":"水稻"}]
+	},
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+30. 扫码统计，区域
+调用地址 http://127.0.0.1:8080/wisdom_farming_site/actionServlet?actionName=STCH5Service&method=showArchive
+GET/POST方式调用
+
+请求参数
+barcode = 123 // 条形码
+
+#注意,saler字段格式为：name,phone;name,phone 这种
+
+返回信息
+{ 
+	"result":{
+		数据对象，跟数据库字段对应(驼峰写法)
+	},
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+31. 扫码统计，更新区域
+调用地址 http://127.0.0.1:8080/wisdom_farming_site/actionServlet?actionName=STCH5Service&method=updateArea
+GET/POST方式调用
+
+请求参数
+companyId = 22 // 公司id 
+userType = 3 // 公司类型（农业/渔业）
+sourceId = 22 // 产品id
+areaId = 22 // 地区
+
+返回信息
+{ 
+	"statusCode":1
+}
+----------------------------------------------------------------------------------
+
+32. 查询环境数据
+调用地址 http://127.0.0.1:8080/wisdom_farming_site/actionServlet?actionName=STCH5Service&method=queryEnvData
+GET/POST方式调用
+
+请求参数
+batchId = 22 // 批次id 
+deviceNum = 3 // 设备类型
+
+返回信息
+{ 
+	"result":{"x":["11.11","11.12","11.13"],"y":[{"name":"平均值","data":[1,2,3]},{"name":"最大值","data":[1,2,3]}]},
+	"statusCode":1
+}
+
+33. 反馈
+调用地址 /staticServlet
+GET/POST方式调用
+
+请求参数
+actionName = feedBackService
+method = saveFeedBack
+companyId 公司id
+content 反馈内容
+img	反馈图片(base64)
+contacts 联系人
+
+返回信息
+{
+  "message": "提交成功",
+  "statusCode": 1
+}
+----------------------------------------------------------------------------------

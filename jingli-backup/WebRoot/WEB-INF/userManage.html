@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <meta http-equiv="pragma" content="no-cache">  
+	<meta http-equiv="cache-control" content="no-cache">  
+	<meta http-equiv="expires" content="0"> 
+    <title>用户管理</title>
+    <script src="dist/js/jquery-1.9.1.min.js"></script> 
+    <link rel="stylesheet" href="dist/css/normalize.css">
+    <link rel="stylesheet" href="dist/css/bootstrap.css">
+    <link rel="stylesheet" href="dist/css/index_public.css">
+    <link rel="stylesheet" href="dist/css/index_table.css">
+    <link rel="stylesheet" href="dist/css/ladda/ladda-themeless.min.css">
+    <script src="dist/js/js/index_head_left.js"></script>
+    <link rel="stylesheet" href="dist/css/toastr.min.css" >
+	<script src="dist/js/widgets/toastr.min.js"></script>
+	<script type="text/javascript" src="dist/js/widgets/jquery.nicescroll.min.js"></script>
+    <!-- alert11.17 -->
+    <link rel="stylesheet" href="dist/css/sweetalert.css">
+    <script src="dist/js/widgets/sweetalert.min.js"></script>
+    <style>
+    	.option{line-height:0;width:97%;margin-left:1%;border:1px solid #ECEFF5;border-bottom:0;padding-top:5px;}
+    	input{outline:none;}
+    	.ladda-label{color:#fff;}
+    	#add label{width:150px;text-align:right;}
+    	#revise label{width:150px;text-align:right;}
+    </style>
+	</head>
+    <script>
+         $(document).ready(function(){
+            $("#div1").load('include/left_title.html',function(){
+                menu(); 
+            })
+            $("#loadHeader").load("include/header.html",function(){
+                header();
+            })
+            getRole();
+            getData();
+            $('#add').on('hidden.bs.modal', function () {
+                $("#add .modal-body>div>input").val('');
+         	})
+         	$('#revise').on('hidden.bs.modal', function () {
+				$("#revise input").val('');
+			})
+    	});
+         
+         function saveAccountDiv(){
+        	 $("#add input").val('');
+        	 $("#add").modal('show');
+         }
+         
+         function saveAccount(){
+        	 var telReg = /(\+86|0086)?\s*1[345789]\d{9}/;
+        	 var re = /^[1-9]\d*$/;
+        	 var mobile = $("#add_mobile").val();
+        	 var name = $("#add_name").val();
+        	 var roleId = $("#add_type").val();
+        	 var contacts = $("#add_contacts").val();
+        	 var maxCnt = $("#add_max_cnt").val();
+        	 var linkMan=$("#add_linkman").val();
+        	 var cameraIp=$("#add_cameraIp").val();
+        	 var cameraPort=$("#add_cameraPort").val();
+        	 var cameraTelPort=$("#add_cameraTelPort").val();
+        	 var cameraAccount=$("#add_cameraAccount").val();
+        	 var cameraPwd=$("#add_cameraPwd").val();
+        	 if(mobile==''){
+        		 toastr.warning('请输入账号','提示');
+	 			 return;
+        	 }
+        	 if(!telReg.test(mobile)){
+        		 toastr.warning('请输入正确的账号','提示');
+	 			 return;
+        	 }
+        	 if(name==''){
+        		 toastr.warning('请输入企业名称','提示');
+	 			 return;
+        	 }
+        	 if(maxCnt==''){
+        		 toastr.warning('请输入下属组织','提示');
+	 			 return;
+        	 }
+        	 if(!re.test(maxCnt)){
+        		 toastr.warning('请输入正数','提示');
+	 			 return;
+        	 }
+        	 if(maxCnt>50){
+        		 toastr.warning('数值太大，请重新输入','提示');
+	 			 return;
+        	 }
+        	 $('.btn-ladda').ladda( 'bind',{timeout:2000});
+           	 Ladda.bind( '.progress-demo .ladda-button',{
+           	 	callback: function( instance ){
+           	 	var progress = 0;
+           	 	var interval = setInterval( function(){
+           	 	progress = Math.min( progress + Math.random() * 0.1, 1 );
+           	 	instance.setProgress( progress );
+           	  	if( progress === 1 ){
+           	 		instance.stop();
+           	 		clearInterval( interval );
+           	 		 }
+           	 	  }, 200 );
+           	 		}
+           	 });
+           	 var l = $('.btn-ladda').ladda();
+           	 l.ladda( 'start' );
+        	 if(!contacts==''&&!telReg.test(contacts)){
+        		 toastr.warning('请输入正确的手机号','提示');
+        		 l.ladda( 'stop' );
+    	 		 return;
+        	 }
+        	 if(!cameraPort==''&&!re.test(cameraPort)){
+        		 toastr.warning('请输入正确的端口号','提示');
+        		 l.ladda( 'stop' );
+    	 		 return;
+        	 }
+        	 if((!cameraTelPort=='')&&(!re.test(cameraTelPort))){
+        		 toastr.warning('请输入正确的手机端口号','提示');
+        		 l.ladda( 'stop' );
+    	 		 return;
+        	 }
+			else{
+        	 $.ajax({
+       			type:"POST",
+       			url:"actionServlet",
+       			data:{"actionName":"permissionService","method":"saveUser",
+       				"mobile":mobile,"name":name,"roleId":roleId,"contacts":contacts,"maxCnt":maxCnt,
+       				"contactsUser":linkMan,"cameraUrl":cameraIp,"cameraPort":cameraPort,"phonePort":cameraTelPort,
+       				"cameraUname":cameraAccount,"cameraPwd":cameraPwd
+       				},
+       			dataType:"JSON",
+       			success:function(data){
+       				console.log(data);
+       				if(data.statusCode == 100){
+       				 	l.ladda( 'stop' );
+		 				toastr.error('请联系管理员','未拥有权限');
+		 				return;
+		 			}
+       				if(data.statusCode==-1){
+       					swal({
+      			            title: "",
+      			            text: "账号重复",
+      			            type: "error"
+      			        });	
+       					l.ladda( 'stop' );
+       				}
+       				if(data.statusCode == 1){
+       					getData();
+       					l.ladda( 'stop' );
+       					$("#add").modal('hide');
+       					swal({
+      			            title: "",
+      			            text: "新增成功!",
+      			            type: "success"
+      			        });		
+       				}
+       			}
+        	 });
+}
+         }
+         
+         
+         function getRole(){
+        	 $.ajax({
+      			type:"POST",
+      			url:"actionServlet",
+      			data:{"actionName":"permissionService","method":"getAllRole"},
+      			dataType:"JSON",
+      			success:function(data){
+      				if(data.statusCode == 100){
+		 				toastr.error('请联系管理员','未拥有权限');
+		 				return;
+		 			}
+      				if(data.statusCode == 1){
+      					for(var i=0;i<data.result.length;i++){
+      						var html = "<option value='"+data.result[i].id+"'>"+data.result[i].name+"</option>";
+      						$("#add_type").append(html);
+      					}		
+      				}
+      			}
+        	 });
+         }
+         
+       //获取用户数据
+         function getData(){
+    	   var name = '';
+    	   name = $("#serarch_name").val();
+        	 $.ajax({
+     			type:"POST",
+     			url:"actionServlet",
+     			data:{"actionName":"permissionService","method":"getAllUser","name":name},
+     			dataType:"JSON",
+     			success:function(data){
+     				if(data.statusCode == 100){
+		 				toastr.error('请联系管理员','未拥有权限');
+		 				return;
+		 			}
+     				if(data.statusCode == 1){
+     					var htmlStr = $("#demo_tr").html();
+     					$("#user_table").empty();
+     					$("#user_table").append("<tr id='demo_tr' style='display:none'>" + htmlStr+ "</tr>");
+     					for(var i=0;i<data.result.length;i++){
+     						var newStr = "<tr>" + htmlStr+"</tr>";
+     						newStr = newStr.replace("#mobile#",data.result[i].mobile);
+     						newStr = newStr.replace("#name#",data.result[i].name);
+     						newStr = newStr.replace("#typeName#",data.result[i].type);
+     						newStr = newStr.replace("#maxCount#",data.result[i].maxCount);
+     						newStr = newStr.replace("#contactsUser#",data.result[i].contactsUser);
+     						newStr = newStr.replace("#contacts#",data.result[i].contacts);
+     						newStr = newStr.replace("#createTime#",data.result[i].createTime);
+     						newStr = newStr.replace("#pwd#",data.result[i].pwd);
+     						var state = data.result[i].state;
+     						if(state == '0'){
+     							newStr = newStr.replace("#stateName#","开启");
+     							newStr = newStr.replace("#stateStyle#","info");
+     							newStr = newStr.replace("#state#","1");
+     						}else{
+     							newStr = newStr.replace("#stateName#","禁用");
+     							newStr = newStr.replace("#stateStyle#","warning");
+     							newStr = newStr.replace("#state#","0");
+     						}
+     						var re = new RegExp("#id#","g");
+     						newStr = newStr.replace(re,data.result[i].id);
+     						$("#user_table").append(newStr);
+     					}
+     					
+     				}
+     			}
+     		});
+         }
+         
+       function updateState(id,state){
+    	   var text = '';
+    	   if(state == '0'){
+    		   text='确定禁用该账号？';
+    	   }else{
+    		   text='确定开启该账号？';
+    	   }
+    	   swal({
+    		   title: text,
+    		   text: '',
+    		   type: 'warning',
+    		   showCancelButton: true,
+    		   closeOnConfirm: false, 
+    		   confirmButtonText: '确定',
+    		   cancelButtonText: '取消',
+    		 }, function() { 
+    			 $.ajax({
+    	     			type:"POST",
+    	     			url:"actionServlet",
+    	     			data:{"actionName":"permissionService","method":"updateUserState","id":id,"state":state},
+    	     			dataType:"JSON",
+    	     			success:function(data){
+    	     				if(data.statusCode == 100){
+    			 				toastr.error('请联系管理员','未拥有权限');
+    			 				return;
+    			 			}
+    	     				if(data.statusCode == 1){
+    	     					getData();
+    	     					swal({
+    	      			            title: "",
+    	      			            text: "操作成功!",
+    	      			            type: "success"
+    	      			        });
+    	     				}
+    	     			}
+    	    	   });
+    		}); 
+    	   
+       }
+       
+       function deleteUser(id){
+    	   swal({
+    		   title: '确定要删除该账号么',
+    		   text: '',
+    		   type: 'warning',
+    		   showCancelButton: true,
+    		   closeOnConfirm: false, 
+    		   confirmButtonText: '删除',
+    		   cancelButtonText: '取消',
+    		 }, function() { 
+    			 $.ajax({
+    	     			type:"POST",
+    	     			url:"actionServlet",
+    	     			data:{"actionName":"permissionService","method":"deleteUser","id":id},
+    	     			dataType:"JSON",
+    	     			success:function(data){
+    	     				if(data.statusCode == 100){
+    			 				toastr.error('请联系管理员','未拥有权限');
+    			 				return;
+    			 			}
+    	     				if(data.statusCode == 1){
+    	     					getData();
+    	     					swal({
+    	      			            title: "",
+    	      			            text: "删除成功!",
+    	      			            type: "success"
+    	      			        });
+    	     				}
+    	     			}
+    	    	   });
+    			 
+    			 
+    		}); 
+       }
+       function revise(id){
+    	   $("#revise #identification").val(id);
+    	   $.ajax({
+    		   type:"POST",
+    		   url:"actionServlet",
+    		   data:{"actionName":"permissionService","method":"getUserById","id":id},
+    		   dataType:"JSON",
+    		   success:function(data){
+    			   if(data.statusCode==1){
+    				   $("#revise").modal('show');
+//     				  $("#revise #identification").val(data.result.id);
+    				  $("#revise_mobile").val(data.result.mobile);
+    				  $("#revise_name").val(data.result.name);
+    				  $("#revise_linkman").val(data.result.contactsUser);
+    				  $("#revise_contacts").val(data.result.contacts);
+    				  $("#revise_cameraIp").val(data.result.cameraUrl);
+    				  $("#revise_cameraPort").val(data.result.cameraPort);
+    				  $("#revise_cameraTelPort").val(data.result.phonePort);
+    				  $("#revise_cameraAccount").val(data.result.cameraUname);
+    				  $("#revise_cameraPwd").val(data.result.cameraPwd);
+    			   }
+    		   }
+    	   })
+       }
+       function reviseSave(){
+    	   	 var telReg = /(\+86|0086)?\s*1[345789]\d{9}/;
+    	   	 var re = /^[1-9]\d*$/ ;
+    	     var id=$("#revise #identification").val();
+    		 var mobile= $("#revise_mobile").val();
+    	     var companyname=$("#revise_name").val();
+			 var linkman= $("#revise_linkman").val();
+			 var contacts= $("#revise_contacts").val();
+			 var cameraIp= $("#revise_cameraIp").val();
+			 var cameraPort= $("#revise_cameraPort").val();
+			 var cameraTelPort= $("#revise_cameraTelPort").val();
+			 var cameraAccount= $("#revise_cameraAccount").val();
+			 var cameraPwd= $("#revise_cameraPwd").val();
+      	 	if(companyname==''){
+      	 		toastr.warning('请输入公司名称','提示');
+      	 		return;
+      	 	}
+      	 	$('.btn-ladda1').ladda( 'bind',{timeout:2000});
+      	 	Ladda.bind( '.progress-demo .ladda-button',{
+      	 	callback: function( instance ){
+      	 	var progress = 0;
+      	 	var interval = setInterval( function(){
+      	 	progress = Math.min( progress + Math.random() * 0.1, 1 );
+      	 	instance.setProgress( progress );
+      	  	if( progress === 1 ){
+      	 		instance.stop();
+      	 		clearInterval( interval );
+      	 		 }
+      	 	  }, 200 );
+      	 		}
+      	 	});
+      	 	var l = $('.btn-ladda1').ladda();
+      	 	l.ladda( 'start' );
+      	 	if(!contacts==''&&!telReg.test(contacts)){
+	       		 toastr.warning('请输入正确的手机号','提示');
+	       		l.ladda( 'stop' );
+	   	 		 return;
+	       	 }
+	       	 if(!cameraPort==''&&!re.test(cameraPort)){
+	       		 toastr.warning('请输入正确的端口号','提示');
+	       		l.ladda( 'stop' );
+	   	 		 return;
+	       	 }
+	       	 if((!cameraTelPort=='')&&(!re.test(cameraTelPort))){
+	       		 toastr.warning('请输入正确的手机端口号','提示');
+	       		 l.ladda( 'stop' );
+	   	 		 return;
+	       	 }
+      	 	else{
+      	 		
+          	 	$.ajax({
+          	 	 	type:"POST",
+      		   		url:"actionServlet",
+      		   		data:{"actionName":"permissionService","method" :"updateUserInfo",
+      		   			"id":id,"name":companyname,"contactsUser":linkman,"contacts":contacts,"cameraUrl":cameraIp,
+      		   			"cameraPort":cameraPort,"phonePort":cameraTelPort,"cameraUname":cameraAccount,"cameraPwd":cameraPwd
+      		   		},
+          	 		dataType:"JSON",
+          	 		success:function(data){
+          	 			if(data.statusCode=='1'){
+          	 				getData();
+           					l.ladda( 'stop' );
+           					$("#revise").modal('hide');
+           					swal({
+          			            title: "",
+          			            text: "修改成功!",
+          			            type: "success"
+          			        });		
+          	 			}
+          	 		}
+          	 	})
+      	 	}
+       }
+         
+		     
+    </script>
+<body>
+ <div class="container-fluid">
+     <!-- header  -->
+    <div class="nav row " id="loadHeader">
+    </div>
+    <div class="row neirong" >
+        <!-- 侧边导航 -->
+         <div id="div1" class="sidebar col-xs-2">
+        </div>
+        <!-- 主题内容 -->
+        <div class="main col-xs-10 row " style="min-height:800px">
+                <h4 class="col-xs-12">账号管理</h4>
+                <div class="col-xs-12 row option">
+                        <a class="btn btn-primary" onclick="saveAccountDiv()" style="margin-left:-8px;">
+                            	新增账号
+                        </a>
+<!--                         <a onclick="getData()" class="btn btn-primary" style="float:right">搜索</a> -->
+                        <a onclick="getData()" class="btn btn-primary" style="float:right;border-radius:0;border-top-right-radius: 3px;border-bottom-right-radius: 3px;background:#1986DF;border-color:#1986DF">
+                        	<span class="glyphicon glyphicon-search" style="color:#fff;"></span>
+                        </a>
+                        <input id="serarch_name" type="text" class="form-control" style="float:right;width:300px;height:34px;border-radius:0;border-top-left-radius: 3px;border-bottom-left-radius: 3px;border-color:#1986DF;" placeholder="请输入账号或企业名称"> 
+                </div>
+               
+             <table class="col-xs-12" id="clerka" style="width:97%;margin-left:1%;">
+                <thead>
+                    <tr>
+                       <th>账号</th>
+                       <th>企业名称</th>
+                       <th>账号类型</th>
+                       <th>下属组织数</th>
+                       <th>联系方式</th>
+                       <th>密码</th>
+                       <th>创建时间</th>
+                       <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="user_table">
+                    <tr id="demo_tr" style="display:none">
+                        <td>#mobile#</td>
+                        <td>#name#</td>
+                        <td>#typeName#</td>
+                        <td>#maxCount#</td>
+                        <td>#contacts# &nbsp;&nbsp;&nbsp;&nbsp; #contactsUser#</td>
+                        <td>#pwd#</td>
+                        <td>#createTime#</td>
+                        <td>
+                        	<a class="btn btn-info" onclick="revise('#id#')">修改</a>
+                            <a class="btn btn-#stateStyle#" onclick="updateState('#id#','#state#')">#stateName#</a> 
+                            <a class="btn btn-danger" onclick="deleteUser('#id#')">删除</a> 
+                        </td> 
+                    </tr>
+                </tbody>
+            </table>                   
+        </div>
+        </div>
+         <div class="row" id="divFooter"></div> 
+        </div>
+        
+    <div class="modal inmodal in" id="add" tabindex="-1" role="dialog" aria-hidden="true" >
+        <div class="modal-dialog">
+        	<div class="modal-content animated bounceInRight">
+                <div class="modal-body" style="text-align:center">
+                	<h3>新建账号</h3>
+                	<div style="margin-top:10px">
+                		<label>账&nbsp;&nbsp;号:</label>
+                		<input style="margin-left:12px" id="add_mobile" type="text" class="form-control" maxlength='11'>
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>企业名称:</label>
+                		<input style="margin-left:10px" id="add_name" type="text" class="form-control">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>角色权限:</label>
+                		<select id="add_type" class="form-control" style="height:100%;margin-left:10px">
+                        </select>
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>下属组织:</label>
+                		<input style="margin-left:10px" id="add_max_cnt" type="number" class="form-control" min='1' max="50" maxlength="2">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>联系人:</label>
+                		<input required="required" style="margin-left:10px" id="add_linkman" type="text" class="form-control" >
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>联系方式:</label>
+                		<input required="required" style="margin-left:10px" id="add_contacts" type="text" class="form-control" maxlength='11'>
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>摄像头IP:</label>
+                		<input required="required" style="margin-left:10px" id="add_cameraIp" type="text" class="form-control">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>摄像头端口号:</label>
+                		<input required="required" style="margin-left:10px" id="add_cameraPort" type="number" class="form-control"  min="0">
+                	</div>
+                	
+                	<div style="margin-top:10px">
+                		<label>摄像头手机访问端口:</label>
+                		<input required="required" style="margin-left:10px" id="add_cameraTelPort" type="number" class="form-control" min="0">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>摄像头账号:</label>
+                		<input required="required" style="margin-left:10px" id="add_cameraAccount" type="text" class="form-control" >
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>摄像头密码:</label>
+                		<input required="required" style="margin-left:10px" id="add_cameraPwd" type="text" class="form-control" >
+                	</div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn_cancel" type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary ladda-button btn-ladda" data-style="zoom-out" onclick="saveAccount()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<div class="modal inmodal in" id="revise" tabindex="-1" role="dialog" aria-hidden="true" >
+        <div class="modal-dialog">
+        	<div class="modal-content animated bounceInRight">
+                <div class="modal-body" style="text-align:center">
+                	<h3>修改信息</h3>
+                	<input type="hidden" id="identification" value="">
+                	<div style="margin-top:10px">
+                		<label>手机号:</label>
+                		<input style="margin-left:12px" id="revise_mobile" type="text" class="form-control" maxlength='11' disabled="disabled">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>企业名称:</label>
+                		<input style="margin-left:10px" id="revise_name" type="text" class="form-control">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>联系人:</label>
+                		<input required="required" style="margin-left:10px" id="revise_linkman" type="text" class="form-control" >
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>联系方式:</label>
+                		<input required="required" style="margin-left:10px" id="revise_contacts" type="text" class="form-control" maxlength='11'>
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>摄像头IP:</label>
+                		<input required="required" style="margin-left:10px" id="revise_cameraIp" type="text" class="form-control">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>摄像头端口号:</label>
+                		<input required="required" style="margin-left:10px" id="revise_cameraPort" type="number" class="form-control"  min="0">
+                	</div>
+                	
+                	<div style="margin-top:10px">
+                		<label>摄像头手机访问端口:</label>
+                		<input required="required" style="margin-left:10px" id="revise_cameraTelPort" type="number" class="form-control" min="0">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>摄像头账号:</label>
+                		<input required="required" style="margin-left:10px" id="revise_cameraAccount" type="text" class="form-control" >
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>摄像头密码:</label>
+                		<input required="required" style="margin-left:10px" id="revise_cameraPwd" type="text" class="form-control" >
+                	</div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn_cancel" type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary ladda-button btn-ladda1" data-style="zoom-out" onclick="reviseSave()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+
+<script src="dist/js/bootstrap.min.js"></script>
+<script src="dist/js/ladda/spin.min.js"></script>
+<script src="dist/js/ladda/ladda.min.js"></script>
+<script src="dist/js/ladda/ladda.jquery.min.js"></script>
+</body>
+</html>

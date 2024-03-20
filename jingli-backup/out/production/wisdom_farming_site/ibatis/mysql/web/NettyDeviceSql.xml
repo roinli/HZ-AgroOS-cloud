@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="nettyDevice">
+
+	<!-- 保存农业数据 -->
+	<insert id="saveGroundDeviceData" parameterClass="map">
+		INSERT INTO t_g_data_collection(company_id,ground_num
+			,device_id,`data`,year,year_date,year_date_hour,create_time)
+		VALUES(#companyId#,#gfNum#,#deviceId#,#data#,DATE_FORMAT(NOW(),'%Y')
+				,DATE_FORMAT(NOW(),'%Y%m%d'),DATE_FORMAT(NOW(),'%Y%m%d%H'),NOW())
+	</insert>
+	
+	<!-- 保存渔业数据 -->
+	<insert id="saveFishpondDeviceData" parameterClass="map">
+		INSERT INTO t_f_data_collection(company_id,fishpond_num
+			,device_id,`data`,year,year_date,year_date_hour,create_time)
+		VALUES(#companyId#,#gfNum#,#deviceId#,#data#,DATE_FORMAT(NOW(),'%Y')
+				,DATE_FORMAT(NOW(),'%Y%m%d'),DATE_FORMAT(NOW(),'%Y%m%d%H'),NOW())
+	</insert>
+	
+	<!-- 保存大田数据 -->
+	<insert id="saveDaTianDeviceData" parameterClass="map">
+		INSERT INTO t_t_data_collection(company_id,datian_num
+			,device_id,`data`,year,year_date,year_date_hour,create_time)
+		VALUES(#companyId#,#gfNum#,#deviceId#,#data#,DATE_FORMAT(NOW(),'%Y')
+				,DATE_FORMAT(NOW(),'%Y%m%d'),DATE_FORMAT(NOW(),'%Y%m%d%H'),NOW())
+	</insert>
+	
+	<!-- 保存仓库数据 -->
+	<insert id="saveCangKuDeviceData" parameterClass="map">
+		INSERT INTO w_inventory_data_collection(company_id,ground_num
+			,device_id,`data`,year,year_date,year_date_hour,create_time)
+		VALUES(#companyId#,#gfNum#,#deviceId#,#data#,DATE_FORMAT(NOW(),'%Y')
+				,DATE_FORMAT(NOW(),'%Y%m%d'),DATE_FORMAT(NOW(),'%Y%m%d%H'),NOW())
+	</insert>
+	
+	
+	
+	<!-- 预警查询 -->
+	<select id="getDeviceIsOutOfRange" parameterClass="map" resultClass="java.lang.Integer">
+		SELECT 
+			( CASE WHEN #data# <![CDATA[ < ]]> left_range THEN '1'
+				 WHEN #data# <![CDATA[ > ]]> right_range THEN '2'
+				 ELSE '0'
+			END) AS state
+		FROM t_device_setting
+		WHERE company_id=#companyId#
+		AND gf_num=#gfNum#
+		AND device_num=#deviceId#
+		AND DATE_FORMAT(NOW(),'%H:%i') BETWEEN start_time AND end_time
+		AND use_state=1
+	</select>
+	
+	<!-- 获取组织号自定义名称 -->
+	<select id="getDisplayName" parameterClass="map" resultClass="java.lang.String">
+		SELECT display_name FROM t_ground_fishpond
+		WHERE company_id=#companyId#
+		AND `type`=#packageType#
+		AND number=#gfNum#
+	</select>
+	
+	<!-- 保存预警信息 -->
+	<insert id="saveDeviceWarning" parameterClass="map">
+		INSERT INTO t_early_waring(company_id,ground_fishpond_num,
+			device_id,waring_info,is_read,create_time,warning_type,source_type)
+		VALUES(#companyId#,#gfNum#,#deviceId#,#warningInfo#,0,NOW(),#warningType#,#packageType#)
+	</insert>
+	
+	<!-- 修改设备运行状态 -->
+	<update id="updateDeviceState" parameterClass="map">
+		UPDATE t_device_relation SET device_state=#deviceState#
+		WHERE divice_flag=#deviceFlag#
+	</update>
+	
+	<!-- 智能控制 -->
+	<select id="getDeviceAutoControl" parameterClass="map" resultClass="java.lang.String">
+		SELECT CONCAT(device_num,'-',device_switch_num,',','1') FROM t_control_device_setting
+		WHERE control_type=2 AND NOW() BETWEEN start_time AND end_time AND use_state=1
+		AND loop_week LIKE CONCAT('%',#week#,'%')
+		AND compay_id=#companyId# AND gf_num=#gfNum#
+		AND open_device=#deviceId# AND open_type=0 AND open_val <![CDATA[ < ]]> #data#
+			UNION ALL
+		SELECT CONCAT(device_num,'-',device_switch_num,',','1') FROM t_control_device_setting
+		WHERE control_type=2 AND NOW() BETWEEN start_time AND end_time AND use_state=1
+		AND loop_week LIKE CONCAT('%',#week#,'%')
+		AND compay_id=#companyId# AND gf_num=#gfNum#
+		AND open_device=#deviceId# AND open_type=1 AND open_val <![CDATA[ > ]]> #data#
+			UNION ALL
+		SELECT CONCAT(device_num,'-',device_switch_num,',','0') FROM t_control_device_setting
+		WHERE control_type=2 AND NOW() BETWEEN start_time AND end_time AND use_state=1
+		AND loop_week LIKE CONCAT('%',#week#,'%')
+		AND compay_id=#companyId# AND gf_num=#gfNum#
+		AND close_device=#deviceId# AND close_type=0 AND close_val <![CDATA[ < ]]> #data#
+			UNION ALL
+		SELECT CONCAT(device_num,'-',device_switch_num,',','0') FROM t_control_device_setting
+		WHERE control_type=2 AND NOW() BETWEEN start_time AND end_time AND use_state=1
+		AND loop_week LIKE CONCAT('%',#week#,'%')
+		AND compay_id=#companyId# AND gf_num=#gfNum#
+		AND close_device=#deviceId# AND close_type=1 AND close_val <![CDATA[ > ]]> #data#
+	</select>
+	
+	<!-- 查询当天所有任务信息 -->
+	<select id="getDeviceTimeSchedule" parameterClass="map" resultClass="cn.lookout.base.bean.DeviceTimeSchedule">
+		SELECT compay_id AS companyId,gf_num AS gfNum,device_num AS deviceNum
+		,loop_type AS loopType ,start_time AS startTime,loop_cnt as loopCnt
+		,end_time AS endTime,duration_time AS durationTime,interval_time AS intervalTime
+		,control_type as controlType,device_switch_num AS switchNum
+		FROM t_control_device_setting WHERE control_type IN(0,1)
+		AND loop_week LIKE CONCAT('%',#week#,'%')
+		AND use_state=1 
+	</select>
+	
+	<select id="getAllCompanyGps" resultClass="cn.lookout.base.bean.WeatherBean" >
+		SELECT t.* FROM(
+			SELECT id AS companyId,CONCAT(lat,':',lng) AS gps FROM t_user 
+		)t
+		WHERE gps IS NOT NULL
+	</select>
+	
+	<select id="getDeviceSwtichCount" parameterClass="map" resultClass="java.lang.String">
+		SELECT device_switch_num FROM t_device_relation WHERE divice_flag=#deviceFlag#
+	</select>
+	
+	<select id="getPhoneById" parameterClass="map" resultClass="java.lang.String">
+		SELECT exception_mobile FROM t_user WHERE id=#companyId# 
+	</select>
+	
+	<insert id="saveDeviceExceptionData" parameterClass="map">
+		INSERT INTO t_early_waring(company_id,ground_fishpond_num
+			,device_id,waring_info,warning_type,source_type
+			,is_read,create_time)
+		VALUES(#companyId#,#gfNum#,#deviceId#,#waringInfo#
+			,'0',#packageType#,'0',NOW())
+	</insert>
+	
+	<select id="getDeviceModifyVal" parameterClass="map" resultClass="java.lang.String">
+		SELECT modify_val 
+		FROM t_device_relation WHERE divice_flag=#deviceFlag#
+		AND is_modify=1
+	</select>
+	
+	<update id="updateDataSum" parameterClass="map" >
+		UPDATE t_data_sum SET sum_data = sum_data + #data#
+		WHERE company_id=#companyId#
+		AND gf_num = #gfNum#
+		AND device_id=#deviceId#
+		AND `year`=NOW()
+	</update>
+	
+	<insert id="saveDataSum" parameterClass="map">
+		INSERT INTO t_data_sum(company_id,gf_num,device_id,sum_data,`year`)
+		VALUES(#companyId#,#gfNum#,#deviceId#,#data#,DATE_FORMAT(NOW(),'%Y'))
+	</insert>
+	
+ </sqlMap>

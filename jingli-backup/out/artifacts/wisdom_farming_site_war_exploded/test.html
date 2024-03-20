@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" CONTENT="text/html;charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="pragma" content="no-cache">  
+	<meta http-equiv="cache-control" content="no-cache">  
+	<meta http-equiv="expires" content="0"> 
+    <title>公司信息</title>
+    <script src="dist/js/jquery-1.9.1.min.js"></script> 
+    <link rel="stylesheet" href="dist/css/animate.css" >
+    <link rel="stylesheet" href="dist/css/normalize.css">
+    <link rel="stylesheet" href="dist/css/bootstrap.css">
+    <link rel="stylesheet" href="dist/css/index_public.css">
+    <link rel="stylesheet" href="dist/css/webuploader.css">
+	<script src="dist/js/index_head_left.js"></script>
+	<link rel="stylesheet" href="dist/css/sweetalert.css">
+	<link rel="stylesheet" href="dist/css/toastr.min.css" >
+	<script src="dist/js/toastr.min.js"></script>
+	<script src="dist/js/sweetalert.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+    <script>
+    	$.ajaxSetup ({
+    		cache: false //close AJAX cache
+    	});
+    	
+    	var pageSize = "2";
+    	
+        $(document).ready(function(){
+            $("#div1").load('include/left_title.html',function(){
+                menu();
+            })
+            $("#loadHeader").load("include/header.html",function(){
+                header();
+			})
+			$("#personal").load("include/modelpersonal.html",function(){
+                personalModel();
+            })
+			getCompanyInfo(1);
+        });
+
+		
+		
+	</script>
+	<style>
+		/* 主页分页11.17 */
+		.M-box1{margin:50px 0;}
+		.M-box1>a,.M-box1>span{color:#7E7E7E;border:1px solid #ddd;padding:1% 1.5%;margin-left:0.5%;border-radius:2px;}
+		.M-box1>a.active,.M-box1>span.active{background:#0583DF;color:#fff;}
+	</style>
+	
+	<script type="text/javascript">
+	
+		function aa(){
+			window.location.href="http://47.94.149.111/caring_interface/teacher/index.html?argument=tel_startUrl_endUrl_MusicUrl&tel=15712999199&startUrl=http://47.94.149.111/caring_interface/service/AppServiceInterface?search_type=game_start&endUrl=http://47.94.149.111/caring_interface/service/AppServiceInterface?search_type=game_end&MusicUrl=http://47.94.149.111/caring_interface/service/AppServiceInterface?search_type=musicUrl"
+		
+		}
+	</script>
+</head>
+<style>
+</style>
+<body>
+ <input type="button" value="aaaa" onclick="aa()">
+</body>
+</html>

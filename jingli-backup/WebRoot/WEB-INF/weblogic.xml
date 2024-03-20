@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--雷强 E-mail:leiqiangcn@gmail.com -->
+<!--特定服务器设置，防止JDk和其他jar包版本冲突等一系列问题 -->
+<!DOCTYPE weblogic-web-app PUBLIC
+    "-//BEA Systems, Inc.//DTD Web Application 8.1//EN"
+    "http://www.bea.com/servers/wls810/dtd/weblogic810-web-jar.dtd">
+<weblogic-web-app>
+    <jsp-descriptor>
+        <jsp-param>
+            <param-name>keepgenerated</param-name>
+            <param-value>true</param-value>
+        </jsp-param>
+        <jsp-param>
+            <param-name>compilerSupportsEncoding</param-name>
+            <param-value>true</param-value>
+        </jsp-param>
+        <jsp-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </jsp-param>
+        <jsp-param>
+        	<param-name>pageCheckSeconds</param-name>
+        	<param-value>5</param-value>
+        </jsp-param>
+    </jsp-descriptor>
+    <container-descriptor>
+    	<servlet-reload-check-secs>-1</servlet-reload-check-secs>
+    	<prefer-web-inf-classes>true</prefer-web-inf-classes>
+  	</container-descriptor>
+	<wl-dispatch-policy>wlkp_service_queue</wl-dispatch-policy>
+</weblogic-web-app>

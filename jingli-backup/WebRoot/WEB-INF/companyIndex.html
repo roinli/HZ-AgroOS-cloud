@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="pragma" content="no-cache">  
+	<meta http-equiv="cache-control" content="no-cache">  
+	<meta http-equiv="expires" content="0"> 
+    <title>公司信息</title>
+    <script src="dist/js/jquery-1.9.1.min.js"></script> 
+    <link rel="stylesheet" href="dist/css/animate.css" >
+    <link rel="stylesheet" href="dist/css/normalize.css">
+    <link rel="stylesheet" href="dist/css/bootstrap.css">
+    <link rel="stylesheet" href="dist/css/index_public.css">
+    <link rel="stylesheet" href="dist/css/webuploader.css">
+	<script src="dist/js/js/index_head_left.js"></script>
+	<link rel="stylesheet" href="dist/css/sweetalert.css">
+	<link rel="stylesheet" href="dist/css/toastr.min.css" >
+	<script src="dist/js/widgets/toastr.min.js"></script>
+	<script src="dist/js/widgets/sweetalert.min.js"></script>
+	<script type="text/javascript" src="dist/js/widgets/jquery.nicescroll.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+    <script>
+    	$.ajaxSetup ({
+    		cache: false //close AJAX cache
+    	});
+    	
+    	var pageSize = 2;
+    	var windMap= {"0":"无风","1":"东风","2":"东南风","3":"南风","4":"西南风","5":"西风","6":"西北风","7":"北风","8":"东北风"}
+    	
+        $(document).ready(function(){
+            $("#div1").load('include/left_title.html',function(){
+                menu();
+            })
+            $("#loadHeader").load("include/header.html",function(){
+                header();
+			})
+			$("#personal").load("include/modelpersonal.html",function(){
+                personalModel();
+            })
+			getCompanyInfo(1);
+        });
+
+		function getCompanyInfo(page){
+			$.ajax({
+	 			type:"POST",
+	 			url:"actionServlet",
+	 			data:{"actionName":"webService","method":"getIndexCompanyCnt"},
+	 			dataType:"JSON",
+	 			success:function(data){
+	 				if(data.statusCode == 100){
+		 				toastr.error('请联系管理员','未拥有权限');
+		 				return;
+		 			}
+	 				var allSize = data.result;
+	 				if(allSize > pageSize){
+	 					$('.M-box1').css('display','');
+	 					$('.M-box1').pagination({
+		 		            totalData:allSize,
+		 		            showData:pageSize,
+		 		            coping:false,
+		 		           	current:page,
+		 		            prevContent:'上一页',	//上一页内容
+		 		        	nextContent:'下一页',	//下一页内容
+		 		            jumpBtn:"确定",
+		 		            callback: firstcallbackAjax
+		 		        });
+	 				}else{
+	 					$('.M-box1').css('display','none'); 
+	 				}
+	 			}
+			});
+			
+			var pageStr = (page-1)*pageSize;
+			$.ajax({
+	 			type:"POST",
+	 			url:"actionServlet",
+	 			data:{"actionName":"webService","method":"getIndexCompanyInfo","page":pageStr,"pageSize":pageSize},
+	 			dataType:"JSON",
+	 			success:function(data){
+	 				sessionStorage.setItem("key",data.result[0].id);
+	 				if(data.statusCode == 100){
+		 				toastr.error('请联系管理员','未拥有权限');
+		 				return;
+		 			}
+	 				//发送ajax循环替换数据
+	 				$("#companyInfoDiv").empty();
+	 				var html = $("#demo").html();
+	 				for(var i=0;i<data.result.length;i++){
+	 					var newh = html.replace("#companyId#" , data.result[i].id)
+	 					newh = newh.replace("#companyType#" , data.result[i].type)
+	 					var re = new RegExp("#companyName#","g");
+	 					newh = newh.replace(re , data.result[i].name)
+	 					newh = newh.replace("#maxCnt#" , data.result[i].maxCnt)
+	 					var crop = data.result[i].crop;
+	 					if(crop == null){
+	 						crop = '无作物';
+	 					}
+	 					newh = newh.replace("#crop#" ,crop )
+	 					newh = newh.replace("#temperature#" , data.result[i].parkDeviceInfo.temperature)
+	 					newh = newh.replace("#rain#" , data.result[i].parkDeviceInfo.rain)
+	 					var wind = data.result[i].parkDeviceInfo.windDirection;
+	 					if(wind == null){
+	 						wind = '0'
+	 					}
+	 					var direction = windMap[wind];
+	 					newh = newh.replace("#windDirection#" , direction)
+	 					newh = newh.replace("#deviceCnt#" , data.result[i].deviceCnt)
+	 					newh = newh.replace("#offLineCnt#" , data.result[i].offlineCnt)
+	 					newh = newh.replace("#humidity#" , data.result[i].parkDeviceInfo.humidity)
+	 					newh = newh.replace("#evaporation#" , data.result[i].parkDeviceInfo.evaporation)
+	 					newh = newh.replace("#airPressure#" , data.result[i].parkDeviceInfo.airPressure)
+	 					newh = newh.replace("#warningCnt#" , data.result[i].waringCnt)
+	 					newh = newh.replace("#runningCnt#" , data.result[i].runingCnt)
+	 					newh = newh.replace("#windSpeed#" , data.result[i].parkDeviceInfo.windSpeed)
+	 					newh = newh.replace("#altitude#" , data.result[i].parkDeviceInfo.altitude)
+	 					newh = newh.replace("#lightRadiation#" , data.result[i].parkDeviceInfo.lightRadiation)
+
+	 					$("#companyInfoDiv").append(newh)
+	 				}
+	 			}
+	 		});
+		}
+		
+		function firstcallbackAjax(api){
+            var current=api.getCurrent();
+			getCompanyInfo(current);
+		}
+		
+		function detail(id,type,name){
+			$.ajax({
+	 			type:"POST",
+	 			url:"actionServlet",
+	 			data:{"actionName":"webService","method":"toGroundFishPage","id":id,"type":type,"name":name},
+	 			dataType:"JSON",
+	 			success:function(data){
+	 				if(data.statusCode == 100){
+		 				toastr.error('请联系管理员','未拥有权限');
+		 				return;
+		 			}
+	 				window.location.href="actionServlet?actionName=webService&method=toPage&page=groundFishList";
+	 			}
+	 		});
+			
+		}
+		
+		
+	</script>
+	<style>
+		/* 主页分页11.17 */
+		.M-box1{margin:50px 0;}
+		.M-box1>a,.M-box1>span{color:#7E7E7E;border:1px solid #ddd;padding:1% 1.5%;margin-left:0.5%;border-radius:2px;}
+		.M-box1>a.active,.M-box1>span.active{background:#0583DF;color:#fff;}
+/* 		@font-face{ */
+/* 			font-family: myThirdFont; */
+/* 			src: url('customFont/thirdFont.TTF') */
+/* 		} */
+	</style>
+</head>
+<style>
+</style>
+<body>
+ <div class="container-fluid">
+     <!-- header  -->
+    <div class="nav row " id="loadHeader">
+    </div>
+    <div class="row neirong" >
+        <!-- 侧边导航 -->
+        <div id="div1" class="sidebar col-xs-2">
+        </div>
+        <!-- 主题内容 -->
+        <div class="main col-xs-10 row animated fadeInRight" style="min-height:800px;background-color:#F4F7FE;padding:15px">
+			<div id="companyInfoDiv" class="col-xs-12 " style="background-color:#FFFFFF;" >
+				
+			</div> 
+			<!-- 11.17 -->
+			<div class="M-box1 col-xs-12" style="text-align:right;"></div>      
+        </div>
+    </div>
+    <div class="row" id="divFooter"></div> 
+ </div>
+ <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">  
+ </div> 
+ 
+ <div id="demo" style="display:none">
+	<div style="padding:20px;background-color:#FFFFFF;" >
+		<p onclick="detail('#companyId#','#companyType#','#companyName#')" class="hoverColor hoverColorBiaoti">#companyName#</p>
+		<table class="table table-bordered table-striped" style="width:100%;text-align:center;margin-top:20px">
+			<tr style="background-color:#F7F8FA;">
+				<td style="width:40%;">
+					<label style="float:left;margin-left:20px"  class="numericalFont">下属组织</label>
+					<label style="float:right;margin-right:20px">#maxCnt#</label>
+				</td>
+				<td style="width:20%">
+					<label  class="numericalFont">温度</label>
+				</td>
+				<td style="width:20%;">
+					<label  class="numericalFont">降雨量</label>
+				</td>
+				<td style="width:20%">
+					<label  class="numericalFont">风向</label>
+				</td>
+			</tr>
+			<tr style="background-color:#FFFFFF;">
+				<td style="width:40%;">
+					<label style="float:left;margin-left:20px;" class="numericalFont">作物</label>
+					<label style="float:right;margin-right:20px;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">#crop#</label>
+				</td>
+				<td style="width:20%">
+					<label class="numericalValue" style="font-family:'impact'">#temperature# <font style="font-family:'Microsoft YaHei';font-size:14px">℃</font></label>
+				</td>
+				<td style="width:20%;">
+					<label class="numericalValue" style="font-family:'impact'">#rain# <font style="font-family:'Microsoft YaHei';font-size:14px">Mm/min</font></label>
+				</td>
+				<td style="width:20%">
+					<label class="numericalValue" style="font-family:'impact';font-weight:bold;">#windDirection#</label>
+				</td>
+			</tr>
+			<tr style="background-color:#F7F8FA;">
+				<td style="width:40%;">
+					<label style="float:left;margin-left:20px"  class="numericalFont">设备数量</label>
+					<label style="float:right;margin-right:20px">#deviceCnt#</label>
+				</td>
+				<td style="width:20%">
+					<label>湿度</label>
+				</td>
+				<td style="width:20%;">
+					<label>蒸发量</label>
+				</td>
+				<td style="width:20%">
+					<label>大气压</label>
+				</td>
+			</tr>
+			<tr style="background-color:#FFFFFF;">
+				<td style="width:40%;">
+					<label style="float:left;margin-left:20px"  class="numericalFont">断线</label>
+					<label style="float:right;margin-right:20px">#offLineCnt#</label>
+				</td>
+				<td style="width:20%">
+					<label class="numericalValue" style="font-family:'impact'">#humidity#  <font style="font-family:'Microsoft YaHei';font-size:14px">%</font></label>
+				</td>
+				<td style="width:20%;">
+					<label class="numericalValue" style="font-family:'impact'">#evaporation# <font style="font-family:'Microsoft YaHei';font-size:14px">Mm</font></label>
+				</td>
+				<td style="width:20%">
+					<label class="numericalValue" style="font-family:'impact'">#airPressure#  <font style='font-family:Microsoft YaHei;font-size:14px'>HPa</font></label>
+				</td>
+			</tr>
+			<tr style="background-color:#F7F8FA;">
+				<td style="width:40%;">
+					<label style="float:left;margin-left:20px"  class="numericalFont">预警</label>
+					<label style="float:right;margin-right:20px">#warningCnt#</label>
+				</td>
+				<td style="width:20%">
+					<label  class="numericalFont">风速</label>
+				</td>
+				<td style="width:20%;">
+					<label  class="numericalFont">海拔高度</label>
+				</td>
+				<td style="width:20%">
+					<label  class="numericalFont">光合辐射</label>
+				</td>
+			</tr>
+			<tr style="background-color:#FFFFFF;">
+				<td style="width:40%;">
+					<label style="float:left;margin-left:20px"  class="numericalFont">正在运行</label>
+					<label style="float:right;margin-right:20px">#runningCnt#</label>
+				</td>
+				<td style="width:20%">
+					<label class="numericalValue" style="font-family:'impact'">#windSpeed# <font style='font-family:Microsoft YaHei;font-size:14px'>m/s</font></label>
+				</td>
+				<td style="width:20%;">
+					<label class="numericalValue" style="font-family:'impact'">#altitude#  <font style='font-family:Microsoft YaHei;font-size:14px'>M</font></label>
+				</td>
+				<td style="width:20%">
+					<label class="numericalValue" style="font-family:'impact'">#lightRadiation# <font style='font-family:Microsoft YaHei;font-size:14px'>Lux</font></label>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+  
+<script src="dist/js/bootstrap.min.js"></script>
+<script src="dist/js/widgets/webuploader.min.js"></script>
+<script src="dist/js/widgets/jquery.pagination.js"></script>
+</body>
+</html>

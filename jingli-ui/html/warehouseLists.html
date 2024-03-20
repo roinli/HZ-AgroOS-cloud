@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>库存列表</title>
+    <link rel="stylesheet" href="../dist/css/toastr.min.css" >
+    <link rel="stylesheet" href="../dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../dist/css/iCheck/custom.css">
+    <link rel="stylesheet" href="../dist/css/sweetalert.css">
+    <link rel="stylesheet" href="../dist/css/index_public.css">
+    <link rel="stylesheet" href="../dist/css/warehouseLists.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <!-- header  -->
+    <div class="nav row " id="loadHeader"></div>
+    <div class="row neirong" >
+      <!-- 侧边导航 -->
+      <div id="div1" class="sidebar col-xs-2"></div>
+      <!-- 主题内容 -->
+      <div class="main col-xs-10 row animated fadeInRight" style="min-height:800px;background-color:#F4F7FE;padding:15px 0;">
+        <div id="companyInfoDiv" class="col-xs-12">
+          <div class="wareList-wrapper">
+            <div class="wareList-head">
+              <span class="wareList-head-tit">库存列表</span>
+              <span class="wareList-head-add"></span>
+            </div>
+            <ul class="wareList-nav">
+              <li class="wareList-nav-items">
+                <span class="wareList-nav-items-t1">筛选查询</span>
+                <!-- <div class="wareList-nav-items-hide">
+                  <i class="wareList-nav-items-hide-icon glyphicon glyphicon-chevron-down"></i>
+                  <span class="wareList-nav-items-t2">收起筛选</span>
+                </div>
+                <span class="wareList-nav-items-t3">查询结果</span> -->
+              </li>
+              <li class="wareList-nav-items-cons">
+                <div class="wareList-nav-items-con">
+                  <span>仓库:</span>
+                  <select class="wareList-nav-items-con-ck form-control"></select>
+                </div>
+                <div class="wareList-nav-items-con">
+                  <span>产品名称:</span>
+                  <!-- <select class="wareList-nav-items-con-cp form-control"></select> -->
+                  <input class="wareList-nav-items-con-cp form-control" type="text" name="name" value="">
+                  <i class="wareList-nav-items-con-search glyphicon glyphicon-search"></i>
+                </div>
+                <!-- <div class="wareList-nav-items-con">
+                  <span>输入搜索:</span>
+                  <select class="wareList-nav-items-con-ss">
+                    <option value=0>产品名称</option>
+                    <option value=1>产品名称</option>
+                  </select>
+                </div> -->
+              </li>
+            </ul>
+            <div class="wareList-content">
+              <div class="wareList-content-head">
+                <span class="wareList-content-head-name">库存列表</span>
+                <div class="wareList-content-head-num">
+                  <div class="wareList-content-head-show">
+                    <span>显示条数</span>
+                    <i class="wareList-content-head-icon glyphicon glyphicon-chevron-down"></i>
+                  </div>
+                  <select class="wareList-content-show-num" value="10">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="wareList-content-nav">
+                <!-- <span class="wareList-content-nav-index"></span> -->
+                <span>编号</span>
+                <span>产品名称</span>
+                <span>产品种类</span>
+                <span>入库量</span>
+                <span>合格率</span>
+                <span>仓库名</span>
+                <span>入库时间</span>
+                <span>操作员</span>
+                <span>操作</span>
+              </div>
+              <div class="wareList-content-con-wra">
+                <!-- <div class="wareList-content-con">
+                  <span class="wareList-content-con-index">
+                    <input class="icheckbox checkId" name="checkId" type="checkbox" value="4" />
+                  </span>
+                  <span>100001</span>
+                  <span>1号仓库</span>
+                  <span>49</span>
+                  <span>983</span>
+                  <span>山西省吕梁市中阳县</span>
+                  <span>
+                    <i>查看</i>
+                  </span>
+                </div> -->
+              </div>
+            </div>
+            <div class="wareList-foot-wra">
+              <div class="wareList-foot-dao">
+                <!-- <div class="wareList-foot-dao-all">
+                  <input id="allSelect" class="icheckbox" type="checkbox"/>
+                  <span>全选</span>
+                </div>
+                <div class="wareList-foot-dao-export">
+                  <span>批量导出</span>
+                  <i class="wareList-foot-dao-export-icon glyphicon glyphicon-chevron-down"></i>
+                </div>
+                <div class="wareList-foot-dao-sure">确定</div> -->
+              </div>
+              <div class="wareList-foot">
+                <!-- 底部 分页 -->
+                <div class="M-box1"></div>
+                <!-- <div class="wareList-foot-jump">
+                  跳至
+                  <input type="text" name="" value="20">
+                  页
+                </div> -->
+              </div>
+            </div>
+
+            <div class="addWare-wra" style="display: none;">
+              <div class="addWare">
+                <div class="addWare-head">
+                  <span>新增出库</span>
+                  <div class="addWare-head-close-wra">
+                    <i class="addWare-head-close glyphicon glyphicon-remove"></i>
+                  </div>
+                </div>
+                <ul class="addWare-items">
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      产品名称
+                    </div>
+                    <div class="addWare-item-cons">
+                      <input class="addWare-item-con addWare-name" type="text" disabled="disabled" />
+                      <!-- <select class="addWare-item-con addWare-name"></select> -->
+                    </div>
+                  </li>
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      产品种类
+                    </div>
+                    <div class="addWare-item-cons addWare-item-cons-type">
+                      <!-- <select class="addWare-item-con addWare-type"></select> -->
+                      <input class="addWare-item-con addWare-type" type="text" disabled="disabled" />
+                    </div>
+                  </li>
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      出库量
+                    </div>
+                    <div class="addWare-item-cons">
+                      <input class="addWare-item-con addWare-num" type="number" placeholder="默认单位为千克">
+                    </div>
+                  </li>
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      合格率
+                    </div>
+                    <div class="addWare-item-cons">
+                      <input class="addWare-item-con addWare-qualified" type="text" placeholder="请输入">
+                    </div>
+                  </li>
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      出库时间
+                    </div>
+                    <div class="addWare-item-cons">
+                      <input class="addWare-item-con addWare-time" id="add_time" onfocus="WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm', readOnly: true});" format="yyyy-MM-dd HH:mm"  type="text" placeholder="请输入时间">
+                    </div>
+                  </li>
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      仓库
+                    </div>
+                    <div class="addWare-item-cons">
+                      <!-- <select class="addWare-item-con addWare-ware"></select> -->
+                      <input class="addWare-item-con addWare-ware" type="text" disabled="disabled" />
+                    </div>
+                  </li>
+                  <li class="addWare-item">
+                    <div class="addWare-item-title">
+                      <i>*</i>
+                      操作员
+                    </div>
+                    <div class="addWare-item-cons">
+                      <!-- <select class="addWare-item-con addWare-oper"></select> -->
+                      <input class="addWare-item-con addWare-oper" type="text" disabled="disabled" />
+                    </div>
+                  </li>
+                </ul>
+                <div class="addWare-mange">
+                  <div class="addWare-mange-cancel addWare-mange-op">
+                    <i class="glyphicon glyphicon-floppy-remove"></i>
+                    <span>取消</span>
+                  </div>
+                  <div class="addWare-mange-confirm addWare-mange-op">
+                    <i class="glyphicon glyphicon-floppy-saved"></i>
+                    <span>确定</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 产品信息 -->
+            <div class="wareListInfo-wra">
+              <div class="wareListInfo">
+                <div class="wareListInfo-head">
+                  <span>产品信息</span>
+                  <div class="wareListInfo-head-close-wra">
+                    <i class="wareListInfo-head-close glyphicon glyphicon-remove"></i>
+                  </div>
+                </div>
+                <ul class="wareListInfo-content">
+                  <li class="wareListInfo-content-items">
+                    <div class="wareListInfo-content-item">
+                      <span>产品名称：</span>
+                      <span class="wareListInfo-name"></span>
+                    </div>
+                    <div class="wareListInfo-content-item">
+                      <span>产品编号：</span>
+                      <span class="wareListInfo-id"></span>
+                    </div>
+                    <div class="wareListInfo-content-item">
+                      <span>产品种类：</span>
+                      <span class="wareListInfo-type"></span>
+                    </div>
+                  </li>
+                  <li class="wareListInfo-content-items">
+                    <div class="wareListInfo-content-item">
+                      <span>库存：</span>
+                      <span class="wareListInfo-size"></span>
+                    </div>
+                    <div class="wareListInfo-content-item">
+                      <span>仓库：</span>
+                      <span class="wareListInfo-warehouse_name"></span>
+                    </div>
+                  </li>
+                </ul>
+                <div class="wareListInfo-record">
+                  <h4 class="wareListInfo-record-title">入库记录</h4>
+                  <table class="wareListInfo-record-info table table-bordered">
+                    <tr>
+                      <td width=20%>
+                        入库量
+                      </td>
+                      <td width=80%>
+                        <span class="wareListInfo-size"></span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width=20%>
+                        合格率
+                      </td>
+                      <td width=80%>
+                        <span class="wareListInfo-qualified"></span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width=20%>
+                        入库时间
+                      </td>
+                      <td width=80%>
+                        <span class="wareListInfo-create_time"></span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td width=20%>
+                        操作员
+                      </td>
+                      <td width=80%>
+                        <span class="wareListInfo-operator"></span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="wareListInfo-out">
+                  <h4 class="wareListInfo-out-title">出库记录</h4>
+                  <table class="wareListInfo-out-info table table-bordered">
+                    <thead>
+                      <tr>
+                        <td>
+                          编号
+                        </td>
+                        <td>
+                          出库量
+                        </td>
+                        <td>
+                          出库合格率
+                        </td>
+                        <td>
+                          仓库名称
+                        </td>
+                        <td>
+                          出库时间
+                        </td>
+                        <td>
+                          操作员
+                        </td>
+                      </tr>
+                    </thead>
+                    <tbody class="wareListInfo-out-list">
+                      <!-- <tr>
+                        <td>
+                          10001
+                        </td>
+                        <td>
+                          984
+                        </td>
+                        <td>
+                          99%
+                        </td>
+                        <td>
+                          1号仓库
+                        </td>
+                        <td>
+                          2018-12-12 12：00
+                        </td>
+                        <td>
+                          任伟军
+                        </td>
+                      </tr> -->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="wareListInfo-mange hide">
+                  <div class="wareListInfo-mange-cancel wareListInfo-mange-op">
+                    <i class="glyphicon glyphicon-floppy-remove"></i>
+                    <span>取消</span>
+                  </div>
+                  <div class="wareListInfo-mange-confirm wareListInfo-mange-op">
+                    <i class="glyphicon glyphicon-floppy-saved"></i>
+                    <span>确定</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- 11.17 -->
+        <!-- <div class="M-box1 col-xs-12" style="text-align:right;">
+          456
+        </div> -->
+      </div>
+    </div>
+    <div class="row" id="divFooter"></div>
+  </div>
+  <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"></div>
+
+  <script type="text/javascript" type="text/javascript" src="../dist/js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+
+  <script type="text/javascript" type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+  <script type="text/javascript" src="../dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/webuploader.min.js"></script>
+  <script type="text/javascript" src="../dist/js/My97DatePicker_ie9/WdatePicker.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/jquery.pagination.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/sweetalert.min.js"></script>
+  <script type="text/javascript" src="../dist/js/iCheck/icheck.min.js"></script>
+  <script type="text/javascript" src="../dist/js/js/comm.js"></script>
+  <script type="text/javascript" src="../dist/js/js/index_head_left.js"></script>
+  <script type="text/javascript">
+      $(document).ready(function(){
+
+        // var URLAPI = "http://chipcity.6655.la:10145/"
+
+        // 获取登陆信息
+        var loginInfo = JSON.parse(sessionStorage.getItem("loginInfo"));
+        var page = 1;
+        var pageSize = 10;
+        var pageMax;
+
+        $("#div1").load('../include/left_title.html',function(){
+          menu();
+        })
+        $("#loadHeader").load("../include/header.html",function(){
+          header();
+        })
+        $("#personal").load("../include/modelpersonal.html",function(){
+          personalModel();
+        })
+
+        // 更改仓库
+        $(".wareList-nav-items-con-ck").on("change", function() {
+          $(".wareList-nav-items-con-cp").val("");
+          var id = $(this).val();
+          wareStock(id);
+          wareCount(id);
+        })
+        $(".wareList-content-show-num").on("change", function(){
+          pageSize= $(this).val();
+          page = 1;
+          var id = $(".wareList-nav-items-con-ck").val();
+          wareStock(id);
+          wareCount(id);
+        })
+
+        // 显示一页显示多少条数据
+        $(".wareList-content-head-show").on("click", function() {
+          $(".wareList-content-head-show").hide();
+        })
+
+        init();
+
+
+
+        $(".addWare-head-close").on("click", function() {
+          $(".addWare-wra").hide();
+          clearInfo();
+        })
+        $(".addWare-mange-cancel").on("click", function() {
+          $(".addWare-wra").hide();
+          clearInfo();
+        })
+        $(".addWare-mange-confirm").on("click", function(){
+          addWare();
+        })
+
+        // 产品信息
+        $(".wareList-content-con-wra").on("click", ".wareList-content-see", function() {
+          // wareList-content-con
+          $(".wareListInfo-wra").show();
+          var create_time_ = $(this).parents(".wareList-content-con").find("span:eq(6)").html();
+          var displayName_ = $(this).parents(".wareList-content-con").attr("data-displayname");
+          var id_ =  $(this).parents(".wareList-content-con").find("span:eq(0)").html();
+          var name_ =  $(this).parents(".wareList-content-con").find("span:eq(1)").html();
+          var operator_ = $(this).parents(".wareList-content-con").find("span:eq(7)").html();
+          var qualified_ = $(this).parents(".wareList-content-con").find("span:eq(4)").html();
+          var size_ = $(this).parents(".wareList-content-con").find("span:eq(3)").html();
+          var type_ = $(this).parents(".wareList-content-con").find("span:eq(2)").html();
+          var warehouse_id_ = $(this).parents(".wareList-content-con").find("span:eq(0)").attr(".data-warehouse_id");
+          var warehouse_name_ = $(this).parents(".wareList-content-con").find("span:eq(5)").html();
+          $(".wareListInfo-create_time").html(create_time_);
+          $(".wareListInfo-displayName").html(displayName_);
+          $(".wareListInfo-id").html(id_);
+          $(".wareListInfo-name").html(name_);
+          $(".wareListInfo-operator").html(operator_);
+          $(".wareListInfo-qualified").html(qualified_);
+          $(".wareListInfo-size").html(size_);
+          $(".wareListInfo-type").html(type_);
+          $(".wareListInfo-warehouse_id").html(warehouse_id_);
+          $(".wareListInfo-warehouse_name").html(warehouse_name_);
+
+          getOutList(id_, displayName_, operator_);
+        })
+
+        // 出库 // 新增出库 显示
+        $(".wareList-content-con-wra").on("click", ".wareList-content-add", function() {
+          clearInfo();
+          showSreenAddWare();
+          var name_ =  $(this).parents(".wareList-content-con").find("span:eq(1)").html();
+          var operator_ = $(this).parents(".wareList-content-con").find("span:eq(7)").html();
+          var type_ = $(this).parents(".wareList-content-con").find("span:eq(2)").html();
+          var type_id = $(this).parents(".wareList-content-con").find("span:eq(2)").attr("data-type");
+          var warehouse_name_ = $(this).parents(".wareList-content-con").find("span:eq(5)").html();
+          var id_ = $(this).parents(".wareList-content-con").find("span:eq(0)").html();
+          $(".addWare-name").attr("data-id", id_);
+          $(".addWare-name").val(name_);
+          $(".addWare-type").val(type_);
+          $(".addWare-type").attr("data-type", type_id);
+          $(".addWare-ware").val(warehouse_name_);
+          $(".addWare-oper").val(operator_);
+          $(".addWare-wra").show();
+        })
+
+        // 关闭
+        $(".wareListInfo-head-close").on("click", function() {
+          $(".wareListInfo-wra").hide();
+        })
+
+        $(".wareList-nav-items-con-search").on("click", function() {
+          var id_ = $(".wareList-nav-items-con-ck").val();
+          var name_ = $(".wareList-nav-items-con-cp").val();
+          wareStock(id_, name_)
+        })
+        // ----------------------------------------------------------------
+        function searchWare(msg) {
+          page = msg.getCurrent();
+          var id = $(".wareList-nav-items-con-ck").val();
+          wareStock(id);
+        }
+        // 初始化仓库列表
+        function init() {
+          // 7.查下仓库下拉框
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              'actionName': 'warehouseService',
+              'method': 'frontWareHouseList',
+              'userType': 3,
+              'companyId': loginInfo.id,
+              "token": getCookie("token")
+            },
+            dataType: 'json',
+            type: 'post',
+            success: function(msg) {
+              console.log(msg);
+              if (msg.statusCode == 1 || msg.statusCode == '1') {
+                var str = '<option value="">== 请选择 ==</option>';
+                var str1 = '';
+                msg.result.forEach(function(item, index) {
+                  str += '<option value="'+item.id+'">'+item.warehouse_name+'</option>'
+                  str1 += '<option value="'+item.company_id+'">'+item.company_id+'</option>'
+                })
+                $(".wareList-nav-items-con-ck").html(str);
+                // $(".addWare-ware").html(str);
+                // $(".addWare-oper").html(str1);
+                // wareStock(msg.result[0].id);
+                // wareCount(msg.result[0].id);
+                wareStock();
+                wareCount();
+              } else {
+                toastr.error('查询仓库数据失败','请联系管理员');
+              }
+            }
+          })
+
+
+        }
+
+        // 9.前端显示库存管理列表
+        function wareStock(id, name) {
+          var id,name;
+          if (!id) id = "";
+          if (!name) name = "";
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              'actionName': 'warehouseService',
+              'method': 'getInventoryManage',
+              'companyId': loginInfo.id,
+              'warehouseId': id,
+              "displayName": name,
+              'page': page,
+              'pageSize': pageSize,
+              "token": getCookie("token")
+            },
+            dataType: 'json',
+            type: 'post',
+            success: function(msg) {
+              if (msg.statusCode == 1) {
+                var str = '';
+                msg.result.forEach(function(item, index) {
+                  str += '<div class="wareList-content-con" data-displayName="'+item.displayName+'">'
+                            +'<span data-warehouse_id="'+item.warehouse_id+'">'+item.id+'</span>'
+                            +'<span>'+item.name+'</span>'
+                            +'<span data-type="'+item.type+'">'+item.typeName+'</span>'
+                            +'<span>'+item.size+'</span>'
+                            +'<span>'+item.qualified+'</span>'
+                            +'<span>'+item.displayName+'</span>'
+                            +'<span>'+item.create_time.substr(0,16)+'</span>'
+                            +'<span>'+item.operator+'</span>'
+                            +'<span><a class="wareList-content-see">查看</a><a class="wareList-content-add">出库</a></span>'
+                          +'</div>';
+                })
+                $(".wareList-content-con-wra").html(str);
+              }
+            }
+          })
+        }
+
+        // 10.前端显示库存管理count
+        function wareCount(id){
+          var id;
+          if (!id) id = "";
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              'actionName': 'warehouseService',
+              'method': 'getInventoryCount',
+              'warehouseId': id,
+              'companyId': loginInfo.id,
+              "token": getCookie("token")
+            },
+            dataType: 'json',
+            type: 'post',
+            success: function(msg) {
+              console.log(msg);
+              if (msg.statusCode == 1) {
+                // 分页
+                if(msg.result) $(".M-box1").show();
+                $('.M-box1').pagination({
+                    totalData: msg.result,  //数据总条数
+                    showData: pageSize,   //每页显示的条数
+                    coping: false,
+                    current: page,      //当前第几页
+                    prevContent: "上一页",	//上一页内容
+                    nextContent: "下一页",	//下一页内容
+                    jumpBtn: "确定",
+                    callback: searchWare
+                });
+              } else {
+                alert('查询总数据失败');
+              }
+            }
+          })
+        }
+
+        // 出库 -- 参数 -- name
+        function WareName(id){
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              "actionName": "warehouseService",
+              "method": "insertWarehousesList",
+              "warehouseId": id,
+              "ioType": 1,
+              "token": getCookie("token")
+            },
+            dateType: "json",
+            type: "post",
+            success: function(msg){
+              if (msg.statusCode == 1 && msg.result.length != 0) {
+                var str = '';
+                msg.result.forEach(function(item){
+                  str += '<option value='+item.id+'>'+item.name+'</option>'
+                })
+                $(".addWare-name").html(str)
+              }
+            }
+          })
+        }
+
+        // 查看产品类型 需要在先查到ID
+        function viewProInfo(id) {
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              "actionName": "warehouseService",
+              "method": "getViewProInfo",
+              "inventoryId": id,
+              "token": getCookie("token")
+            },
+            dataType: "json",
+            type: "post",
+            success: function(msg) {
+              if (msg.statusCode == 1) {
+                // TODO
+                var str = "";
+                if (msg.result.length > 0) {
+                  str += '<select class="addWare-item-con">';
+                  msg.result.forEach(function(item) {
+                    str += '<option value="'+item.name+'">'+item.name+'</option>';
+                  })
+                  str += '</select>';
+                } else {
+                  str = '<input class="addWare-item-con addWare-type" type="text" />';
+                }
+                console.log(str);
+                $(".addWare-item-cons-type").html(str);
+              } else {
+                toastr.error('获取仓库种类列表失败','');
+              }
+            }
+          })
+        }
+
+        function clearInfo() {
+          $(".addWare-num").val("");
+          $(".addWare-qualified").val("");
+          $(".addWare-time").val("");
+        }
+
+        // 新增出库
+        function addWare(){
+          var inventoryId = $(".addWare-name").attr("data-id");
+          var name = $(".addWare-name").val();
+          var type = $(".addWare-type").attr("data-type");
+          var size = $(".addWare-num").val();
+          var qualified = $(".addWare-qualified").val();
+
+          if (!name) {
+            $(".addWare-name").focus();
+            return false;
+          }
+          if (!type) {
+            $(".addWare-type").focus();
+            return false;
+          }
+          if (!size) {
+            $(".addWare-num").focus();
+            return false;
+          }
+          if (!qualified) {
+            $(".addWare-qualified").focus();
+            return false;
+          }
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              "actionName": "warehouseService",
+              "method": "updatePlacing",
+              "inventoryId": inventoryId,
+              "name": name,
+              "type": type,
+              "size": size,
+              "qualified": qualified,
+              "operator": loginInfo.id,
+              "io_type": 2,
+              "token": getCookie("token")
+            },
+            dataType: "json",
+            type: "post",
+            success: function(msg) {
+              console.log(msg);
+              $(".addWare-wra").hide();
+              if (msg.statusCode == 1) {
+                swal({
+                  title: "保存成功",
+                    text: "",
+                    type: "success"
+                });
+              } else {
+                swal({
+                  title: "保存失败",
+                  text: "",
+                  type: "error"
+                });
+              }
+
+            }
+          })
+        }
+
+        // 获取出库记录
+        function getOutList(id, displayName_, operator_) {
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              "actionName": "warehouseService",
+              "method": "getViewOutgoingRecords",
+              "inventoryId": id,
+              "ioType": 2,
+              "token": getCookie("token")
+            },
+            dateType: "json",
+            type: "post",
+            success: function(msg) {
+              console.log(msg);
+              if (msg.statusCode == 1) {
+                var str = "";
+                msg.result.forEach(function(item) {
+                  str +='<tr>'
+                          +'<td>'+item.id+'</td>'
+                          +'<td>'+item.size+'</td>'
+                          +'<td>'+item.qualified+'</td>'
+                          +'<td>'+displayName_+'</td>'
+                          +'<td>'+item.create_time.substr(0,16)+'</td>'
+                          +'<td>'+operator_+'</td>'
+                        +'</tr>'
+                })
+                $(".wareListInfo-out-list").html(str);
+                showSreen();
+              }
+            }
+          })
+        }
+
+        function showSreen() {
+          var a = $(".wareListInfo").height();
+          var b = document.documentElement.clientHeight || document.body.clientHeight;
+          if (b - 60 < a) {
+            $(".wareListInfo").css({
+              "height": (b-60) + "px",
+              "overflow-y": "auto"
+            })
+          }
+        }
+        function showSreenAddWare() {
+          var a = 549;
+          var b = document.documentElement.clientHeight || document.body.clientHeight;
+          if (b - 60 < a) {
+            $(".addWare").css({
+              "height": (b-60) + "px",
+              "overflow-y": "auto"
+            })
+          }
+        }
+
+      });
+    </script>
+</body>
+</html>

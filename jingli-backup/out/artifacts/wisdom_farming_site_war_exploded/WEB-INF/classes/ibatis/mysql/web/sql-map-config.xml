@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"  "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings cacheModelsEnabled="true" enhancementEnabled="true" lazyLoadingEnabled="false" maxRequests="20" maxSessions="10" maxTransactions="50" useStatementNamespaces="true" />
+	<sqlMap resource="ibatis/mysql/web/WebSql.xml" />
+	<sqlMap resource="ibatis/mysql/web/DeviceSql.xml" />
+	<sqlMap resource="ibatis/mysql/web/OtherSql.xml" />
+	<sqlMap resource="ibatis/mysql/web/PermissionSql.xml" />
+	<sqlMap resource="ibatis/mysql/web/UserInfoSql.xml" />
+	<sqlMap resource="ibatis/mysql/web/NettyDeviceSql.xml" />
+	<sqlMap resource="ibatis/mysql/web/GridDataSql.xml" />
+	<sqlMap resource="ibatis/mysql/web/WarningSql.xml" />
+	<sqlMap resource="ibatis/mysql/web/SourceSql.xml" />
+	<sqlMap resource="ibatis/mysql/web/ExpertSql.xml" />
+	<sqlMap resource="ibatis/mysql/web/EmployeeSql.xml" />
+	<sqlMap resource="ibatis/mysql/web/WarehouseSql.xml" /><!-- 仓库管理 -->
+	
+	
+</sqlMapConfig>

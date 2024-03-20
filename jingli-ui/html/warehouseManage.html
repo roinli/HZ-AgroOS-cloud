@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <title>仓库列表</title>
+    <link rel="stylesheet" href="../dist/css/toastr.min.css" >
+    <link rel="stylesheet" href="../dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../dist/css/sweetalert.css">
+    <link rel="stylesheet" href="../dist/css/index_public.css">
+    <link rel="stylesheet" href="../dist/css/warehouseManage.css">
+</head>
+<body>
+  <div class="container-fluid">
+    <!-- header  -->
+    <div class="nav row " id="loadHeader"></div>
+    <div class="row neirong" >
+      <!-- 侧边导航 -->
+      <div id="div1" class="sidebar col-xs-2"></div>
+      <!-- 主题内容 -->
+      <div class="main col-xs-10 row animated fadeInRight" style="min-height:800px;background-color:#F4F7FE;padding:15px 0;">
+        <div id="companyInfoDiv" class="col-xs-12">
+          <div class="wareList-wrapper">
+            <div class="wareList-head">
+              仓库管理
+            </div>
+            <ul class="wareList-nav">
+              <!-- <li class="wareList-nav-items">
+                <span class="wareList-nav-items-t1">筛选查询</span>
+                <div class="wareList-nav-items-hide">
+                  <i class="wareList-nav-items-hide-icon glyphicon glyphicon-chevron-down"></i>
+                  <span class="wareList-nav-items-t2">收起筛选</span>
+                </div>
+                <span class="wareList-nav-items-t3">查询结果</span>
+              </li> -->
+              <li class="wareList-nav-items-cons">
+                <div class="wareList-nav-items-con">
+                  <span class="wareList-nav-add">添加仓库</span>
+                </div>
+                <div class="wareList-nav-items-con wareList-nav-items-con2">
+                  <input class="wareList-nav-company" type="text" placeholder="请输入企业账号"/>
+                  <span class="wareList-nav-company-search glyphicon glyphicon-search"></span>
+                </div>
+              </li>
+            </ul>
+            <div class="wareList-content">
+              <div class="wareList-content-nav">
+                <span>编号</span>
+                <span>仓库ID</span>
+                <span>仓库名称</span>
+                <span>仓库数量</span>
+                <span>仓库位置</span>
+                <span>创建时间</span>
+                <span>操作</span>
+              </div>
+              <div class="wareList-content-con-wra">
+                <!-- <div class="wareList-content-con">
+                  <span>100001</span>
+                  <span>1号仓库</span>
+                  <span>49</span>
+                  <span>983</span>
+                  <span>山西省吕梁市中阳县</span>
+                  <span>
+                    <i class="wareList-content-edit">修改</i>
+                    <i class="wareList-content-del">删除</i>
+                  </span>
+                </div> -->
+              </div>
+
+            </div>
+            <div class="wareList-foot-wra">
+
+              <div class="wareList-foot">
+                <!-- 底部 分页 -->
+              </div>
+            </div>
+          </div>
+          <div class="wareListNew-wra" data-main="add" style="display: none;">
+            <div class="wareListNew">
+              <div class="wareListNew-head">
+                <span>新建仓库</span>
+                <div class="wareListNew-head-close-wra">
+                  <i class="wareListNew-head-close glyphicon glyphicon-remove"></i>
+                </div>
+              </div>
+              <ul class="wareListNew-content">
+                <li class="wareListNew-content-items">
+                  <span>显示名称:</span>
+                  <input class="wareListNew-displayName" type="text" placeholder="请输入显示名称">
+                </li>
+                <li class="wareListNew-content-items">
+                  <span>仓库名称:</span>
+                  <input class="wareListNew-warehouse_name" type="text" placeholder="请输入仓库名称">
+                </li>
+                <li class="wareListNew-content-items">
+                  <span>仓库数量:</span>
+                  <input class="wareListNew-warehouse_num" type="number" placeholder="请输入仓库数量">
+                </li>
+                <li class="wareListNew-content-items">
+                  <span>仓库位置:</span>
+                  <input class="wareListNew-warehouse_location" type="text" placeholder="请输入仓库位置">
+                </li>
+                <li class="wareListNew-content-items">
+                  <span>摄像头通道号:</span>
+                  <input class="wareListNew-camera_pass_num" type="text" placeholder="请输入摄像头通道号">
+                </li>
+              </ul>
+              <div class="wareListNew-mange">
+                <div class="wareListNew-mange-cancel wareListNew-mange-op">
+                  <i class="glyphicon glyphicon-floppy-remove"></i>
+                  <span>取消</span>
+                </div>
+                <div class="wareListNew-mange-confirm wareListNew-mange-op">
+                  <i class="glyphicon glyphicon-floppy-saved"></i>
+                  <span>确定</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 11.17 -->
+        <!-- <div class="M-box1 col-xs-12" style="text-align:right;">
+          456
+        </div> -->
+      </div>
+    </div>
+    <div class="row" id="divFooter"></div>
+  </div>
+  <div class="modal fade" id="personal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"></div>
+
+  <script type="text/javascript" type="text/javascript" src="../dist/js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" type="text/javascript" src="../dist/js/widgets/jquery.nicescroll.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+
+  <script type="text/javascript" type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=sjnEPnWsuqC8nnOea4HMNQkUqK3TGBmu"></script>
+  <script type="text/javascript" src="../dist/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/webuploader.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/jquery.pagination.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/toastr.min.js"></script>
+  <script type="text/javascript" src="../dist/js/widgets/sweetalert.min.js"></script>
+
+  <script type="text/javascript" src="../dist/js/js/comm.js"></script>
+  <script type="text/javascript" src="../dist/js/js/index_head_left.js"></script>
+  <script type="text/javascript">
+      $(document).ready(function(){
+        $("#div1").load('../include/left_title.html',function(){
+          menu();
+        })
+        $("#loadHeader").load("../include/header.html",function(){
+          header();
+        })
+        $("#personal").load("../include/modelpersonal.html",function(){
+          personalModel();
+        })
+        var warehouse = 0;
+        var company_id;
+
+        //查询公司id
+        $(".wareList-nav-company-search").on("click", function() {
+          var val = $(".wareList-nav-company").val();
+          if (!val) return false;
+          $(".wareList-nav-company").attr("data-val", val);
+          getWrahouseInfo(val);
+        })
+
+        // 新增仓库 显示
+        $(".wareList-nav-add").on("click", function() {
+          if (!$(".wareList-nav-company").val()) {
+            swal({
+              title: "请先查询公司账号",
+              text: ""
+            });
+            $(".wareList-nav-company").focus();
+            return false;
+          }
+          $(".wareListNew-wra").show();
+          $(".wareListNew-wra").attr("data-main","add");
+          $(".wareListNew-head span").html("新增仓库");
+        })
+
+        // 新增仓库
+        $(".wareListNew-mange-confirm").on("click", function() {
+          var type = $(".wareListNew-wra").attr("data-main");
+          if (type == "add") {
+            saveWarehouse()
+          } else {
+            var id = $(".wareListNew-wra").attr("data-id");
+            editWarehouse(id);
+          }
+        })
+
+        // 修改
+        $(".wareList-content-con-wra").on("click", ".wareList-content-edit", function() {
+          var id = $(this).attr("data-id");
+          $(".wareListNew-wra").attr("data-id", id);
+          $(".wareListNew-wra").show();
+          $(".wareListNew-wra").attr("data-main","edit");
+          $(".wareListNew-head span").html("修改仓库");
+          var displayName = $(this).parents(".wareList-content-con").find("span:eq(2)").html();
+          var warehouse_name = $(this).parents(".wareList-content-con").find("span:eq(2)").html();
+          var warehouse_num = $(this).parents(".wareList-content-con").find("span:eq(3)").html();
+          var warehouse_location = $(this).parents(".wareList-content-con").find("span:eq(4)").html();
+          var camera_pass_num = $(this).parents(".wareList-content-con").attr("data-camera_pass_num");
+          $(".wareListNew-displayName").val(displayName);
+          $(".wareListNew-warehouse_name").val(warehouse_name);
+          $(".wareListNew-warehouse_num").val(warehouse_num);
+          $(".wareListNew-warehouse_location").val(warehouse_location);
+          $(".wareListNew-camera_pass_num").val(camera_pass_num);
+        })
+
+        // 删除
+        $(".wareList-content-con-wra").on("click", ".wareList-content-del", function() {
+          var id = $(this).attr("data-id");
+          var num = $(this).parents(".wareList-content-con").find("span:eq(0)").html();
+          var this_ = $(this);
+          delWarehouse(id, num, this_);
+        })
+
+        // 关闭
+        $(".wareListNew-head-close").on("click", function() {
+          $(".wareListNew-wra").hide();
+        })
+        $(".wareListNew-mange-cancel").on("click", function() {
+          $(".wareListNew-wra").hide();
+        })
+
+        // =================================================================
+        // 根据手机号码查询仓库
+        function getWrahouseInfo(val) {
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              "actionName": "warehouseService",
+              "method": "getWareHouseManage",
+              "mobile": val,
+              "type": 3,
+              "page": 1,
+              "pageSize": 10,
+              "token": getCookie("token")
+            },
+            dataType: "json",
+            type: "post",
+            success: function(msg) {
+              console.log(msg);
+              if (msg.statusCode == 1) {
+                var str = "";
+                msg.result.forEach(function(item) {
+                  company_id = item.company_id;
+                  warehouse = item.number;
+                  str += '<div class="wareList-content-con" data-camera_pass_num = "'+item.camera_pass_num+'">'
+                            +'<span>'+item.number+'</span>'
+                            +'<span>'+item.id+'</span>'
+                            +'<span>'+item.display_name+'</span>'
+                            +'<span>'+item.warehouse_num+'</span>'
+                            +'<span>'+item.warehouse_location+'</span>'
+                            +'<span>'+item.create_time.substr(0,19)+'</span>'
+                            +'<span>'
+                              +'<i data-id="'+item.id+'" class="wareList-content-edit">修改</i>'
+                              +'<i data-id="'+item.company_id+'" class="wareList-content-del">删除</i>'
+                            +'</span>'
+                          +'</div>';
+                })
+                $(".wareList-content-con-wra").html(str);
+              }
+            }
+          })
+        }
+
+        // 新增
+        function saveWarehouse() {
+          var displayName = $(".wareListNew-displayName").val();
+          var warehouse_name = $(".wareListNew-warehouse_name").val();
+          var warehouse_num = $(".wareListNew-warehouse_num").val();
+          var warehouse_location = $(".wareListNew-warehouse_location").val();
+          var camera_pass_num = $(".wareListNew-camera_pass_num").val() || 0;
+          warehouse = parseInt(warehouse) + 1;
+          if (!displayName) {
+            $(".wareListNew-displayName").focus();
+            return false;
+          }
+          if (!warehouse_name) {
+            $(".wareListNew-warehouse_name").focus();
+            return false;
+          }
+          if (!warehouse_num) {
+            $(".wareListNew-warehouse_num").focus();
+            return false;
+          }
+          if (!warehouse_location) {
+            $(".wareListNew-warehouse_location").focus();
+            return false;
+          }
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              "actionName": "warehouseService",
+              "method": "insertWareHouseAdd",
+              "userType": 3,
+              "companyId": company_id,
+              "number": warehouse,
+              "displayName": displayName,
+              "camera_pass_num": camera_pass_num,
+              "warehouse_name": warehouse_name,
+              "warehouse_num": camera_pass_num,
+              "warehouse_location": warehouse_location,
+              "token": getCookie("token")
+            },
+            dataType: "json",
+            type: "post",
+            success: function(msg) {
+              $(".wareListNew-wra").hide();
+              if (msg.statusCode == 1) {
+                swal({
+  	 	    	  		title: "保存成功",
+  	 	          		text: "",
+  	 	          		type: "success"
+  	 	         	});
+                var val_ = $(".wareList-nav-company").attr("data-val");
+                if (!val_) return false;
+                getWrahouseInfo(val_);
+              } else {
+                swal({
+                  title: "保存失败",
+                  text: "",
+                  type: "error"
+                });
+              }
+            }
+          })
+        }
+
+        // 修改
+        function editWarehouse(id) {
+          var camera_pass_num = $(".wareListNew-camera_pass_num").val();
+          var warehouse_num = $(".wareListNew-warehouse_num").val();
+          var warehouse_location = $(".wareListNew-warehouse_location").val();
+          var displayName = $(".wareListNew-displayName").val();
+          // TODO
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              "actionName": "warehouseService",
+              "method": "updateWareHouse",
+              "wareHouseID": id,
+              "camera_pass_num": camera_pass_num,
+              "warehouse_num": warehouse_num,
+              "warehouse_location": warehouse_location,
+              "displayName": displayName,
+              "token": getCookie("token")
+            },
+            dataType: "json",
+            type: "post",
+            success: function(msg) {
+              if (msg.statusCode == 1) {
+                swal({
+                  title: "保存成功",
+                    text: "",
+                    type: "success"
+                });
+                var val_ = $(".wareList-nav-company").attr("data-val");
+                if (!val_) return false;
+                getWrahouseInfo(val_);
+              } else {
+                swal({
+                  title: "保存失败",
+                  text: "",
+                  type: "error"
+                });
+              }
+            }
+          })
+
+          // TODO
+          $(".wareListNew-wra").hide();
+        }
+
+        function delWarehouse(id, num, this_){
+          $.ajax({
+            url: URLAPI + "warehouseInterface",
+            data: {
+              "actionName": "warehouseService",
+              "method": "deleteWareHouse",
+              "userType": 3,
+              "companyId": id,
+              "num": parseInt(num),
+              "token": getCookie("token")
+            },
+            dataType: "json",
+            type: "post",
+            success: function(msg) {
+              if (msg.statusCode == 1) {
+                this_.parents(".wareList-content-con").remove();
+                swal({
+  	 	    	  		title: "删除成功",
+  	 	          		text: "",
+  	 	          		type: "success"
+  	 	         	});
+              } else {
+                swal({
+                  title: "删除失败",
+                  text: "",
+                  type: "error"
+                });
+              }
+            }
+          })
+        }
+      });
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>鱼类生长期图片</title>
+    <link rel="stylesheet" href="../page/css/mui.min.css">
+    <link rel="stylesheet" href="../page/css/publicStyle.css">
+</head>
+<body>
+    <header id="myNav" class="mui-bar mui-bar-nav">
+        <a class="mui-icon mui-icon-arrowleft mui-action-back" style="color:#333;font-size:15px;margin-top:5px;" id="back">返回</a>
+        <h1 class="mui-title">生长期图片</h1>       
+    </header>
+    <div class="mui-content">
+        	<div class="mui-content-padded">
+                    <!-- <p class="imgRow">
+                        <img src="img/002.jpg" data-preview-src="">
+                    </p>
+                    <div class="photoNote">
+                        <p>
+                            <a class="uploadDate">2017-08-05 22:00</a> 
+                            <a class="uploadAddress">兰州市榆中县榆兴农庄</a>
+                        </p>
+                        <p class="photoNoteMsg">
+                            <a class="photoNoteMsgTitle">图片备注</a>
+                            <a class="photoNoteMsgContent">
+                                定植前准备工作--旋地
+                            </a>
+                        </p>
+                    </div>
+                   -->
+            </div>
+    </div>
+    <script src="../dist/js/jquery-1.9.1.min.js"></script>
+    <script src="../page/js/mui.min.js"></script>
+    <script src="../page/js/mui.previewimage.js"></script> 
+    <script src="../page/js/mui.zoom.js"></script>
+    <script src="../page/js/publicRem.js"></script>
+    <script>
+        $(function(){
+            mui.init()
+            mui.previewImage();
+//             var imgUrl='http://ozdwirxvt.bkt.clouddn.com/';
+            var imgUrl="http://img.nxptdn.com/";
+           var fishGrowthPeriodContent= JSON.parse(localStorage.getItem('fishGrowthPeriodContent'));
+           console.log(fishGrowthPeriodContent);
+           var html="";
+            for(var i=0;i<fishGrowthPeriodContent.length;i++){
+                html+='<p class="imgRow">'+
+                        '<img src="'+imgUrl+fishGrowthPeriodContent[i].icon+'" data-preview-src="" style="width:100%;">'+
+                    '</p>'+
+                    '<div class="photoNote">'+
+                        '<p><a class="uploadDate">'+fishGrowthPeriodContent[i].picDate+'</a><a class="uploadAddress">'+fishGrowthPeriodContent[i].position+'</a>';
+                if(fishGrowthPeriodContent[i].type == '1'){
+                	html+='<a class="uploadDate">鱼苗期  存活率'+fishGrowthPeriodContent[i].chl+'</a>';
+                }      
+                if(fishGrowthPeriodContent[i].type == '2'){
+                	html+='<a class="uploadDate">成长期</a>';
+                }    
+                if(fishGrowthPeriodContent[i].type == '3'){
+                	html+='<a class="uploadDate">收获期 收获率'+fishGrowthPeriodContent[i].shl+'</a>';
+                }    
+                html+='</p><p class="photoNoteMsg"><a class="photoNoteMsgTitle">图片备注</a><a class="photoNoteMsgContent">'+fishGrowthPeriodContent[i].desc+'</a></p>'+
+                    '</div>'
+            }
+            $(".mui-content-padded").html(html)
+        })
+    </script>
+</body>
+</html>

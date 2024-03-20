@@ -1,0 +1,32 @@
+h4{margin:30px 0 ;}
+/* ..统计--图表 */
+.sousuo{height:50px;line-height:50px;margin:15px;}
+.input-group .form-control{width:65%}
+#start_time,#end_time{
+width:30%;height:30px;border-radius: 3px;border:1px solid #ddd;line-height: 25px;padding-left:5px;
+}
+.chaxun{border:1px solid #ddd;margin:-15px 15px 15px 15px;border-bottom:none};
+/* 搜索框 */
+.input-xs{height:30px;}
+.granularity{text-align: center}
+#lead_out{text-align: center;margin-top:50px;}
+#lead_out>button{
+width:136px;
+height:35px;
+font-size:14px;
+border:1px solid #0583DF;
+border-radius: 25px;
+background:#0583DF;
+color:#fff;
+}
+/* 最高温度 最低温度 */
+.chaxun{height:60px;line-height:60px;font-size:14px;}
+.temperature{padding:7px 14px; border:1px solid #ddd;margin:-4px}
+.temperature:hover{cursor: pointer}
+/* .average{border-top-left-radius: 25px;border-bottom-left-radius: 25px;} */
+.minMum{border-top-right-radius: 25px;border-bottom-right-radius: 25px;}
+.activeBg{background:#1481E1;color:#fff;border-color: #1481E1}
+.graph{border-top-left-radius: 25px;border-bottom-left-radius: 25px;}
+
+/*下拉框*/
+#searchSel{height:30px;border:1px solid #ddd;border-radius:2px;width:30%;}

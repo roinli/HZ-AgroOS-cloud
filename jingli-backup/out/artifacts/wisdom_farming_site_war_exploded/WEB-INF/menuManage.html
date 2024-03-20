@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+     <meta http-equiv="pragma" content="no-cache">  
+	<meta http-equiv="cache-control" content="no-cache">  
+	<meta http-equiv="expires" content="0"> 
+    <title>菜单管理</title>
+    <script src="dist/js/jquery-1.9.1.min.js"></script> 
+    <link rel="stylesheet" href="dist/css/normalize.css">
+    <link rel="stylesheet" href="dist/css/bootstrap.css">
+    <link rel="stylesheet" href="dist/css/index_public.css">
+    <link rel="stylesheet" href="dist/css/index_table.css">
+    <link rel="stylesheet" href="dist/css/ladda/ladda-themeless.min.css">
+    <script src="dist/js/js/index_head_left.js"></script>
+    <link rel="stylesheet" href="dist/css/toastr.min.css" >
+	<script src="dist/js/widgets/toastr.min.js"></script>
+	<script type="text/javascript" src="dist/js/widgets/jquery.nicescroll.min.js"></script>
+
+    <!-- alert11.17 -->
+    <link rel="stylesheet" href="dist/css/sweetalert.css">
+    <script src="dist/js/widgets/sweetalert.min.js"></script>
+    <style>
+    	.option{line-height:0;width:97%;margin-left:1%;border:1px solid #ECEFF5;border-bottom:0;padding-top:5px;}
+    	input{outline:none;}
+    	.ladda-label{color:#fff;}
+    </style>
+	</head>
+    <script>
+         $(document).ready(function(){
+            $("#div1").load('include/left_title.html',function(){
+                menu(); 
+            })
+            $("#loadHeader").load("include/header.html",function(){
+                header();
+            })
+            $("#personal").load("include/modelpersonal.html",function(){
+                personalModel();
+            })
+			getParent();
+            getData();
+           
+           $('#add').on('hidden.bs.modal', function () {
+            	$("#add .modal-body>div>input").val('');
+            })
+    	});
+         
+         //获取父级菜单
+         function getParent(){
+        	 var phtml1	= "<option value='0'>无</option>";
+        	 var phtml2 = "<option value='-1'>全部</option><option value='0'>父级菜单</option>";
+        	 $("#parent_menu").html(phtml1);
+        	 $("#parent_menu2").html(phtml2);
+ 			$.ajax({
+       			type:"POST",
+       			url:"actionServlet",
+       			data:{"actionName":"permissionService","method":"getAllParent"},
+       			dataType:"JSON",
+       			success:function(data){
+       				if(data.statusCode == 100){
+		 				toastr.error('请联系管理员','未拥有权限');
+		 				return;
+		 			}
+       				if(data.statusCode == 1){
+       					
+       					for(var i=0;i<data.result.length;i++){
+       						var str = "<option value='"+data.result[i].menuFlag+"'>"+data.result[i].menuName+"</option>";
+       						$("#parent_menu").append(str);
+       						$("#parent_menu2").append(str);
+       					}
+       				}
+       			}
+       		});
+ 			
+ 		}    
+       //获取菜单数据
+         function getData(){
+        	 
+        	 var parent = $("#parent_menu2").val();
+        	 if(parent == null || parent==''){
+        		 parent='-1';
+        	 }
+        	 $.ajax({
+     			type:"POST",
+     			url:"actionServlet",
+     			data:{"actionName":"permissionService","method":"getAllMenu","parent":parent},
+     			dataType:"JSON",
+     			success:function(data){
+     				if(data.statusCode == 100){
+		 				toastr.error('请联系管理员','未拥有权限');
+		 				return;
+		 			}
+     				if(data.statusCode == 1){
+     					var htmlStr = $("#demo_tr").html();
+     					$("#role_table").empty();
+     					$("#role_table").append("<tr id='demo_tr' style='display:none'>" + htmlStr+ "</tr>");
+     					for(var i=0;i<data.result.length;i++){
+     						var newStr = "<tr>" + htmlStr+"</tr>";
+     						var re = new RegExp("#menuId#","g");
+     						newStr = newStr.replace(re,data.result[i].id);
+     						re = new RegExp("#menuName#","g");
+     						newStr = newStr.replace(re,data.result[i].menuName);
+     						if(data.result[i].parent == null){
+     							data.result[i].parent='无';
+     						}
+     						newStr = newStr.replace("#parent#",data.result[i].parent);
+     						re = new RegExp("#menuFlag#","g");
+     						newStr = newStr.replace(re,data.result[i].menuFlag);
+     						re = new RegExp("#menuUrl#","g");
+     						newStr = newStr.replace(re,data.result[i].menuUrl);
+     						re = new RegExp("#menuOrder#","g");
+     						newStr = newStr.replace(re,data.result[i].menuOrder);
+     						var vis = data.result[i].visible;
+     						if(vis == '0'){
+     							newStr = newStr.replace("#visibleName#","显示");
+     							newStr = newStr.replace("#visibleStyle#","info");
+     							newStr = newStr.replace("#visible#","1");
+     						}else{
+     							newStr = newStr.replace("#visibleName#","隐藏");
+     							newStr = newStr.replace("#visibleStyle#","warning");
+     							newStr = newStr.replace("#visible#","0");
+     						}
+     						
+     						$("#role_table").append(newStr);
+     					}
+     					
+     				}
+     			}
+     		});
+         }
+         
+       //新增菜单
+         function saveMenu(){
+    	   var parent = $("#parent_menu").val();
+        	 var name = $("#menu_name").val();
+        	 var flag = $("#menu_flag").val();
+        	 var url = $("#menu_url").val();
+        	 var menuOrder = $("#menu_order").val();
+			 if(name==''){
+				 toastr.warning('请输入菜单名称','提示');
+	 			 return;
+			 }
+			 if(flag==''){
+				 toastr.warning('请输入菜单标识','提示');
+	 			 return; 
+			 }
+			 if(url==''){
+				 toastr.warning('请输入菜单路径','提示');
+	 			 return; 
+			 }
+			 if(menuOrder==''){
+				 toastr.warning('请输入菜单排序','提示');
+	 			 return; 
+			 }
+			 $('.btn-ladda').ladda( 'bind');
+			 Ladda.bind( '.progress-demo .ladda-button',{
+			 	callback: function( instance ){
+	 			 	var progress = 0;
+	 			 	var interval = setInterval( function(){
+	 			 	progress = Math.min( progress + Math.random() * 0.1, 1 );
+	 			 	instance.setProgress( progress );
+	 			  	if( progress === 1 ){
+				 		instance.stop();
+	 			 		clearInterval( interval );
+	 			 		 }
+	 			 	  }, 200 );
+				 	}
+			 });
+			 var l = $('.btn-ladda').ladda();
+			 l.ladda( 'start' );
+        	 $.ajax({
+      			type:"POST",
+      			url:"actionServlet",
+      			data:{"actionName":"permissionService","method":"saveMenu","name":name,"parent":parent,"flag":flag,"url":url,"menuOrder":menuOrder},
+      			dataType:"JSON",
+      			success:function(data){
+      				if(data.statusCode == 100){
+      					 l.ladda( 'stop' );
+		 				toastr.error('请联系管理员','未拥有权限');
+		 				return;
+		 			}
+      				if(data.statusCode == 1){
+      					if(parent == '0'){
+      						getParent();
+      					}
+      					getData();
+      					l.ladda( 'stop' );
+      					$("#btn_cancel").click();
+      					swal({
+      			            title: "",
+      			            text: "新增成功!",
+      			            type: "success"
+      			        });
+      					$("#add .modal-body>div>input").val('');
+      				}
+      			}
+      		});
+         }
+       
+       
+       function updateMenuDiv(id,name,menuOrder,menuFlag,menuUrl){
+    	   $("#update_menu_id").val(id);
+    	   $("#update_menu_name").val(name);
+    	   $("#update_menu_flag").val(menuFlag);
+    	   $("#update_menu_order").val(menuOrder);
+    	   $("#update_menu_url").val(menuUrl);
+    	   $("#update").modal('show');
+       }
+       //修改菜单
+         function updateMenu(){
+        	 
+    	   var id = $("#update_menu_id").val();
+        	 var name = $("#update_menu_name").val();
+        	 var flag = $("#update_menu_flag").val();
+        	 var url = $("#update_menu_url").val();
+        	 var menuOrder = $("#update_menu_order").val();
+			 
+        	 $.ajax({
+      			type:"POST",
+      			url:"actionServlet",
+      			data:{"actionName":"permissionService","method":"updateMenu","name":name,"id":id,"flag":flag,"url":url,"menuOrder":menuOrder},
+      			dataType:"JSON",
+      			success:function(data){
+      				if(data.statusCode == 100){
+		 				toastr.error('请联系管理员','未拥有权限');
+		 				return;
+		 			}
+      				if(data.statusCode == 1){
+      					getParent();
+      					getData();
+      					$("#update").modal('hide');
+      					swal({
+      			            title: "",
+      			            text: "修改成功!",
+      			            type: "success"
+      			        });
+      					
+      				}
+      			}
+      		});
+         }
+       
+       
+       
+       //菜单显示隐藏
+       function visibleMenu(id,style){
+    	   $.ajax({
+     			type:"POST",
+     			url:"actionServlet",
+     			data:{"actionName":"permissionService","method":"updateVisible","visible":style,"id":id},
+     			dataType:"JSON",
+     			success:function(data){
+     				if(data.statusCode == 100){
+		 				toastr.error('请联系管理员','未拥有权限');
+		 				return;
+		 			}
+     				if(data.statusCode == 1){
+     					getData();
+     					swal({
+      			            title: "",
+      			            text: "操作成功!",
+      			            type: "success"
+      			        });
+     				}
+     			}
+    	   });
+       }
+       
+       function deleteMenu(flag){
+    	   swal({
+    		   title: '确定要删除该菜单么',
+    		   text: '若删除父级菜单，会同时删除其子级！！！',
+    		   type: 'warning',
+    		   showCancelButton: true,
+    		   closeOnConfirm: false, 
+    		   confirmButtonText: '删除',
+    		   cancelButtonText: '取消',
+    		 }, function() { 
+    			 
+    			 $.ajax({
+    	     			type:"POST",
+    	     			url:"actionServlet",
+    	     			data:{"actionName":"permissionService","method":"deleteMenu","flag":flag},
+    	     			dataType:"JSON",
+    	     			success:function(data){
+    	     				if(data.statusCode == 100){
+    			 				toastr.error('请联系管理员','未拥有权限');
+    			 				return;
+    			 			}
+    	     				if(data.statusCode == 1){
+    	     					getParent()
+    	     					getData();
+    	     					swal({
+    	      			            title: "",
+    	      			            text: "删除成功!",
+    	      			            type: "success"
+    	      			        });
+    	     				}
+    	     			}
+    	    	   });
+    			 
+    			 
+    		}); 
+       }
+         
+		     
+    </script>
+<body>
+ <div class="container-fluid">
+     <!-- header  -->
+    <div class="nav row " id="loadHeader">
+    </div>
+    <div class="row neirong" >
+        <!-- 侧边导航 -->
+         <div id="div1" class="sidebar col-xs-2">
+            
+        </div>
+        <!-- 主题内容 -->
+        <div class="main col-xs-10 row " style="min-height:800px">
+                <h4 class="col-xs-12">菜单管理</h4>
+                <div class="col-xs-12 row option">
+                        <a class="btn btn-primary" data-toggle="modal" data-target="#add" href="#add" style="margin-left:-8px;">
+                            	新增菜单
+                        </a>
+                        <select onchange="getData()" id="parent_menu2" class="form-control" style="height:35px;width:150px;float:right;">
+                        	<option value="-1">全部</option>
+                        	<option value="0">父级菜单</option>
+                        </select>
+                </div>
+               
+             <table class="col-xs-12" id="clerka" style="width:97%;margin-left:1%;">
+                <thead>
+                    <tr>
+                       <th>菜单名称</th>
+                       <th>父级菜单</th>
+                       <th>菜单排序</th>
+                       <th>菜单标识</th>
+                       <th>菜单路径</th>
+                       <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="role_table">
+                    <tr id="demo_tr" style="display:none">
+                        <td width="15%">
+                        	#menuName#
+                        </td>
+                        <td width="15%">
+                        	#parent#
+                        </td>
+                        <td width="15%">
+                        	#menuOrder#
+                        </td>
+                        <td width="15%">
+                        	#menuFlag#
+                        </td>
+                        <td width="10%">
+                        	#menuUrl#
+                        </td>
+                        <td width="30%">
+                        	<a class="btn btn-#visibleStyle#" onclick="visibleMenu('#menuId#','#visible#')">#visibleName#</a> 
+                            <a class="btn btn-primary" onclick="updateMenuDiv('#menuId#','#menuName#','#menuOrder#','#menuFlag#','#menuUrl#')">修改</a> 
+                            <a class="btn btn-danger" onclick="deleteMenu('#menuFlag#')">删除</a> 
+                        </td> 
+                    </tr>
+                </tbody>
+            </table>                   
+        </div>
+        </div>
+         <div class="row" id="divFooter"></div> 
+        </div>
+        
+    <div class="modal inmodal in" id="add" tabindex="-1" role="dialog" aria-hidden="true" >
+        <div class="modal-dialog">
+        	<div class="modal-content animated bounceInRight">
+                <div class="modal-body" style="text-align:center">
+                	<h3>新增菜单</h3>
+                	<div style="margin-top:10px">
+                		<label>父级菜单:</label>
+                		<select id="parent_menu" class="form-control" style="height:100%;margin-left:10px">
+                			<option value="0">无</option>
+                        </select>
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>菜单名称:</label>
+                		<input style="margin-left:10px" id="menu_name" type="text" class="form-control">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>菜单标识:</label>
+                		<input style="margin-left:10px" id="menu_flag" type="text" class="form-control">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>菜单路径:</label>
+                		<input style="margin-left:10px" id="menu_url" type="text" class="form-control">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>菜单排序:</label>
+                		<input style="margin-left:10px" id="menu_order" type="text" class="form-control">
+                	</div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn_cancel" type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary ladda-button btn-ladda" onclick="saveMenu()" data-style="zoom-out">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <div class="modal inmodal in" id="update" tabindex="-1" role="dialog" aria-hidden="true" >
+        <div class="modal-dialog">
+        	<div class="modal-content animated bounceInRight">
+                <div class="modal-body" style="text-align:center">
+                	<h3>修改菜单</h3>
+                	<div style="margin-top:10px">
+                		<label>菜单名称:</label>
+                		<input id="update_menu_id" type="hidden">
+                		<input style="margin-left:10px" id="update_menu_name" type="text" class="form-control">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>菜单标识:</label>
+                		<input style="margin-left:10px" id="update_menu_flag" type="text" class="form-control">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>菜单路径:</label>
+                		<input style="margin-left:10px" id="update_menu_url" type="text" class="form-control">
+                	</div>
+                	<div style="margin-top:10px">
+                		<label>菜单排序:</label>
+                		<input style="margin-left:10px" id="update_menu_order" type="text" class="form-control">
+                	</div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn_cancel" type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="updateMenu()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script src="dist/js/bootstrap.min.js"></script>
+<script src="dist/js/ladda/spin.min.js"></script>
+<script src="dist/js/ladda/ladda.min.js"></script>
+<script src="dist/js/ladda/ladda.jquery.min.js"></script>
+</body>
+</html>
